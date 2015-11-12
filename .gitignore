@@ -1,3 +1,4 @@
 *.suo
 /source/bin
 /source/obj
+/source/*.user
