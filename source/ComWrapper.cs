@@ -206,6 +206,21 @@ namespace PC_Client
             string[] ports = SerialPort.GetPortNames();
             return ports;
         }
+
+
+        public object[] GetBaudRateRange()
+        {
+            object[] range = { 2400, 4800, 6400, 7200, 9600, 14400, 19200, 28800, 38400, 57600, 76800, 115200, 230400 };
+            return range;
+        }
+
+
+        public object[] GetDataBitsRange()
+        {
+            object[] range = { 7, 8};
+            return range;
+        }
+
     }
 }
 

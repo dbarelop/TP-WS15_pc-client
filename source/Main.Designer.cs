@@ -71,6 +71,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(482, 469);
             this.tabControl1.TabIndex = 3;
+            this.tabControl1.MouseEnter += new System.EventHandler(this.OnMouseEntering);
             // 
             // tabPage1
             // 
@@ -283,6 +284,7 @@
             this.btnOpenPort.TabIndex = 4;
             this.btnOpenPort.Text = "Open ComPort";
             this.btnOpenPort.UseVisualStyleBackColor = true;
+            this.btnOpenPort.Click += new System.EventHandler(this.btnOpenPort_Click);
             // 
             // label4
             // 
@@ -300,6 +302,7 @@
             this.cmbDataBits.Name = "cmbDataBits";
             this.cmbDataBits.Size = new System.Drawing.Size(83, 24);
             this.cmbDataBits.TabIndex = 2;
+            this.cmbDataBits.DropDown += new System.EventHandler(this.cmbDataBits_DropDown);
             // 
             // cmbBaudRate
             // 
@@ -308,6 +311,7 @@
             this.cmbBaudRate.Name = "cmbBaudRate";
             this.cmbBaudRate.Size = new System.Drawing.Size(83, 24);
             this.cmbBaudRate.TabIndex = 1;
+            this.cmbBaudRate.DropDown += new System.EventHandler(this.cmbBaudRate_DropDown);
             // 
             // cmbPortName
             // 
@@ -316,6 +320,7 @@
             this.cmbPortName.Name = "cmbPortName";
             this.cmbPortName.Size = new System.Drawing.Size(83, 24);
             this.cmbPortName.TabIndex = 0;
+            this.cmbPortName.DropDown += new System.EventHandler(this.cmbPortName_DropDown);
             // 
             // rtfTerminal
             // 

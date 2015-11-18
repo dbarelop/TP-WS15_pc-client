@@ -323,6 +323,20 @@ namespace PC_Client
         }
 
 
+        private void cmbBaudRate_DropDown(object sender, EventArgs e)
+        {
+            cmbBaudRate.Items.Clear();
+            cmbBaudRate.Items.AddRange(_comWrapper.GetBaudRateRange());          
+        }
+
+
+        private void cmbDataBits_DropDown(object sender, EventArgs e)
+        {
+            cmbDataBits.Items.Clear();
+            cmbDataBits.Items.AddRange(_comWrapper.GetDataBitsRange());   
+        }
+
+
 
         private void OnMouseEntering(object sender, EventArgs e)
         {
