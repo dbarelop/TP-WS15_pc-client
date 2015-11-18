@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace PC_Client
+namespace pc_client
 {
     class ErrorMessageBoxes
     {

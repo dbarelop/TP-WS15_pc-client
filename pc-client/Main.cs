@@ -10,7 +10,7 @@ using System.IO.Ports;
 using System.IO;
 using System.Threading;
 
-namespace PC_Client
+namespace pc_client
 {
     public partial class MainForm : Form
     {
@@ -66,13 +66,13 @@ namespace PC_Client
             cmbParity.Items.AddRange(Enum.GetNames(typeof(Parity)));
             cmbStopBits.Items.Clear();
             cmbStopBits.Items.AddRange(Enum.GetNames(typeof(StopBits)));
-            cmbParity.Text = _settings.Parity;
-            cmbStopBits.Text = _settings.StopBits;
-            cmbDataBits.Text = _settings.DataBits;
-            cmbBaudRate.Text = _settings.BaudRate;
-            chkDTR.Checked = _settings.DTR;
-            chkRTS.Checked = _settings.RTS;
-            cmbPortName.Text = _settings.PortName;        
+            cmbParity.Text = Properties.Settings.Default.Parity;
+            cmbStopBits.Text = Properties.Settings.Default.StopBits;
+            cmbDataBits.Text = Properties.Settings.Default.DataBits;
+            cmbBaudRate.Text = Properties.Settings.Default.BaudRate;
+            chkDTR.Checked = Properties.Settings.Default.DTR;
+            chkRTS.Checked = Properties.Settings.Default.RTS;
+            cmbPortName.Text = Properties.Settings.Default.Port;
         }
 
         #endregion
@@ -92,7 +92,15 @@ namespace PC_Client
             _settings.DTR = chkDTR.Checked;
             _settings.RTS = chkRTS.Checked;
 
-            //Properties.Settings.Default.Save();
+            Properties.Settings.Default.Port = cmbPortName.Text;
+            Properties.Settings.Default.BaudRate = cmbBaudRate.Text;
+            Properties.Settings.Default.DataBits = cmbDataBits.Text;
+            Properties.Settings.Default.Parity = cmbParity.Text;
+            Properties.Settings.Default.StopBits = cmbStopBits.Text;
+            Properties.Settings.Default.RTS = chkRTS.Checked;
+            Properties.Settings.Default.DTR = chkDTR.Checked;
+
+            Properties.Settings.Default.Save();
         }
 
         #endregion

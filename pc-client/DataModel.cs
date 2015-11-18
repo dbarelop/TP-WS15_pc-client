@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PC_Client
+namespace pc_client
 {
     class DataModel
     {       

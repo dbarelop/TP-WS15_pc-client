@@ -1,0 +1,9 @@
+C:\Users\andi\Desktop\repo\pc-client\pc-client\bin\Debug\pc-client.exe.config
+C:\Users\andi\Desktop\repo\pc-client\pc-client\bin\Debug\pc-client.exe
+C:\Users\andi\Desktop\repo\pc-client\pc-client\bin\Debug\pc-client.pdb
+C:\Users\andi\Desktop\repo\pc-client\pc-client\obj\Debug\pc-client.csprojResolveAssemblyReference.cache
+C:\Users\andi\Desktop\repo\pc-client\pc-client\obj\Debug\pc_client.Properties.Resources.resources
+C:\Users\andi\Desktop\repo\pc-client\pc-client\obj\Debug\pc-client.csproj.GenerateResource.Cache
+C:\Users\andi\Desktop\repo\pc-client\pc-client\obj\Debug\pc-client.exe
+C:\Users\andi\Desktop\repo\pc-client\pc-client\obj\Debug\pc-client.pdb
+C:\Users\andi\Desktop\repo\pc-client\pc-client\obj\Debug\pc_client.MainForm.resources

@@ -1,4 +1,4 @@
-﻿namespace PC_Client
+﻿namespace pc_client
 {
     partial class MainForm
     {

@@ -3,7 +3,7 @@ using System.IO.Ports;
 using System.IO;
 using System.Windows.Forms;
 
-namespace PC_Client
+namespace pc_client
 {
     public class ComWrapper
     {
@@ -217,7 +217,7 @@ namespace PC_Client
 
         public object[] GetDataBitsRange()
         {
-            object[] range = { 7, 8};
+            object[] range = { 7, 8, 9};
             return range;
         }
 

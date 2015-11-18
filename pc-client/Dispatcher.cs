@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 
 
-namespace PC_Client
+namespace pc_client
 {
     public class Dispatcher
     {
