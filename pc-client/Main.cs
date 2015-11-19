@@ -22,19 +22,17 @@ namespace pc_client
         Settings _settings = null;
         int _listIndex = 0;
 
-        private bool KeyHandled = false;
+        private bool _keyHandled = false;
         List<string> _commandHistory = new List<string>();
 
         #endregion
 
-
+        ///////////////////////////////////////////////////////////////////////
+        #region Initialization
 
         public MainForm()
         {
             InitializeComponent();
-
-            ///////////////////////////////////////////////////////////////////////
-            #region Initialization
 
             _comWrapper = new ComWrapper();
             _settings = Settings.GetInstance;
@@ -42,7 +40,6 @@ namespace pc_client
 
             InitializeControlValues();
             EnableControls();
-
 
             #endregion
         }
@@ -252,7 +249,7 @@ namespace pc_client
         private void txtSendData_KeyDown(object sender, KeyEventArgs e)
         {
             // If the user presses [ENTER], send the data now
-            if (KeyHandled = e.KeyCode == Keys.Enter)
+            if (_keyHandled = e.KeyCode == Keys.Enter)
             {
                 e.Handled = true;
                 SendData();
@@ -261,7 +258,7 @@ namespace pc_client
             }
 
 
-            else if (KeyHandled = e.KeyCode == Keys.Up)
+            else if (_keyHandled = e.KeyCode == Keys.Up)
             {
                 if (_commandHistory.Count == 0)
                 {
@@ -286,7 +283,7 @@ namespace pc_client
             }
 
 
-            else if (KeyHandled = e.KeyCode == Keys.Down)
+            else if (_keyHandled = e.KeyCode == Keys.Down)
             {
                 if (_commandHistory.Count == 0)
                 {
@@ -320,7 +317,7 @@ namespace pc_client
 
         private void txtSendData_KeyPress(object sender, KeyPressEventArgs e)
         { 
-            e.Handled = KeyHandled; 
+            e.Handled = _keyHandled; 
         }
 
 
@@ -437,6 +434,7 @@ namespace pc_client
             cmbBaudRate.Enabled = true;
             cmbStopBits.Enabled = true;
             cmbDataBits.Enabled = true;
+            checkBox_simulation.Enabled = true;
         }
 
 
@@ -450,6 +448,7 @@ namespace pc_client
             cmbBaudRate.Enabled = false;
             cmbStopBits.Enabled = false;
             cmbDataBits.Enabled = false;
+            checkBox_simulation.Enabled = false;
         }
 
         # endregion

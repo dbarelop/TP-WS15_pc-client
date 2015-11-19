@@ -1,4 +1,4 @@
 *.suo
-/source/bin
-/source/obj
-/source/*.user
+/pc-client/bin
+/pc-client/obj
+/pc-client/*.user
