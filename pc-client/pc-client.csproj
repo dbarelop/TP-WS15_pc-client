@@ -48,6 +48,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADW.cs" />
     <Compile Include="Commands.cs" />
     <Compile Include="ComWrapper.cs" />
     <Compile Include="DataModel.cs" />

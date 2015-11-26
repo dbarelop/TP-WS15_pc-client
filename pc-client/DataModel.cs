@@ -28,9 +28,9 @@ namespace pc_client
         public string Temperature
         { get; set; }
 
-        public string Value
+        public ADW Adw
         { get; set; }
-
+        
         #endregion
     }
 }

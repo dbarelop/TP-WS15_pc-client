@@ -177,29 +177,17 @@ namespace pc_client
         {
             string data = ComportRead();
             _input += data;
-            string[] lines = null;
 
-            if ((_input.Contains("\n")) || (_input.Contains("\r")))
+            if (data != "")
             {
-                lines = _input.Split(new string[] { "\r", "\n" }, StringSplitOptions.None);
-
-                for (int i = 0; i < lines.Length - 1; i++)
+                if (NewDataReceivedEvent != null)
                 {
-                    {
-                        if (lines[i] != "")
-                        {
-                            if (NewDataReceivedEvent != null)
-                            {
-                                NewDataReceivedEvent(this, lines[i]);
-                            }
-                        }
-                    }
+                    NewDataReceivedEvent(this, data);
                 }
-                _input = lines[lines.Length - 1];
             }
+        
         }
-
-
+        
 
         public string[] GetAvailablePorts()
         {

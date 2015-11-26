@@ -3,7 +3,7 @@
 
 namespace pc_client
 {
-    class Commands
+    static class Commands
     {
         ///////////////////////////////////////////////////////////////////////
         #region constant commands
@@ -23,14 +23,8 @@ namespace pc_client
         public const byte RNG1 =    0x05; // 0000_0101
         public const byte RNG2 =    0x06; // 0000_0110        
 
-        public byte EEPROM_READ = EEPROM | READ;
+        // e.g. call it like --> public byte EEPROM_READ = EEPROM | READ;
 
         #endregion
-
-        //TBD specified by protocol
-        public string PrepareCommand(string cmd)
-        {
-            return cmd + "\r\n";
-        }
     }
 }
