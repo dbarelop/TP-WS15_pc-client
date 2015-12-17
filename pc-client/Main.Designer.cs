@@ -34,16 +34,19 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.tbTemperatur = new System.Windows.Forms.TextBox();
+            this.tbADChannel1 = new System.Windows.Forms.TextBox();
+            this.tbHardware = new System.Windows.Forms.TextBox();
+            this.btnReadTemperatur = new System.Windows.Forms.Button();
+            this.btnResetHardware = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.rtfTerminalIn = new System.Windows.Forms.RichTextBox();
+            this.chkInputType = new System.Windows.Forms.CheckBox();
             this.chkDTR = new System.Windows.Forms.CheckBox();
             this.chkRTS = new System.Windows.Forms.CheckBox();
-            this.checkBox_simulation = new System.Windows.Forms.CheckBox();
+            this.chkSimulation = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.cmbStopBits = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -55,11 +58,31 @@
             this.cmbDataBits = new System.Windows.Forms.ComboBox();
             this.cmbBaudRate = new System.Windows.Forms.ComboBox();
             this.cmbPortName = new System.Windows.Forms.ComboBox();
-            this.rtfTerminal = new System.Windows.Forms.RichTextBox();
+            this.chkHex = new System.Windows.Forms.CheckBox();
+            this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
+            this.chkPoll = new System.Windows.Forms.CheckBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.tbADChannel2 = new System.Windows.Forms.TextBox();
+            this.btnReadADC2 = new System.Windows.Forms.Button();
+            this.btnReadADC1 = new System.Windows.Forms.Button();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.label17 = new System.Windows.Forms.Label();
+            this.btnReadEprom = new System.Windows.Forms.Button();
+            this.btnWriteEprom = new System.Windows.Forms.Button();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.rbV1 = new System.Windows.Forms.RadioButton();
+            this.rbV2 = new System.Windows.Forms.RadioButton();
+            this.label11 = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -76,14 +99,23 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.Gainsboro;
+            this.tabPage1.Controls.Add(this.panel2);
+            this.tabPage1.Controls.Add(this.btnWriteEprom);
+            this.tabPage1.Controls.Add(this.btnReadEprom);
+            this.tabPage1.Controls.Add(this.label17);
+            this.tabPage1.Controls.Add(this.richTextBox1);
+            this.tabPage1.Controls.Add(this.btnReadADC2);
+            this.tabPage1.Controls.Add(this.btnReadADC1);
+            this.tabPage1.Controls.Add(this.label16);
+            this.tabPage1.Controls.Add(this.tbADChannel2);
             this.tabPage1.Controls.Add(this.label3);
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.textBox3);
-            this.tabPage1.Controls.Add(this.textBox2);
-            this.tabPage1.Controls.Add(this.textBox1);
-            this.tabPage1.Controls.Add(this.button2);
-            this.tabPage1.Controls.Add(this.button1);
+            this.tabPage1.Controls.Add(this.tbTemperatur);
+            this.tabPage1.Controls.Add(this.tbADChannel1);
+            this.tabPage1.Controls.Add(this.tbHardware);
+            this.tabPage1.Controls.Add(this.btnReadTemperatur);
+            this.tabPage1.Controls.Add(this.btnResetHardware);
             this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
@@ -95,74 +127,84 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(123, 115);
+            this.label3.Location = new System.Drawing.Point(14, 57);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(50, 16);
+            this.label3.Size = new System.Drawing.Size(78, 16);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Value2";
+            this.label3.Text = "Temperatur";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(123, 160);
+            this.label2.Location = new System.Drawing.Point(15, 95);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(50, 16);
+            this.label2.Size = new System.Drawing.Size(96, 16);
             this.label2.TabIndex = 6;
-            this.label2.Text = "Value3";
+            this.label2.Text = "AD - Channel 1";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(123, 68);
+            this.label1.Location = new System.Drawing.Point(14, 19);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(78, 16);
+            this.label1.Size = new System.Drawing.Size(67, 16);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Temperatur";
+            this.label1.Text = "Hardware";
             // 
-            // textBox3
+            // tbTemperatur
             // 
-            this.textBox3.Location = new System.Drawing.Point(232, 109);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(100, 22);
-            this.textBox3.TabIndex = 4;
+            this.tbTemperatur.BackColor = System.Drawing.Color.Gainsboro;
+            this.tbTemperatur.Location = new System.Drawing.Point(123, 54);
+            this.tbTemperatur.Name = "tbTemperatur";
+            this.tbTemperatur.ReadOnly = true;
+            this.tbTemperatur.Size = new System.Drawing.Size(100, 22);
+            this.tbTemperatur.TabIndex = 4;
             // 
-            // textBox2
+            // tbADChannel1
             // 
-            this.textBox2.Location = new System.Drawing.Point(232, 157);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 22);
-            this.textBox2.TabIndex = 3;
+            this.tbADChannel1.BackColor = System.Drawing.Color.Gainsboro;
+            this.tbADChannel1.Location = new System.Drawing.Point(123, 92);
+            this.tbADChannel1.Name = "tbADChannel1";
+            this.tbADChannel1.ReadOnly = true;
+            this.tbADChannel1.Size = new System.Drawing.Size(100, 22);
+            this.tbADChannel1.TabIndex = 3;
             // 
-            // textBox1
+            // tbHardware
             // 
-            this.textBox1.Location = new System.Drawing.Point(232, 65);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 22);
-            this.textBox1.TabIndex = 2;
+            this.tbHardware.BackColor = System.Drawing.Color.Gainsboro;
+            this.tbHardware.Location = new System.Drawing.Point(123, 16);
+            this.tbHardware.Name = "tbHardware";
+            this.tbHardware.ReadOnly = true;
+            this.tbHardware.Size = new System.Drawing.Size(100, 22);
+            this.tbHardware.TabIndex = 2;
             // 
-            // button2
+            // btnReadTemperatur
             // 
-            this.button2.Location = new System.Drawing.Point(257, 248);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Write";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnReadTemperatur.Location = new System.Drawing.Point(256, 53);
+            this.btnReadTemperatur.Name = "btnReadTemperatur";
+            this.btnReadTemperatur.Size = new System.Drawing.Size(75, 23);
+            this.btnReadTemperatur.TabIndex = 1;
+            this.btnReadTemperatur.Text = "Read";
+            this.btnReadTemperatur.UseVisualStyleBackColor = true;
             // 
-            // button1
+            // btnResetHardware
             // 
-            this.button1.Location = new System.Drawing.Point(123, 248);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Read";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnResetHardware.Location = new System.Drawing.Point(256, 15);
+            this.btnResetHardware.Name = "btnResetHardware";
+            this.btnResetHardware.Size = new System.Drawing.Size(75, 23);
+            this.btnResetHardware.TabIndex = 0;
+            this.btnResetHardware.Text = "Reset";
+            this.btnResetHardware.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Gainsboro;
-            this.tabPage2.Controls.Add(this.groupBox1);
-            this.tabPage2.Controls.Add(this.rtfTerminal);
+            this.tabPage2.Controls.Add(this.panel3);
+            this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.label9);
+            this.tabPage2.Controls.Add(this.rtfTerminalIn);
+            this.tabPage2.Controls.Add(this.chkInputType);
+            this.tabPage2.Controls.Add(this.rtfTerminalOut);
             this.tabPage2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
@@ -171,33 +213,53 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "ComPort";
             // 
-            // groupBox1
+            // label10
             // 
-            this.groupBox1.BackColor = System.Drawing.Color.Silver;
-            this.groupBox1.Controls.Add(this.chkDTR);
-            this.groupBox1.Controls.Add(this.chkRTS);
-            this.groupBox1.Controls.Add(this.checkBox_simulation);
-            this.groupBox1.Controls.Add(this.label8);
-            this.groupBox1.Controls.Add(this.cmbStopBits);
-            this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.cmbParity);
-            this.groupBox1.Controls.Add(this.label6);
-            this.groupBox1.Controls.Add(this.label5);
-            this.groupBox1.Controls.Add(this.btnOpenPort);
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.cmbDataBits);
-            this.groupBox1.Controls.Add(this.cmbBaudRate);
-            this.groupBox1.Controls.Add(this.cmbPortName);
-            this.groupBox1.Location = new System.Drawing.Point(7, 334);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(458, 103);
-            this.groupBox1.TabIndex = 2;
-            this.groupBox1.TabStop = false;
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label10.Location = new System.Drawing.Point(13, 12);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(52, 16);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "Output";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
+            this.label9.Location = new System.Drawing.Point(13, 174);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(41, 16);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "Input";
+            // 
+            // rtfTerminalIn
+            // 
+            this.rtfTerminalIn.BackColor = System.Drawing.Color.Gainsboro;
+            this.rtfTerminalIn.Location = new System.Drawing.Point(7, 193);
+            this.rtfTerminalIn.Name = "rtfTerminalIn";
+            this.rtfTerminalIn.ReadOnly = true;
+            this.rtfTerminalIn.Size = new System.Drawing.Size(356, 130);
+            this.rtfTerminalIn.TabIndex = 16;
+            this.rtfTerminalIn.Text = "";
+            // 
+            // chkInputType
+            // 
+            this.chkInputType.AutoSize = true;
+            this.chkInputType.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.chkInputType.Location = new System.Drawing.Point(366, 256);
+            this.chkInputType.Name = "chkInputType";
+            this.chkInputType.Size = new System.Drawing.Size(86, 20);
+            this.chkInputType.TabIndex = 15;
+            this.chkInputType.Text = "Raw Data";
+            this.chkInputType.UseVisualStyleBackColor = true;
             // 
             // chkDTR
             // 
             this.chkDTR.AutoSize = true;
-            this.chkDTR.Location = new System.Drawing.Point(70, 73);
+            this.chkDTR.Location = new System.Drawing.Point(71, 67);
             this.chkDTR.Name = "chkDTR";
             this.chkDTR.Size = new System.Drawing.Size(56, 20);
             this.chkDTR.TabIndex = 13;
@@ -207,27 +269,27 @@
             // chkRTS
             // 
             this.chkRTS.AutoSize = true;
-            this.chkRTS.Location = new System.Drawing.Point(9, 73);
+            this.chkRTS.Location = new System.Drawing.Point(13, 67);
             this.chkRTS.Name = "chkRTS";
             this.chkRTS.Size = new System.Drawing.Size(55, 20);
             this.chkRTS.TabIndex = 12;
             this.chkRTS.Text = "RTS";
             this.chkRTS.UseVisualStyleBackColor = true;
             // 
-            // checkBox_simulation
+            // chkSimulation
             // 
-            this.checkBox_simulation.AutoSize = true;
-            this.checkBox_simulation.Location = new System.Drawing.Point(131, 73);
-            this.checkBox_simulation.Name = "checkBox_simulation";
-            this.checkBox_simulation.Size = new System.Drawing.Size(124, 20);
-            this.checkBox_simulation.TabIndex = 11;
-            this.checkBox_simulation.Text = "Simulate Values";
-            this.checkBox_simulation.UseVisualStyleBackColor = true;
+            this.chkSimulation.AutoSize = true;
+            this.chkSimulation.Location = new System.Drawing.Point(130, 67);
+            this.chkSimulation.Name = "chkSimulation";
+            this.chkSimulation.Size = new System.Drawing.Size(89, 20);
+            this.chkSimulation.TabIndex = 11;
+            this.chkSimulation.Text = "Simulation";
+            this.chkSimulation.UseVisualStyleBackColor = true;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(359, 18);
+            this.label8.Location = new System.Drawing.Point(363, 12);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(61, 16);
             this.label8.TabIndex = 10;
@@ -236,7 +298,7 @@
             // cmbStopBits
             // 
             this.cmbStopBits.FormattingEnabled = true;
-            this.cmbStopBits.Location = new System.Drawing.Point(362, 37);
+            this.cmbStopBits.Location = new System.Drawing.Point(366, 31);
             this.cmbStopBits.Name = "cmbStopBits";
             this.cmbStopBits.Size = new System.Drawing.Size(83, 24);
             this.cmbStopBits.TabIndex = 9;
@@ -244,7 +306,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(270, 18);
+            this.label7.Location = new System.Drawing.Point(274, 12);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(42, 16);
             this.label7.TabIndex = 8;
@@ -253,7 +315,7 @@
             // cmbParity
             // 
             this.cmbParity.FormattingEnabled = true;
-            this.cmbParity.Location = new System.Drawing.Point(273, 37);
+            this.cmbParity.Location = new System.Drawing.Point(277, 31);
             this.cmbParity.Name = "cmbParity";
             this.cmbParity.Size = new System.Drawing.Size(83, 24);
             this.cmbParity.TabIndex = 7;
@@ -261,7 +323,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(181, 18);
+            this.label6.Location = new System.Drawing.Point(185, 12);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(62, 16);
             this.label6.TabIndex = 6;
@@ -270,7 +332,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(92, 18);
+            this.label5.Location = new System.Drawing.Point(96, 12);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(72, 16);
             this.label5.TabIndex = 5;
@@ -278,7 +340,7 @@
             // 
             // btnOpenPort
             // 
-            this.btnOpenPort.Location = new System.Drawing.Point(273, 70);
+            this.btnOpenPort.Location = new System.Drawing.Point(277, 64);
             this.btnOpenPort.Name = "btnOpenPort";
             this.btnOpenPort.Size = new System.Drawing.Size(172, 23);
             this.btnOpenPort.TabIndex = 4;
@@ -289,7 +351,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 18);
+            this.label4.Location = new System.Drawing.Point(10, 12);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(60, 16);
             this.label4.TabIndex = 3;
@@ -298,7 +360,7 @@
             // cmbDataBits
             // 
             this.cmbDataBits.FormattingEnabled = true;
-            this.cmbDataBits.Location = new System.Drawing.Point(184, 37);
+            this.cmbDataBits.Location = new System.Drawing.Point(188, 31);
             this.cmbDataBits.Name = "cmbDataBits";
             this.cmbDataBits.Size = new System.Drawing.Size(83, 24);
             this.cmbDataBits.TabIndex = 2;
@@ -307,7 +369,7 @@
             // cmbBaudRate
             // 
             this.cmbBaudRate.FormattingEnabled = true;
-            this.cmbBaudRate.Location = new System.Drawing.Point(95, 37);
+            this.cmbBaudRate.Location = new System.Drawing.Point(99, 31);
             this.cmbBaudRate.Name = "cmbBaudRate";
             this.cmbBaudRate.Size = new System.Drawing.Size(83, 24);
             this.cmbBaudRate.TabIndex = 1;
@@ -316,19 +378,204 @@
             // cmbPortName
             // 
             this.cmbPortName.FormattingEnabled = true;
-            this.cmbPortName.Location = new System.Drawing.Point(6, 37);
+            this.cmbPortName.Location = new System.Drawing.Point(10, 31);
             this.cmbPortName.Name = "cmbPortName";
             this.cmbPortName.Size = new System.Drawing.Size(83, 24);
             this.cmbPortName.TabIndex = 0;
             this.cmbPortName.DropDown += new System.EventHandler(this.cmbPortName_DropDown);
             // 
-            // rtfTerminal
+            // chkHex
             // 
-            this.rtfTerminal.Location = new System.Drawing.Point(7, 7);
-            this.rtfTerminal.Name = "rtfTerminal";
-            this.rtfTerminal.Size = new System.Drawing.Size(458, 321);
-            this.rtfTerminal.TabIndex = 1;
-            this.rtfTerminal.Text = "";
+            this.chkHex.AutoSize = true;
+            this.chkHex.Location = new System.Drawing.Point(221, 66);
+            this.chkHex.Name = "chkHex";
+            this.chkHex.Size = new System.Drawing.Size(51, 20);
+            this.chkHex.TabIndex = 14;
+            this.chkHex.Text = "Hex";
+            this.chkHex.UseVisualStyleBackColor = true;
+            // 
+            // rtfTerminalOut
+            // 
+            this.rtfTerminalOut.Location = new System.Drawing.Point(7, 31);
+            this.rtfTerminalOut.Name = "rtfTerminalOut";
+            this.rtfTerminalOut.Size = new System.Drawing.Size(356, 130);
+            this.rtfTerminalOut.TabIndex = 1;
+            this.rtfTerminalOut.Text = "";
+            // 
+            // chkPoll
+            // 
+            this.chkPoll.AutoSize = true;
+            this.chkPoll.Location = new System.Drawing.Point(291, 16);
+            this.chkPoll.Name = "chkPoll";
+            this.chkPoll.Size = new System.Drawing.Size(95, 20);
+            this.chkPoll.TabIndex = 14;
+            this.chkPoll.Text = "Poll Values";
+            this.chkPoll.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(13, 133);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(96, 16);
+            this.label16.TabIndex = 10;
+            this.label16.Text = "AD - Channel 2";
+            // 
+            // tbADChannel2
+            // 
+            this.tbADChannel2.BackColor = System.Drawing.Color.Gainsboro;
+            this.tbADChannel2.Location = new System.Drawing.Point(123, 130);
+            this.tbADChannel2.Name = "tbADChannel2";
+            this.tbADChannel2.ReadOnly = true;
+            this.tbADChannel2.Size = new System.Drawing.Size(100, 22);
+            this.tbADChannel2.TabIndex = 9;
+            // 
+            // btnReadADC2
+            // 
+            this.btnReadADC2.Location = new System.Drawing.Point(256, 130);
+            this.btnReadADC2.Name = "btnReadADC2";
+            this.btnReadADC2.Size = new System.Drawing.Size(75, 23);
+            this.btnReadADC2.TabIndex = 12;
+            this.btnReadADC2.Text = "Read";
+            this.btnReadADC2.UseVisualStyleBackColor = true;
+            // 
+            // btnReadADC1
+            // 
+            this.btnReadADC1.Location = new System.Drawing.Point(256, 92);
+            this.btnReadADC1.Name = "btnReadADC1";
+            this.btnReadADC1.Size = new System.Drawing.Size(75, 23);
+            this.btnReadADC1.TabIndex = 11;
+            this.btnReadADC1.Text = "Read";
+            this.btnReadADC1.UseVisualStyleBackColor = true;
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(123, 256);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(341, 139);
+            this.richTextBox1.TabIndex = 13;
+            this.richTextBox1.Text = "";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(13, 320);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(66, 16);
+            this.label17.TabIndex = 14;
+            this.label17.Text = "EEPROM";
+            // 
+            // btnReadEprom
+            // 
+            this.btnReadEprom.Location = new System.Drawing.Point(205, 401);
+            this.btnReadEprom.Name = "btnReadEprom";
+            this.btnReadEprom.Size = new System.Drawing.Size(75, 23);
+            this.btnReadEprom.TabIndex = 15;
+            this.btnReadEprom.Text = "Read";
+            this.btnReadEprom.UseVisualStyleBackColor = true;
+            // 
+            // btnWriteEprom
+            // 
+            this.btnWriteEprom.Location = new System.Drawing.Point(294, 401);
+            this.btnWriteEprom.Name = "btnWriteEprom";
+            this.btnWriteEprom.Size = new System.Drawing.Size(75, 23);
+            this.btnWriteEprom.TabIndex = 16;
+            this.btnWriteEprom.Text = "Write";
+            this.btnWriteEprom.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.rbV2);
+            this.panel1.Controls.Add(this.rbV1);
+            this.panel1.Location = new System.Drawing.Point(92, 12);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(172, 25);
+            this.panel1.TabIndex = 15;
+            // 
+            // rbV1
+            // 
+            this.rbV1.AutoSize = true;
+            this.rbV1.Checked = true;
+            this.rbV1.Location = new System.Drawing.Point(3, 1);
+            this.rbV1.Name = "rbV1";
+            this.rbV1.Size = new System.Drawing.Size(62, 20);
+            this.rbV1.TabIndex = 0;
+            this.rbV1.TabStop = true;
+            this.rbV1.Text = "2.56 V";
+            this.rbV1.UseVisualStyleBackColor = true;
+            // 
+            // rbV2
+            // 
+            this.rbV2.AutoSize = true;
+            this.rbV2.Location = new System.Drawing.Point(82, 3);
+            this.rbV2.Name = "rbV2";
+            this.rbV2.Size = new System.Drawing.Size(62, 20);
+            this.rbV2.TabIndex = 1;
+            this.rbV2.Text = "0.16 V";
+            this.rbV2.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(27, 17);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(52, 16);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "Range:";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Silver;
+            this.panel2.Controls.Add(this.label13);
+            this.panel2.Controls.Add(this.label12);
+            this.panel2.Controls.Add(this.label11);
+            this.panel2.Controls.Add(this.chkPoll);
+            this.panel2.Controls.Add(this.panel1);
+            this.panel2.Location = new System.Drawing.Point(-12, 174);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(504, 76);
+            this.panel2.TabIndex = 17;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.Silver;
+            this.panel3.Controls.Add(this.chkDTR);
+            this.panel3.Controls.Add(this.btnOpenPort);
+            this.panel3.Controls.Add(this.chkRTS);
+            this.panel3.Controls.Add(this.chkHex);
+            this.panel3.Controls.Add(this.chkSimulation);
+            this.panel3.Controls.Add(this.cmbPortName);
+            this.panel3.Controls.Add(this.label8);
+            this.panel3.Controls.Add(this.cmbBaudRate);
+            this.panel3.Controls.Add(this.cmbStopBits);
+            this.panel3.Controls.Add(this.cmbDataBits);
+            this.panel3.Controls.Add(this.label7);
+            this.panel3.Controls.Add(this.label4);
+            this.panel3.Controls.Add(this.cmbParity);
+            this.panel3.Controls.Add(this.label5);
+            this.panel3.Controls.Add(this.label6);
+            this.panel3.Location = new System.Drawing.Point(7, 335);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(461, 98);
+            this.panel3.TabIndex = 18;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(27, 48);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(48, 16);
+            this.label12.TabIndex = 18;
+            this.label12.Text = "Status:";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(92, 48);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(126, 16);
+            this.label13.TabIndex = 19;
+            this.label13.Text = "Connected to ComX";
             // 
             // MainForm
             // 
@@ -345,8 +592,13 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.tabPage2.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -359,12 +611,11 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.TextBox tbTemperatur;
+        private System.Windows.Forms.TextBox tbADChannel1;
+        private System.Windows.Forms.TextBox tbHardware;
+        private System.Windows.Forms.Button btnReadTemperatur;
+        private System.Windows.Forms.Button btnResetHardware;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.ComboBox cmbParity;
         private System.Windows.Forms.Label label6;
@@ -374,12 +625,34 @@
         private System.Windows.Forms.ComboBox cmbDataBits;
         private System.Windows.Forms.ComboBox cmbBaudRate;
         private System.Windows.Forms.ComboBox cmbPortName;
-        private System.Windows.Forms.RichTextBox rtfTerminal;
-        private System.Windows.Forms.CheckBox checkBox_simulation;
+        private System.Windows.Forms.RichTextBox rtfTerminalOut;
+        private System.Windows.Forms.CheckBox chkSimulation;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbStopBits;
         private System.Windows.Forms.CheckBox chkDTR;
         private System.Windows.Forms.CheckBox chkRTS;
+        private System.Windows.Forms.CheckBox chkInputType;
+        private System.Windows.Forms.CheckBox chkHex;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.RichTextBox rtfTerminalIn;
+        private System.Windows.Forms.Button btnReadADC2;
+        private System.Windows.Forms.Button btnReadADC1;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox tbADChannel2;
+        private System.Windows.Forms.CheckBox chkPoll;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Button btnWriteEprom;
+        private System.Windows.Forms.Button btnReadEprom;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.RadioButton rbV2;
+        private System.Windows.Forms.RadioButton rbV1;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label12;
 
     }
 }

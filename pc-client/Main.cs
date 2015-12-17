@@ -134,7 +134,7 @@ namespace pc_client
                 close_port();
             }
 
-            rtfTerminal.Focus();
+            rtfTerminalOut.Focus();
         }
 
 
@@ -253,7 +253,7 @@ namespace pc_client
             {
                 e.Handled = true;
                 SendData();
-                rtfTerminal.AppendText("\n");
+                rtfTerminalOut.AppendText("\n");
                 _listIndex = 0;
             }
 
@@ -265,19 +265,19 @@ namespace pc_client
                     return;
                 }
 
-                string[] tmpLines = rtfTerminal.Lines;
+                string[] tmpLines = rtfTerminalOut.Lines;
                 tmpLines[tmpLines.Count() - 1] = "";
-                rtfTerminal.Lines = tmpLines;
+                rtfTerminalOut.Lines = tmpLines;
 
                 int index = (_listIndex + (_commandHistory.Count - 1)) % _commandHistory.Count;
 
                 if (index == 0)
                 {
-                    rtfTerminal.AppendText(_commandHistory.ElementAt(index));
+                    rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
                     return;
                 }
 
-                rtfTerminal.AppendText(_commandHistory.ElementAt(index));
+                rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
 
                 --_listIndex;
             }
@@ -290,19 +290,19 @@ namespace pc_client
                     return;
                 }
 
-                string[] tmpLines = rtfTerminal.Lines;
+                string[] tmpLines = rtfTerminalOut.Lines;
                 tmpLines[tmpLines.Count() - 1] = "";
-                rtfTerminal.Lines = tmpLines;
+                rtfTerminalOut.Lines = tmpLines;
 
                 int index = (_listIndex + (_commandHistory.Count - 1)) % _commandHistory.Count;
 
                 if (index == _commandHistory.Count - 1)
                 {
-                    rtfTerminal.AppendText(_commandHistory.ElementAt(index));
+                    rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
                     return;
                 }
 
-                rtfTerminal.AppendText(_commandHistory.ElementAt(index));
+                rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
 
                 ++_listIndex;
             }
@@ -345,12 +345,12 @@ namespace pc_client
 
         private void OnMouseEntering(object sender, EventArgs e)
         {
-            rtfTerminal.Focus();
+            rtfTerminalOut.Focus();
         }
 
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
-            rtfTerminal.Focus();
+            rtfTerminalOut.Focus();
         }
 
         #endregion
@@ -371,11 +371,11 @@ namespace pc_client
                 }
                 if (input.Contains("\n"))
                 {
-                    rtfTerminal.AppendText(input);
+                    rtfTerminalOut.AppendText(input);
                 }
                 else
                 {
-                    rtfTerminal.AppendText(input + "\n");
+                    rtfTerminalOut.AppendText(input + "\n");
                 }
             }
             catch (Exception)
@@ -394,7 +394,7 @@ namespace pc_client
 
         private void SendData()
         {
-            string sendData = rtfTerminal.Lines[(rtfTerminal.Lines.Count() - 1)];
+            string sendData = rtfTerminalOut.Lines[(rtfTerminalOut.Lines.Count() - 1)];
 
             if (NewSnifferDataEvent != null)
             {
@@ -434,7 +434,7 @@ namespace pc_client
             cmbBaudRate.Enabled = true;
             cmbStopBits.Enabled = true;
             cmbDataBits.Enabled = true;
-            checkBox_simulation.Enabled = true;
+            chkSimulation.Enabled = true;
         }
 
 
@@ -448,10 +448,12 @@ namespace pc_client
             cmbBaudRate.Enabled = false;
             cmbStopBits.Enabled = false;
             cmbDataBits.Enabled = false;
-            checkBox_simulation.Enabled = false;
+            chkSimulation.Enabled = false;
         }
 
         # endregion
+
+
 
 
     }
