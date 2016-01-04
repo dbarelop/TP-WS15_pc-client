@@ -399,7 +399,6 @@ namespace pc_client
             if (NewSnifferDataEvent != null)
             {
                 _commandHistory.Add(sendData);
-                sendData = sendData + "\r\n";
                 NewSnifferDataEvent(this, sendData, false);
             }
         }
@@ -452,6 +451,20 @@ namespace pc_client
         }
 
         # endregion
+
+        private void btnSend_Click(object sender, EventArgs e)
+        {
+            int hexValue = 41;
+            //int decValue = Convert.ToInt32(hexValue, 16);
+            Char sendChar = System.Convert.ToChar(System.Convert.ToUInt32("0x41"));
+            String sendData = sendChar.ToString();
+           _comWrapper.ComportWrite(sendData, true);
+        }
+
+        private void rtfTerminalOut_KeyDown(object sender, KeyEventArgs e)
+        {
+            //if()
+        }
 
 
 
