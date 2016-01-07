@@ -25,6 +25,12 @@ namespace pc_client
         private bool _keyHandled = false;
         List<string> _commandHistory = new List<string>();
 
+        System.Windows.Threading.Dispatcher _windowDispatcher;
+        Form _receiverForm = null;
+        Object _lockObject = new Object();
+
+        delegate void NewDataReceivedDelegate(object sender, string data);
+
         #endregion
 
         ///////////////////////////////////////////////////////////////////////
@@ -35,13 +41,24 @@ namespace pc_client
             InitializeComponent();
 
             _comWrapper = new ComWrapper();
+            _comWrapper.NewDataReceivedEvent += new ComWrapper.NewDataReceivedEventHandler(ComWrapper_NewDataReceivedEvent);
             _settings = Settings.GetInstance;
             _error = new ErrorMessageBoxes();
+            _windowDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
+            _receiverForm = this;
 
             InitializeControlValues();
-            EnableControls();
+            EnableControls();        
 
             #endregion
+        }
+
+        ~MainForm()
+        {
+            if (_comWrapper != null)
+            {
+                _comWrapper.NewDataReceivedEvent -= new ComWrapper.NewDataReceivedEventHandler(ComWrapper_NewDataReceivedEvent);
+            }
         }
 
                 ///////////////////////////////////////////////////////////////////////
@@ -456,8 +473,8 @@ namespace pc_client
         {
             int hexValue = 41;
             //int decValue = Convert.ToInt32(hexValue, 16);
-            Char sendChar = System.Convert.ToChar(System.Convert.ToUInt32("0x41"));
-            String sendData = sendChar.ToString();
+            //Char sendChar = System.Convert.ToChar(System.Convert.ToUInt32("0x41"));
+            String sendData = "test";// sendChar.ToString();
            _comWrapper.ComportWrite(sendData, true);
         }
 
@@ -466,7 +483,21 @@ namespace pc_client
             //if()
         }
 
+        public void ComWrapper_NewDataReceivedEvent(object sender, string data)
+        {
 
+            lock (_lockObject)
+            {
+                if (_receiverForm.InvokeRequired)
+                {
+                    _windowDispatcher.BeginInvoke(new NewDataReceivedDelegate(ComWrapper_NewDataReceivedEvent), new object[] { sender, data });
+                    return;
+                }
+
+                rtfTerminalIn.AppendText(data);
+            }
+            
+        }
 
 
     }
