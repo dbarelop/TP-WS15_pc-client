@@ -61,13 +61,6 @@ namespace pc_client
             }
         }
 
-                ///////////////////////////////////////////////////////////////////////
-        #region Delegates
-
-        public delegate void NewSnifferDataEventHandler(object sender, string data, bool logCommand);
-        public event NewSnifferDataEventHandler NewSnifferDataEvent;
-
-        #endregion
                     
         
 
@@ -260,74 +253,6 @@ namespace pc_client
 
 
 
-        ///////////////////////////////////////////////////////////////////////
-        #region Control Keys
-
-        private void txtSendData_KeyDown(object sender, KeyEventArgs e)
-        {
-            // If the user presses [ENTER], send the data now
-            if (_keyHandled = e.KeyCode == Keys.Enter)
-            {
-                e.Handled = true;
-                SendData();
-                rtfTerminalOut.AppendText("\n");
-                _listIndex = 0;
-            }
-
-
-            else if (_keyHandled = e.KeyCode == Keys.Up)
-            {
-                if (_commandHistory.Count == 0)
-                {
-                    return;
-                }
-
-                string[] tmpLines = rtfTerminalOut.Lines;
-                tmpLines[tmpLines.Count() - 1] = "";
-                rtfTerminalOut.Lines = tmpLines;
-
-                int index = (_listIndex + (_commandHistory.Count - 1)) % _commandHistory.Count;
-
-                if (index == 0)
-                {
-                    rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
-                    return;
-                }
-
-                rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
-
-                --_listIndex;
-            }
-
-
-            else if (_keyHandled = e.KeyCode == Keys.Down)
-            {
-                if (_commandHistory.Count == 0)
-                {
-                    return;
-                }
-
-                string[] tmpLines = rtfTerminalOut.Lines;
-                tmpLines[tmpLines.Count() - 1] = "";
-                rtfTerminalOut.Lines = tmpLines;
-
-                int index = (_listIndex + (_commandHistory.Count - 1)) % _commandHistory.Count;
-
-                if (index == _commandHistory.Count - 1)
-                {
-                    rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
-                    return;
-                }
-
-                rtfTerminalOut.AppendText(_commandHistory.ElementAt(index));
-
-                ++_listIndex;
-            }
-        }
-
-        #endregion
-
-
 
         ///////////////////////////////////////////////////////////////////////
         #region MiscellaneousEvents
@@ -372,55 +297,6 @@ namespace pc_client
 
         #endregion
 
-
-
-        ///////////////////////////////////////////////////////////////////////
-        #region SnifferData
-
-        public void SnifferReceivedData(string input, bool isData, bool logCommand)
-        {
-            try
-            {
-                if (logCommand == false)
-                {
-                    return; //don't log because it's a manually typed command (already in the log)
-                    //to avoid duplicate logentries
-                }
-                if (input.Contains("\n"))
-                {
-                    rtfTerminalOut.AppendText(input);
-                }
-                else
-                {
-                    rtfTerminalOut.AppendText(input + "\n");
-                }
-            }
-            catch (Exception)
-            {
-
-                _error.StillReceivingDataError();
-            }
-        }
-
-        #endregion
-
-
-
-        ///////////////////////////////////////////////////////////////////////
-        #region SendDataTextfield
-
-        private void SendData()
-        {
-            string sendData = rtfTerminalOut.Lines[(rtfTerminalOut.Lines.Count() - 1)];
-
-            if (NewSnifferDataEvent != null)
-            {
-                _commandHistory.Add(sendData);
-                NewSnifferDataEvent(this, sendData, false);
-            }
-        }
-
-        #endregion
 
 
 
@@ -475,12 +351,16 @@ namespace pc_client
             //int decValue = Convert.ToInt32(hexValue, 16);
             //Char sendChar = System.Convert.ToChar(System.Convert.ToUInt32("0x41"));
             String sendData = "test";// sendChar.ToString();
-           _comWrapper.ComportWrite(sendData, true);
+            _comWrapper.ComportWrite(sendData, true);
         }
 
         private void rtfTerminalOut_KeyDown(object sender, KeyEventArgs e)
         {
-            //if()
+            if (e.KeyValue == (char)13)
+            {
+                String sendData = rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1];
+                _comWrapper.ComportWrite(sendData, true);
+            }
         }
 
         public void ComWrapper_NewDataReceivedEvent(object sender, string data)
