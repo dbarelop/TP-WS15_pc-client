@@ -20,7 +20,6 @@ namespace pc_client
         ComWrapper _comWrapper = null;
         ErrorMessageBoxes _error = null;
         Settings _settings = null;
-        int _listIndex = 0;
 
         private bool _keyHandled = false;
         List<string> _commandHistory = new List<string>();
@@ -347,10 +346,13 @@ namespace pc_client
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            int hexValue = 41;
-            //int decValue = Convert.ToInt32(hexValue, 16);
-            //Char sendChar = System.Convert.ToChar(System.Convert.ToUInt32("0x41"));
-            String sendData = "test";// sendChar.ToString();
+            String sendData = "FF";
+
+            if (chkHex.Checked == true)
+            {
+                sendData = Convert.ToString(Convert.ToInt32(sendData, 16), 2).PadLeft(12, '0');                
+            }
+
             _comWrapper.ComportWrite(sendData, true);
         }
 
@@ -359,7 +361,23 @@ namespace pc_client
             if (e.KeyValue == (char)13)
             {
                 String sendData = rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1];
-                _comWrapper.ComportWrite(sendData, true);
+
+                if (chkHex.Checked == true)
+                {
+                    char[] values = sendData.ToCharArray();
+                    foreach (char letter in values)
+                    {
+                        // Get the integral value of the character.
+                        int value = Convert.ToInt32(letter);
+                        // Convert the decimal value to a hexadecimal value in string form.
+                        string hexOutput = String.Format("{0:X}", value);
+                        _comWrapper.ComportWrite(hexOutput, true);
+                    }
+                }
+                else
+                {
+                    _comWrapper.ComportWrite(sendData, true);
+                }                
             }
         }
 
