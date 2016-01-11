@@ -163,6 +163,28 @@ namespace pc_client
             return retval;
         }
 
+        public bool ComportWrite(Char[] data, Int32 offset, Int32 count)
+        {
+            if ((Comport == null) || (!Comport.IsOpen))
+            {
+                return false;
+            }
+
+            bool retval = true;
+
+            try
+            {
+                Comport.Write(data, offset, count);
+            }
+            catch (Exception)
+            {
+                retval = false;
+            }
+
+            return retval;
+        }
+
+
 
 
         public string ComportRead()
