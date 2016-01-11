@@ -346,38 +346,14 @@ namespace pc_client
 
         private void btnSend_Click(object sender, EventArgs e)
         {
-            String sendData = "FF";
-
-            if (chkHex.Checked == true)
-            {
-                sendData = Convert.ToString(Convert.ToInt32(sendData, 16), 2).PadLeft(12, '0');                
-            }
-
-            _comWrapper.ComportWrite(sendData, true);
+            SendData();  
         }
 
         private void rtfTerminalOut_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyValue == (char)13)
             {
-                String sendData = rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1];
-
-                if (chkHex.Checked == true)
-                {
-                    char[] values = sendData.ToCharArray();
-                    foreach (char letter in values)
-                    {
-                        // Get the integral value of the character.
-                        int value = Convert.ToInt32(letter);
-                        // Convert the decimal value to a hexadecimal value in string form.
-                        string hexOutput = String.Format("{0:X}", value);
-                        _comWrapper.ComportWrite(hexOutput, true);
-                    }
-                }
-                else
-                {
-                    _comWrapper.ComportWrite(sendData, true);
-                }                
+                SendData();               
             }
         }
 
@@ -392,11 +368,96 @@ namespace pc_client
                     return;
                 }
 
-                rtfTerminalIn.AppendText(data);
+                if(chkInputType.Checked == true)
+                {
+                    rtfTerminalIn.AppendText(StringToHex(data)); 
+                }
+                else
+                {
+                    rtfTerminalIn.AppendText(data);
+                }                
             }
             
         }
 
+
+        private void SendData()
+        {
+            String sendData = rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1];
+
+            if (chkHex.Checked == true)
+            {
+                String subString;
+                char data;
+                for (int i = 0; i < sendData.Length; i += 2)
+                {
+                    subString = sendData.Substring(i, 2);
+                    int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
+                    data = (char)intValue;
+                    _comWrapper.ComportWrite(data);
+                }
+            }
+            else
+            {
+                _comWrapper.ComportWrite(sendData, true);
+            } 
+        }
+
+
+
+        private void chkInputType_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkInputType.Checked == true)
+            {
+                string value = rtfTerminalIn.Text;
+                rtfTerminalIn.Clear();
+                rtfTerminalIn.AppendText(StringToHex(value));
+            }
+            else
+            {
+                string value = rtfTerminalIn.Text;
+                rtfTerminalIn.Clear();
+                rtfTerminalIn.AppendText(HexToString(value));
+            }
+
+        }
+
+
+
+        private String StringToHex(String value)
+        {
+            String returnValue = "";
+            // Convert the string into a byte[].
+            byte[] asciiBytes = Encoding.ASCII.GetBytes(value);
+            
+            for (int i = 0; i < asciiBytes.Length; i++)
+            {
+                // Convert integer byte as a hex in a string variable
+                string hexValue = asciiBytes[i].ToString("X");
+                returnValue += hexValue;
+            }
+            return returnValue;
+        }
+
+
+        private String HexToString(String value)
+        {
+            String subString;
+            char data;
+            String returnValue = "";
+
+            for (int i = 0; i < value.Length; i += 2)
+            {
+                subString = value.Substring(i, 2);
+                int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
+                data = (char)intValue;
+                String intString = data.ToString();
+                returnValue += intString;                   
+            }
+            return returnValue;
+        }
+
+        
 
     }
 }

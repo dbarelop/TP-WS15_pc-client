@@ -52,7 +52,6 @@
     <Compile Include="Commands.cs" />
     <Compile Include="ComWrapper.cs" />
     <Compile Include="DataModel.cs" />
-    <Compile Include="Dispatcher.cs" />
     <Compile Include="ErrorMessageBoxes.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

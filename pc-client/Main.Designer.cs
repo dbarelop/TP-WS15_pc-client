@@ -63,7 +63,6 @@
             this.chkDTR = new System.Windows.Forms.CheckBox();
             this.btnOpenPort = new System.Windows.Forms.Button();
             this.chkRTS = new System.Windows.Forms.CheckBox();
-            this.chkHex = new System.Windows.Forms.CheckBox();
             this.chkSimulation = new System.Windows.Forms.CheckBox();
             this.cmbPortName = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -76,6 +75,7 @@
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
+            this.chkHex = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
             this.rtfTerminalIn = new System.Windows.Forms.RichTextBox();
             this.chkInputType = new System.Windows.Forms.CheckBox();
@@ -260,7 +260,7 @@
             // richTextBox1
             // 
             this.richTextBox1.Location = new System.Drawing.Point(85, 241);
-            this.richTextBox1.MaxLength = 4096;
+            this.richTextBox1.MaxLength = 512;
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(378, 155);
             this.richTextBox1.TabIndex = 13;
@@ -380,6 +380,7 @@
             this.tabPage2.Controls.Add(this.btnSend);
             this.tabPage2.Controls.Add(this.panel3);
             this.tabPage2.Controls.Add(this.label10);
+            this.tabPage2.Controls.Add(this.chkHex);
             this.tabPage2.Controls.Add(this.label9);
             this.tabPage2.Controls.Add(this.rtfTerminalIn);
             this.tabPage2.Controls.Add(this.chkInputType);
@@ -394,7 +395,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(369, 54);
+            this.btnSend.Location = new System.Drawing.Point(369, 89);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(83, 28);
             this.btnSend.TabIndex = 15;
@@ -408,7 +409,6 @@
             this.panel3.Controls.Add(this.chkDTR);
             this.panel3.Controls.Add(this.btnOpenPort);
             this.panel3.Controls.Add(this.chkRTS);
-            this.panel3.Controls.Add(this.chkHex);
             this.panel3.Controls.Add(this.chkSimulation);
             this.panel3.Controls.Add(this.cmbPortName);
             this.panel3.Controls.Add(this.label8);
@@ -428,7 +428,7 @@
             // chkDTR
             // 
             this.chkDTR.AutoSize = true;
-            this.chkDTR.Location = new System.Drawing.Point(85, 66);
+            this.chkDTR.Location = new System.Drawing.Point(99, 67);
             this.chkDTR.Name = "chkDTR";
             this.chkDTR.Size = new System.Drawing.Size(56, 20);
             this.chkDTR.TabIndex = 13;
@@ -455,20 +455,10 @@
             this.chkRTS.Text = "RTS";
             this.chkRTS.UseVisualStyleBackColor = true;
             // 
-            // chkHex
-            // 
-            this.chkHex.AutoSize = true;
-            this.chkHex.Location = new System.Drawing.Point(269, 66);
-            this.chkHex.Name = "chkHex";
-            this.chkHex.Size = new System.Drawing.Size(51, 20);
-            this.chkHex.TabIndex = 14;
-            this.chkHex.Text = "Hex";
-            this.chkHex.UseVisualStyleBackColor = true;
-            // 
             // chkSimulation
             // 
             this.chkSimulation.AutoSize = true;
-            this.chkSimulation.Location = new System.Drawing.Point(159, 66);
+            this.chkSimulation.Location = new System.Drawing.Point(188, 67);
             this.chkSimulation.Name = "chkSimulation";
             this.chkSimulation.Size = new System.Drawing.Size(89, 20);
             this.chkSimulation.TabIndex = 11;
@@ -574,6 +564,16 @@
             this.label10.TabIndex = 17;
             this.label10.Text = "Output";
             // 
+            // chkHex
+            // 
+            this.chkHex.AutoSize = true;
+            this.chkHex.Location = new System.Drawing.Point(369, 63);
+            this.chkHex.Name = "chkHex";
+            this.chkHex.Size = new System.Drawing.Size(51, 20);
+            this.chkHex.TabIndex = 14;
+            this.chkHex.Text = "Hex";
+            this.chkHex.UseVisualStyleBackColor = true;
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -599,12 +599,13 @@
             // 
             this.chkInputType.AutoSize = true;
             this.chkInputType.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
-            this.chkInputType.Location = new System.Drawing.Point(366, 256);
+            this.chkInputType.Location = new System.Drawing.Point(369, 253);
             this.chkInputType.Name = "chkInputType";
             this.chkInputType.Size = new System.Drawing.Size(86, 20);
             this.chkInputType.TabIndex = 15;
             this.chkInputType.Text = "Raw Data";
             this.chkInputType.UseVisualStyleBackColor = true;
+            this.chkInputType.CheckedChanged += new System.EventHandler(this.chkInputType_CheckedChanged);
             // 
             // rtfTerminalOut
             // 

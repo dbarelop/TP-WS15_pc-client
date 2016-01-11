@@ -25,8 +25,8 @@ namespace pc_client
 
         public const byte CH1 =     0x03; // 0000_0011
         public const byte CH2 =     0x04; // 0000_0100
-        public const byte RNG1 =    0x05; // 0000_0101
-        public const byte RNG2 =    0x06; // 0000_0110        
+        public const byte RNG1 =    0x05; // 0000_0101  +-2.50V
+        public const byte RNG2 =    0x06; // 0000_0110  +-0.16V      
 
         #endregion
     }

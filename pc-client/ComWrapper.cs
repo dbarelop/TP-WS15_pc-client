@@ -163,8 +163,11 @@ namespace pc_client
             return retval;
         }
 
-        public bool ComportWrite(Char[] data, Int32 offset, Int32 count)
+        public bool ComportWrite(Char data)
         {
+            char[] character = new char[1];
+            character[0] = data;
+
             if ((Comport == null) || (!Comport.IsOpen))
             {
                 return false;
@@ -174,7 +177,7 @@ namespace pc_client
 
             try
             {
-                Comport.Write(data, offset, count);
+                Comport.Write(character, 0, 1);
             }
             catch (Exception)
             {
