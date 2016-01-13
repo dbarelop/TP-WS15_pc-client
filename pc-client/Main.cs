@@ -383,18 +383,30 @@ namespace pc_client
 
         private void SendData()
         {
-            String sendData = rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1];
+            String sendData = ""; ;
+
+            if (rtfTerminalOut.Lines.Length > 0)
+            {
+                sendData = rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1];
+            }
 
             if (chkHex.Checked == true)
             {
-                String subString;
+                String subString = "";
                 char data;
                 for (int i = 0; i < sendData.Length; i += 2)
                 {
-                    subString = sendData.Substring(i, 2);
-                    int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
-                    data = (char)intValue;
-                    _comWrapper.ComportWrite(data);
+                    try
+                    {
+                        subString = sendData.Substring(i, 2);
+                        int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
+                        data = (char)intValue;
+                        _comWrapper.ComportWrite(data);
+                    }
+                    catch
+                    {
+                        _error.HexConversionError();
+                    }                    
                 }
             }
             else
@@ -457,7 +469,15 @@ namespace pc_client
             return returnValue;
         }
 
-        
 
+        private void btnClearOut_Click(object sender, EventArgs e)
+        {
+            rtfTerminalOut.Clear();
+        }
+
+        private void btnClearIn_Click(object sender, EventArgs e)
+        {
+            rtfTerminalIn.Clear();
+        }
     }
 }

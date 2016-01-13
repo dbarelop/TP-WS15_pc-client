@@ -27,10 +27,10 @@ namespace pc_client
         }
 
 
-        public void ReadTemperatureErrorOccurred()
+        public void HexConversionError()
         {
-            MessageBox.Show("Can't read the temperature",
-            "Error Occurred While Reading",
+            MessageBox.Show("Please type HEX-values double-digit or leading 0",
+            "Can't convert to HEX",
             MessageBoxButtons.OK,
             MessageBoxIcon.Error,
             MessageBoxDefaultButton.Button1);
