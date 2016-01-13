@@ -28,6 +28,9 @@ namespace pc_client
         Form _receiverForm = null;
         Object _lockObject = new Object();
 
+        private string Input
+        { get; set; }
+
         delegate void NewDataReceivedDelegate(object sender, string data);
 
         #endregion
@@ -374,10 +377,13 @@ namespace pc_client
 
                 if(chkInputType.Checked == true)
                 {
-                    rtfTerminalIn.AppendText(StringToHex(data)); 
+                    String receivedData = StringToHex(data);
+                    Input += receivedData;
+                    rtfTerminalIn.AppendText(receivedData); 
                 }
                 else
                 {
+                    Input += data;
                     rtfTerminalIn.AppendText(data);
                 }                
             }
@@ -424,15 +430,15 @@ namespace pc_client
 
         private void chkInputType_CheckedChanged(object sender, EventArgs e)
         {
+            string value = Input;
+
             if (chkInputType.Checked == true)
             {
-                string value = rtfTerminalIn.Text;
                 rtfTerminalIn.Clear();
                 rtfTerminalIn.AppendText(StringToHex(value));
             }
             else
             {
-                string value = rtfTerminalIn.Text;
                 rtfTerminalIn.Clear();
                 rtfTerminalIn.AppendText(HexToString(value));
             }
@@ -472,12 +478,7 @@ namespace pc_client
                 returnValue += intString;                   
             }
             return returnValue;
-<<<<<<< HEAD
         }        
-=======
-        }
-
->>>>>>> 1356ad8063c5fbdb76c50de945497d81d769dd90
 
         private void btnClearOut_Click(object sender, EventArgs e)
         {
@@ -487,6 +488,7 @@ namespace pc_client
         private void btnClearIn_Click(object sender, EventArgs e)
         {
             rtfTerminalIn.Clear();
+            Input = "";
         }
     }
 }

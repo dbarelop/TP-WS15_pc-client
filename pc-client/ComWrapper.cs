@@ -2,6 +2,7 @@
 using System.IO.Ports;
 using System.IO;
 using System.Windows.Forms;
+using System.Text;
 
 namespace pc_client
 {
@@ -210,17 +211,17 @@ namespace pc_client
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             byte[] data = ComportReadBytes();
-            String dataString = "";
-            for(int i = 0; i < data.Length)
-            _input += data;
+            ASCIIEncoding ascii = new ASCIIEncoding();
+            String dataString = ascii.GetString(data);
+ 
 
-            if (data != "")
+            if (dataString != "")
             {
                 if (NewDataReceivedEvent != null)
                 {
-                    NewDataReceivedEvent(this, data);
+                    NewDataReceivedEvent(this, dataString);
                 }
-            }        
+            }
         }
         
 
