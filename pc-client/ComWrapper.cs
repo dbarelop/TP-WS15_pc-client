@@ -198,9 +198,20 @@ namespace pc_client
 
 
 
+        public byte[] ComportReadBytes()
+        {
+            byte[] data = new byte[Comport.BytesToRead];
+            Comport.Read(data, 0, data.Length);
+            return data;
+        }
+
+
+
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            string data = ComportRead();
+            byte[] data = ComportReadBytes();
+            String dataString = "";
+            for(int i = 0; i < data.Length)
             _input += data;
 
             if (data != "")
@@ -209,8 +220,7 @@ namespace pc_client
                 {
                     NewDataReceivedEvent(this, data);
                 }
-            }
-        
+            }        
         }
         
 

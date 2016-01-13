@@ -80,6 +80,8 @@
             this.rtfTerminalIn = new System.Windows.Forms.RichTextBox();
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
+            this.btnClearOut = new System.Windows.Forms.Button();
+            this.btnClearIn = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -377,6 +379,8 @@
             // tabPage2
             // 
             this.tabPage2.BackColor = System.Drawing.Color.Gainsboro;
+            this.tabPage2.Controls.Add(this.btnClearIn);
+            this.tabPage2.Controls.Add(this.btnClearOut);
             this.tabPage2.Controls.Add(this.btnSend);
             this.tabPage2.Controls.Add(this.panel3);
             this.tabPage2.Controls.Add(this.label10);
@@ -395,7 +399,7 @@
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(369, 89);
+            this.btnSend.Location = new System.Drawing.Point(369, 84);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(83, 28);
             this.btnSend.TabIndex = 15;
@@ -567,7 +571,7 @@
             // chkHex
             // 
             this.chkHex.AutoSize = true;
-            this.chkHex.Location = new System.Drawing.Point(369, 63);
+            this.chkHex.Location = new System.Drawing.Point(369, 58);
             this.chkHex.Name = "chkHex";
             this.chkHex.Size = new System.Drawing.Size(51, 20);
             this.chkHex.TabIndex = 14;
@@ -616,6 +620,26 @@
             this.rtfTerminalOut.TabIndex = 1;
             this.rtfTerminalOut.Text = "";
             this.rtfTerminalOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rtfTerminalOut_KeyDown);
+            // 
+            // btnClearOut
+            // 
+            this.btnClearOut.Location = new System.Drawing.Point(369, 133);
+            this.btnClearOut.Name = "btnClearOut";
+            this.btnClearOut.Size = new System.Drawing.Size(83, 28);
+            this.btnClearOut.TabIndex = 19;
+            this.btnClearOut.Text = "Clear";
+            this.btnClearOut.UseVisualStyleBackColor = true;
+            this.btnClearOut.Click += new System.EventHandler(this.btnClearOut_Click);
+            // 
+            // btnClearIn
+            // 
+            this.btnClearIn.Location = new System.Drawing.Point(369, 295);
+            this.btnClearIn.Name = "btnClearIn";
+            this.btnClearIn.Size = new System.Drawing.Size(83, 28);
+            this.btnClearIn.TabIndex = 20;
+            this.btnClearIn.Text = "Clear";
+            this.btnClearIn.UseVisualStyleBackColor = true;
+            this.btnClearIn.Click += new System.EventHandler(this.btnClearIn_Click);
             // 
             // MainForm
             // 
@@ -696,7 +720,8 @@
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button btnSend;
-
+        private System.Windows.Forms.Button btnClearIn;
+        private System.Windows.Forms.Button btnClearOut;
     }
 }
 
