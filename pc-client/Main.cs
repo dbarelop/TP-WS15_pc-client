@@ -48,9 +48,8 @@ namespace pc_client
 
             InitializeControlValues();
             EnableControls();        
-
-            #endregion
         }
+
 
         ~MainForm()
         {
@@ -60,9 +59,10 @@ namespace pc_client
             }
         }
 
-                    
-        
+        #endregion
 
+                           
+        
         ///////////////////////////////////////////////////////////////////////
         #region InitializeControlValues
 
@@ -252,7 +252,6 @@ namespace pc_client
 
 
 
-
         ///////////////////////////////////////////////////////////////////////
         #region MiscellaneousEvents
 
@@ -295,7 +294,6 @@ namespace pc_client
         }
 
         #endregion
-
 
 
 
@@ -344,10 +342,14 @@ namespace pc_client
 
         # endregion
 
+
+
         private void btnSend_Click(object sender, EventArgs e)
         {
             SendData();  
         }
+
+
 
         private void rtfTerminalOut_KeyDown(object sender, KeyEventArgs e)
         {
@@ -356,6 +358,8 @@ namespace pc_client
                 SendData();               
             }
         }
+
+
 
         public void ComWrapper_NewDataReceivedEvent(object sender, string data)
         {
@@ -379,6 +383,7 @@ namespace pc_client
             }
             
         }
+
 
 
         private void SendData()
@@ -419,7 +424,6 @@ namespace pc_client
                 rtfTerminalIn.Clear();
                 rtfTerminalIn.AppendText(HexToString(value));
             }
-
         }
 
 
@@ -440,6 +444,7 @@ namespace pc_client
         }
 
 
+
         private String HexToString(String value)
         {
             String subString;
@@ -455,9 +460,7 @@ namespace pc_client
                 returnValue += intString;                   
             }
             return returnValue;
-        }
-
-        
+        }        
 
     }
 }

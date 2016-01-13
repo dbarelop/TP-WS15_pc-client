@@ -223,7 +223,7 @@ namespace pc_client
 
         public object[] GetBaudRateRange()
         {
-            object[] range = { 2400, 4800, 6400, 7200, 9600, 14400, 19200, 28800, 38400, 57600, 76800, 115200, 230400 };
+            object[] range = { 1200, 2400, 4800, 9600, 19200, 38400, 57600, 115200 };
             return range;
         }
 

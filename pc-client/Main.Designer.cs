@@ -597,6 +597,7 @@
             // 
             // chkInputType
             // 
+            this.chkInputType.AccessibleDescription = "";
             this.chkInputType.AutoSize = true;
             this.chkInputType.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
             this.chkInputType.Location = new System.Drawing.Point(369, 253);
