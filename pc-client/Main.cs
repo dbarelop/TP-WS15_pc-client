@@ -344,11 +344,6 @@ namespace pc_client
             rbV1.Enabled = false;
             rbV2.Enabled = false;
             btnSend.Enabled = false;
-
-            if (rtfTerminalIn.Text.Length == 0)
-            {
-                btnClearIn.Enabled = false;
-            }
         }
 
 
@@ -374,12 +369,6 @@ namespace pc_client
             chkAD2.Enabled = true;
             rbV1.Enabled = true;
             rbV2.Enabled = true;
-            btnSend.Enabled = true;
-
-            if(rtfTerminalIn.Text.Length > 0)
-            {
-                btnClearIn.Enabled = true;
-            }
         }
 
         # endregion
@@ -417,7 +406,7 @@ namespace pc_client
 
                 System.Buffer.BlockCopy(_receivedInput, 0, newData, 0, _receivedInput.Length);
                 System.Buffer.BlockCopy(data, 0, newData, _receivedInput.Length, data.Length);
-                _receivedInput = newData;
+                _receivedInput = newData;                
 
                 if (chkInputType.Checked == true)
                 {
@@ -531,6 +520,7 @@ namespace pc_client
         private void btnClearOut_Click(object sender, EventArgs e)
         {
             rtfTerminalOut.Clear();
+            btnClearOut.Enabled = false;
         }
 
 
@@ -538,6 +528,7 @@ namespace pc_client
         private void btnClearIn_Click(object sender, EventArgs e)
         {
             rtfTerminalIn.Clear();
+            btnClearIn.Enabled = false;
             _receivedInput = new byte[0]; 
         }
 
@@ -627,6 +618,40 @@ namespace pc_client
         }
 
         #endregion
+
+
+
+        private void rtfTerminalOut_TextChanged(object sender, EventArgs e)
+        {
+            if(rtfTerminalOut.Text.Length > 0)
+            {
+                btnClearOut.Enabled = true;
+            }
+
+            if (rtfTerminalOut.Lines.Length == 0)
+            {
+                btnSend.Enabled = false;
+                btnClearOut.Enabled = false;
+                return; //nothing left to do
+            }
+
+            if(rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1].Length > 0)
+            {
+                btnSend.Enabled = true;
+            }
+            else
+            {
+                btnSend.Enabled = false;
+            }
+        }
+
+        private void rtfTerminalIn_TextChanged(object sender, EventArgs e)
+        {
+            if (rtfTerminalIn.Text.Length > 0)
+            {
+                btnClearIn.Enabled = true;
+            }
+        }
 
     }
 }

@@ -35,6 +35,7 @@
             this.chkAD2 = new System.Windows.Forms.CheckBox();
             this.chkAD1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.btnConnect = new System.Windows.Forms.Button();
             this._portLabel = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
@@ -84,7 +85,6 @@
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.btnConnect = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -167,6 +167,17 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(504, 67);
             this.panel2.TabIndex = 17;
+            // 
+            // btnConnect
+            // 
+            this.btnConnect.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnConnect.Location = new System.Drawing.Point(268, 36);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(75, 23);
+            this.btnConnect.TabIndex = 20;
+            this.btnConnect.Text = "Connect";
+            this.btnConnect.UseVisualStyleBackColor = false;
+            this.btnConnect.Click += new System.EventHandler(this.btnOpenPort_Click);
             // 
             // _portLabel
             // 
@@ -403,6 +414,7 @@
             // 
             // btnClearIn
             // 
+            this.btnClearIn.Enabled = false;
             this.btnClearIn.Location = new System.Drawing.Point(369, 295);
             this.btnClearIn.Name = "btnClearIn";
             this.btnClearIn.Size = new System.Drawing.Size(83, 28);
@@ -413,6 +425,7 @@
             // 
             // btnClearOut
             // 
+            this.btnClearOut.Enabled = false;
             this.btnClearOut.Location = new System.Drawing.Point(369, 133);
             this.btnClearOut.Name = "btnClearOut";
             this.btnClearOut.Size = new System.Drawing.Size(83, 28);
@@ -622,6 +635,7 @@
             this.rtfTerminalIn.Size = new System.Drawing.Size(356, 130);
             this.rtfTerminalIn.TabIndex = 16;
             this.rtfTerminalIn.Text = "";
+            this.rtfTerminalIn.TextChanged += new System.EventHandler(this.rtfTerminalIn_TextChanged);
             // 
             // chkInputType
             // 
@@ -643,22 +657,12 @@
             this.rtfTerminalOut.Size = new System.Drawing.Size(356, 130);
             this.rtfTerminalOut.TabIndex = 1;
             this.rtfTerminalOut.Text = "";
+            this.rtfTerminalOut.TextChanged += new System.EventHandler(this.rtfTerminalOut_TextChanged);
             this.rtfTerminalOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rtfTerminalOut_KeyDown);
             // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // btnConnect
-            // 
-            this.btnConnect.BackColor = System.Drawing.Color.Gainsboro;
-            this.btnConnect.Location = new System.Drawing.Point(268, 36);
-            this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(75, 23);
-            this.btnConnect.TabIndex = 20;
-            this.btnConnect.Text = "Connect";
-            this.btnConnect.UseVisualStyleBackColor = false;
-            this.btnConnect.Click += new System.EventHandler(this.btnOpenPort_Click);
             // 
             // MainForm
             // 
