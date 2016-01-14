@@ -28,13 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.label13 = new System.Windows.Forms.Label();
+            this._portLabel = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -58,6 +59,8 @@
             this.btnReadTemperatur = new System.Windows.Forms.Button();
             this.btnResetHardware = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.btnClearIn = new System.Windows.Forms.Button();
+            this.btnClearOut = new System.Windows.Forms.Button();
             this.btnSend = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
             this.chkDTR = new System.Windows.Forms.CheckBox();
@@ -80,8 +83,7 @@
             this.rtfTerminalIn = new System.Windows.Forms.RichTextBox();
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
-            this.btnClearOut = new System.Windows.Forms.Button();
-            this.btnClearIn = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -155,7 +157,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Silver;
-            this.panel2.Controls.Add(this.label13);
+            this.panel2.Controls.Add(this._portLabel);
             this.panel2.Controls.Add(this.label12);
             this.panel2.Controls.Add(this.label11);
             this.panel2.Controls.Add(this.panel1);
@@ -164,14 +166,14 @@
             this.panel2.Size = new System.Drawing.Size(504, 67);
             this.panel2.TabIndex = 17;
             // 
-            // label13
+            // _portLabel
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(92, 39);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(126, 16);
-            this.label13.TabIndex = 19;
-            this.label13.Text = "Connected to ComX";
+            this._portLabel.AutoSize = true;
+            this._portLabel.Location = new System.Drawing.Point(92, 39);
+            this._portLabel.Name = "_portLabel";
+            this._portLabel.Size = new System.Drawing.Size(126, 16);
+            this._portLabel.TabIndex = 19;
+            this._portLabel.Text = "Connected to ComX";
             // 
             // label12
             // 
@@ -397,6 +399,26 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "ComPort";
             // 
+            // btnClearIn
+            // 
+            this.btnClearIn.Location = new System.Drawing.Point(369, 295);
+            this.btnClearIn.Name = "btnClearIn";
+            this.btnClearIn.Size = new System.Drawing.Size(83, 28);
+            this.btnClearIn.TabIndex = 20;
+            this.btnClearIn.Text = "Clear";
+            this.btnClearIn.UseVisualStyleBackColor = true;
+            this.btnClearIn.Click += new System.EventHandler(this.btnClearIn_Click);
+            // 
+            // btnClearOut
+            // 
+            this.btnClearOut.Location = new System.Drawing.Point(369, 133);
+            this.btnClearOut.Name = "btnClearOut";
+            this.btnClearOut.Size = new System.Drawing.Size(83, 28);
+            this.btnClearOut.TabIndex = 19;
+            this.btnClearOut.Text = "Clear";
+            this.btnClearOut.UseVisualStyleBackColor = true;
+            this.btnClearOut.Click += new System.EventHandler(this.btnClearOut_Click);
+            // 
             // btnSend
             // 
             this.btnSend.Location = new System.Drawing.Point(369, 84);
@@ -621,25 +643,9 @@
             this.rtfTerminalOut.Text = "";
             this.rtfTerminalOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rtfTerminalOut_KeyDown);
             // 
-            // btnClearOut
+            // timer1
             // 
-            this.btnClearOut.Location = new System.Drawing.Point(369, 133);
-            this.btnClearOut.Name = "btnClearOut";
-            this.btnClearOut.Size = new System.Drawing.Size(83, 28);
-            this.btnClearOut.TabIndex = 19;
-            this.btnClearOut.Text = "Clear";
-            this.btnClearOut.UseVisualStyleBackColor = true;
-            this.btnClearOut.Click += new System.EventHandler(this.btnClearOut_Click);
-            // 
-            // btnClearIn
-            // 
-            this.btnClearIn.Location = new System.Drawing.Point(369, 295);
-            this.btnClearIn.Name = "btnClearIn";
-            this.btnClearIn.Size = new System.Drawing.Size(83, 28);
-            this.btnClearIn.TabIndex = 20;
-            this.btnClearIn.Text = "Clear";
-            this.btnClearIn.UseVisualStyleBackColor = true;
-            this.btnClearIn.Click += new System.EventHandler(this.btnClearIn_Click);
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // MainForm
             // 
@@ -715,13 +721,14 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Panel panel3;
-        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label _portLabel;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.CheckBox checkBox2;
         private System.Windows.Forms.CheckBox checkBox1;
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Button btnClearIn;
         private System.Windows.Forms.Button btnClearOut;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

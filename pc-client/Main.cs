@@ -20,6 +20,7 @@ namespace pc_client
         ComWrapper _comWrapper = null;
         ErrorMessageBoxes _error = null;
         Settings _settings = null;
+        int _waitCounter = 1;
 
         private bool _keyHandled = false;
         List<string> _commandHistory = new List<string>();
@@ -50,7 +51,8 @@ namespace pc_client
             _receivedInput = new byte[0];
 
             InitializeControlValues();
-            EnableControls();        
+            EnableControls();
+            InitializeTimer();
         }
 
 
@@ -501,5 +503,93 @@ namespace pc_client
             rtfTerminalIn.Clear();
             _receivedInput = new byte[0]; 
         }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region PortStatus
+
+        private void InitializeTimer()
+        {
+            timer1.Interval = 600;
+            timer1.Enabled = true;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+        }
+
+        private void timer1_Tick(object sender, System.EventArgs e)
+        {
+            bool portAvailable = false;
+            string[] availablePortNames = SerialPort.GetPortNames();
+            String portName = cmbPortName.Text;
+
+            string waiting = "";
+
+            for (int i = 0; i < availablePortNames.Length; i++)
+            {
+                if (portName == availablePortNames[i])
+                {
+                    portAvailable = true;
+                }
+            }
+
+            for (int i = 0; i < _waitCounter; i++)
+            {
+                waiting += ".";
+            }
+            _waitCounter++;
+            if (_waitCounter > 4)
+            {
+                _waitCounter = 1;
+            }
+
+            if (_comWrapper.ComportIsOpen())
+            {
+                PortInUse(portName, waiting);
+                return;
+            }
+            if (portAvailable == true)
+            {
+                PortAvailable(portName, waiting);
+            }
+            else
+            {
+                PortNotAvailable(portName, waiting);
+            }
+        }
+
+        #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region PortStatusControl
+
+        private void PortInUse(string portname, string waiting)
+        {
+            string text = " is connected";
+
+            _portLabel.Text = portname + text + waiting;
+            _portLabel.ForeColor = System.Drawing.Color.Yellow;
+
+        }
+
+
+        private void PortAvailable(string portname, string waiting)
+        {
+            string text = " available";
+
+            _portLabel.Text = portname + text + waiting;
+            _portLabel.ForeColor = System.Drawing.Color.Black;
+        }
+
+
+        private void PortNotAvailable(string portname, string waiting)
+        {
+            string text = " not available! ";
+            
+            _portLabel.Text = portname + text + waiting;
+            _portLabel.ForeColor = System.Drawing.Color.Black;
+        }
+
+        #endregion
+
     }
 }
