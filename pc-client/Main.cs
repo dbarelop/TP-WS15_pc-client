@@ -384,13 +384,11 @@ namespace pc_client
                 {
                     rtfTerminalIn.Clear();
 
-                    String receivedData = StringToHex(System.Text.Encoding.Default.GetString(_receivedInput));
-
-                    rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, 0, 1)));
+                    rtfTerminalIn.AppendText(HexToString(_receivedInput[0]));
                     for (int i = 1; i < _receivedInput.Length; i++)
                     {
                         rtfTerminalIn.AppendText(":");
-                        rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, i, 1)));
+                        rtfTerminalIn.AppendText(HexToString(_receivedInput[i]));
                     }
                 }
                 else
@@ -446,19 +444,19 @@ namespace pc_client
                 return; // nothing to convert
             }
 
+            rtfTerminalIn.Clear();
+
             if (chkInputType.Checked == true)
-            {
-                rtfTerminalIn.Clear();
-                rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, 0, 1)));
+            {              
+                rtfTerminalIn.AppendText(HexToString(_receivedInput[0]));
                 for (int i = 1; i < _receivedInput.Length; i++)
                 {
                     rtfTerminalIn.AppendText(":");
-                    rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, i, 1)));
+                    rtfTerminalIn.AppendText(HexToString(_receivedInput[i]));
                 }
             }
             else
             {
-                rtfTerminalIn.Clear();
                 rtfTerminalIn.AppendText(System.Text.Encoding.Default.GetString(_receivedInput));
             }
         }
@@ -482,27 +480,21 @@ namespace pc_client
 
 
 
-        private String HexToString(String value)
+        private String HexToString(byte hexValue)
         {
-            String subString;
-            char data;
-            String returnValue = "";
-
-            for (int i = 0; i < value.Length; i += 2)
-            {
-                subString = value.Substring(i, 2);
-                int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
-                data = (char)intValue;
-                String intString = data.ToString();
-                returnValue += intString;                   
-            }
-            return returnValue;
+            int value = Convert.ToInt32(hexValue);
+            string hexOutput = String.Format("{0:x}", value);
+            return hexOutput;
         }        
+
+
 
         private void btnClearOut_Click(object sender, EventArgs e)
         {
             rtfTerminalOut.Clear();
         }
+
+
 
         private void btnClearIn_Click(object sender, EventArgs e)
         {
