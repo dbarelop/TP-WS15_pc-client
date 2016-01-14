@@ -10,7 +10,7 @@ namespace pc_client
     {
         ///////////////////////////////////////////////////////////////////////
         #region delegates
-        public delegate void NewDataReceivedEventHandler(object sender, string data);
+        public delegate void NewDataReceivedEventHandler(object sender, byte[] data);
         public event NewDataReceivedEventHandler NewDataReceivedEvent;
 
         public delegate void NewRequestReceivedEventHandler(object sender, string data, bool logCommand);
@@ -211,15 +211,12 @@ namespace pc_client
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             byte[] data = ComportReadBytes();
-            ASCIIEncoding ascii = new ASCIIEncoding();
-            String dataString = ascii.GetString(data);
- 
 
-            if (dataString != "")
+            if (data.Length > 0)
             {
                 if (NewDataReceivedEvent != null)
                 {
-                    NewDataReceivedEvent(this, dataString);
+                    NewDataReceivedEvent(this, data);
                 }
             }
         }

@@ -28,10 +28,9 @@ namespace pc_client
         Form _receiverForm = null;
         Object _lockObject = new Object();
 
-        private string Input
-        { get; set; }
+        private static byte[] _receivedInput = null;
 
-        delegate void NewDataReceivedDelegate(object sender, string data);
+        delegate void NewDataReceivedDelegate(object sender, byte[] data);
 
         #endregion
 
@@ -48,6 +47,7 @@ namespace pc_client
             _error = new ErrorMessageBoxes();
             _windowDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
             _receiverForm = this;
+            _receivedInput = new byte[0];
 
             InitializeControlValues();
             EnableControls();        
@@ -364,8 +364,9 @@ namespace pc_client
 
 
 
-        public void ComWrapper_NewDataReceivedEvent(object sender, string data)
+        public void ComWrapper_NewDataReceivedEvent(object sender, byte[] data)
         {
+            byte[] newData = new byte[_receivedInput.Length + data.Length];
 
             lock (_lockObject)
             {
@@ -375,16 +376,26 @@ namespace pc_client
                     return;
                 }
 
-                if(chkInputType.Checked == true)
+                System.Buffer.BlockCopy(_receivedInput, 0, newData, 0, _receivedInput.Length);
+                System.Buffer.BlockCopy(data, 0, newData, _receivedInput.Length, data.Length);
+                _receivedInput = newData;
+
+                if (chkInputType.Checked == true)
                 {
-                    String receivedData = StringToHex(data);
-                    Input += receivedData;
-                    rtfTerminalIn.AppendText(receivedData); 
+                    rtfTerminalIn.Clear();
+
+                    String receivedData = StringToHex(System.Text.Encoding.Default.GetString(_receivedInput));
+
+                    rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, 0, 1)));
+                    for (int i = 1; i < _receivedInput.Length; i++)
+                    {
+                        rtfTerminalIn.AppendText(":");
+                        rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, i, 1)));
+                    }
                 }
                 else
                 {
-                    Input += data;
-                    rtfTerminalIn.AppendText(data);
+                    rtfTerminalIn.Text  = System.Text.Encoding.Default.GetString(_receivedInput);
                 }                
             }
             
@@ -430,17 +441,25 @@ namespace pc_client
 
         private void chkInputType_CheckedChanged(object sender, EventArgs e)
         {
-            string value = Input;
+            if(_receivedInput.Length == 0)
+            {
+                return; // nothing to convert
+            }
 
             if (chkInputType.Checked == true)
             {
                 rtfTerminalIn.Clear();
-                rtfTerminalIn.AppendText(StringToHex(value));
+                rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, 0, 1)));
+                for (int i = 1; i < _receivedInput.Length; i++)
+                {
+                    rtfTerminalIn.AppendText(":");
+                    rtfTerminalIn.AppendText(StringToHex(System.Text.Encoding.Default.GetString(_receivedInput, i, 1)));
+                }
             }
             else
             {
                 rtfTerminalIn.Clear();
-                rtfTerminalIn.AppendText(HexToString(value));
+                rtfTerminalIn.AppendText(System.Text.Encoding.Default.GetString(_receivedInput));
             }
         }
 
@@ -488,7 +507,7 @@ namespace pc_client
         private void btnClearIn_Click(object sender, EventArgs e)
         {
             rtfTerminalIn.Clear();
-            Input = "";
+            _receivedInput = new byte[0]; 
         }
     }
 }
