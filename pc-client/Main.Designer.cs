@@ -32,8 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.checkBox2 = new System.Windows.Forms.CheckBox();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chkAD2 = new System.Windows.Forms.CheckBox();
+            this.chkAD1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this._portLabel = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -43,7 +43,7 @@
             this.rbV1 = new System.Windows.Forms.RadioButton();
             this.btnWriteEprom = new System.Windows.Forms.Button();
             this.btnReadEprom = new System.Windows.Forms.Button();
-            this.chkPoll = new System.Windows.Forms.CheckBox();
+            this.chkPollTemp = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.btnReadADC2 = new System.Windows.Forms.Button();
@@ -84,6 +84,7 @@
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.btnConnect = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -106,12 +107,12 @@
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.Gainsboro;
-            this.tabPage1.Controls.Add(this.checkBox2);
-            this.tabPage1.Controls.Add(this.checkBox1);
+            this.tabPage1.Controls.Add(this.chkAD2);
+            this.tabPage1.Controls.Add(this.chkAD1);
             this.tabPage1.Controls.Add(this.panel2);
             this.tabPage1.Controls.Add(this.btnWriteEprom);
             this.tabPage1.Controls.Add(this.btnReadEprom);
-            this.tabPage1.Controls.Add(this.chkPoll);
+            this.tabPage1.Controls.Add(this.chkPollTemp);
             this.tabPage1.Controls.Add(this.label17);
             this.tabPage1.Controls.Add(this.richTextBox1);
             this.tabPage1.Controls.Add(this.btnReadADC2);
@@ -134,29 +135,30 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Start";
             // 
-            // checkBox2
+            // chkAD2
             // 
-            this.checkBox2.AutoSize = true;
-            this.checkBox2.Location = new System.Drawing.Point(375, 132);
-            this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(50, 20);
-            this.checkBox2.TabIndex = 19;
-            this.checkBox2.Text = "Poll";
-            this.checkBox2.UseVisualStyleBackColor = true;
+            this.chkAD2.AutoSize = true;
+            this.chkAD2.Location = new System.Drawing.Point(375, 132);
+            this.chkAD2.Name = "chkAD2";
+            this.chkAD2.Size = new System.Drawing.Size(50, 20);
+            this.chkAD2.TabIndex = 19;
+            this.chkAD2.Text = "Poll";
+            this.chkAD2.UseVisualStyleBackColor = true;
             // 
-            // checkBox1
+            // chkAD1
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(375, 94);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(50, 20);
-            this.checkBox1.TabIndex = 18;
-            this.checkBox1.Text = "Poll";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.chkAD1.AutoSize = true;
+            this.chkAD1.Location = new System.Drawing.Point(375, 94);
+            this.chkAD1.Name = "chkAD1";
+            this.chkAD1.Size = new System.Drawing.Size(50, 20);
+            this.chkAD1.TabIndex = 18;
+            this.chkAD1.Text = "Poll";
+            this.chkAD1.UseVisualStyleBackColor = true;
             // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Silver;
+            this.panel2.Controls.Add(this.btnConnect);
             this.panel2.Controls.Add(this._portLabel);
             this.panel2.Controls.Add(this.label12);
             this.panel2.Controls.Add(this.label11);
@@ -242,15 +244,15 @@
             this.btnReadEprom.Text = "Read";
             this.btnReadEprom.UseVisualStyleBackColor = true;
             // 
-            // chkPoll
+            // chkPollTemp
             // 
-            this.chkPoll.AutoSize = true;
-            this.chkPoll.Location = new System.Drawing.Point(375, 56);
-            this.chkPoll.Name = "chkPoll";
-            this.chkPoll.Size = new System.Drawing.Size(50, 20);
-            this.chkPoll.TabIndex = 14;
-            this.chkPoll.Text = "Poll";
-            this.chkPoll.UseVisualStyleBackColor = true;
+            this.chkPollTemp.AutoSize = true;
+            this.chkPollTemp.Location = new System.Drawing.Point(375, 56);
+            this.chkPollTemp.Name = "chkPollTemp";
+            this.chkPollTemp.Size = new System.Drawing.Size(50, 20);
+            this.chkPollTemp.TabIndex = 14;
+            this.chkPollTemp.Text = "Poll";
+            this.chkPollTemp.UseVisualStyleBackColor = true;
             // 
             // label17
             // 
@@ -647,6 +649,17 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // btnConnect
+            // 
+            this.btnConnect.BackColor = System.Drawing.Color.Gainsboro;
+            this.btnConnect.Location = new System.Drawing.Point(268, 36);
+            this.btnConnect.Name = "btnConnect";
+            this.btnConnect.Size = new System.Drawing.Size(75, 23);
+            this.btnConnect.TabIndex = 20;
+            this.btnConnect.Text = "Connect";
+            this.btnConnect.UseVisualStyleBackColor = false;
+            this.btnConnect.Click += new System.EventHandler(this.btnOpenPort_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -710,7 +723,7 @@
         private System.Windows.Forms.Button btnReadADC1;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.TextBox tbADChannel2;
-        private System.Windows.Forms.CheckBox chkPoll;
+        private System.Windows.Forms.CheckBox chkPollTemp;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.RichTextBox richTextBox1;
         private System.Windows.Forms.Button btnWriteEprom;
@@ -723,12 +736,13 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Label _portLabel;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.CheckBox checkBox2;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chkAD2;
+        private System.Windows.Forms.CheckBox chkAD1;
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Button btnClearIn;
         private System.Windows.Forms.Button btnClearOut;
         private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Button btnConnect;
     }
 }
 

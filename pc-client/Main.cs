@@ -138,12 +138,14 @@ namespace pc_client
             if (btnOpenPort.Text == "Open Port")
             {
                 btnOpenPort.Text = "Close Port";
+                btnConnect.Text = "Close";
                 DisableSettingsControls();
                 open_port();
             }
             else if (btnOpenPort.Text == "Close Port")
             {
                 btnOpenPort.Text = "Open Port";
+                btnConnect.Text = "Connect";
                 EnableSettingsControls();
                 close_port();
             }
@@ -329,6 +331,24 @@ namespace pc_client
             cmbStopBits.Enabled = true;
             cmbDataBits.Enabled = true;
             chkSimulation.Enabled = true;
+
+            btnReadADC1.Enabled = false;
+            btnReadADC2.Enabled = false;
+            btnReadEprom.Enabled = false;
+            btnReadTemperatur.Enabled = false;
+            btnResetHardware.Enabled = false;
+            btnWriteEprom.Enabled = false;
+            chkPollTemp.Enabled = false;
+            chkAD1.Enabled = false;
+            chkAD2.Enabled = false;
+            rbV1.Enabled = false;
+            rbV2.Enabled = false;
+            btnSend.Enabled = false;
+
+            if (rtfTerminalIn.Text.Length == 0)
+            {
+                btnClearIn.Enabled = false;
+            }
         }
 
 
@@ -342,7 +362,24 @@ namespace pc_client
             cmbBaudRate.Enabled = false;
             cmbStopBits.Enabled = false;
             cmbDataBits.Enabled = false;
-            chkSimulation.Enabled = false;
+
+            btnReadADC1.Enabled = true;
+            btnReadADC2.Enabled = true;
+            btnReadEprom.Enabled = true;
+            btnReadTemperatur.Enabled = true;
+            btnResetHardware.Enabled = true;
+            btnWriteEprom.Enabled = true;
+            chkPollTemp.Enabled = true;
+            chkAD1.Enabled = true;
+            chkAD2.Enabled = true;
+            rbV1.Enabled = true;
+            rbV2.Enabled = true;
+            btnSend.Enabled = true;
+
+            if(rtfTerminalIn.Text.Length > 0)
+            {
+                btnClearIn.Enabled = true;
+            }
         }
 
         # endregion
@@ -567,7 +604,7 @@ namespace pc_client
             string text = " is connected";
 
             _portLabel.Text = portname + text + waiting;
-            _portLabel.ForeColor = System.Drawing.Color.Yellow;
+            _portLabel.ForeColor = System.Drawing.Color.Black;
 
         }
 
@@ -586,7 +623,7 @@ namespace pc_client
             string text = " not available! ";
             
             _portLabel.Text = portname + text + waiting;
-            _portLabel.ForeColor = System.Drawing.Color.Black;
+            _portLabel.ForeColor = System.Drawing.Color.DimGray;
         }
 
         #endregion
