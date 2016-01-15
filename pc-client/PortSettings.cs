@@ -24,7 +24,7 @@ namespace pc_client
         
 
         ///////////////////////////////////////////////////////////////////////
-        #region GetterSetter
+        #region Properties
 
         public string BaudRate
         { get; set; }

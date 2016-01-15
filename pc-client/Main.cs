@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.IO;
-using System.Threading;
 
 namespace pc_client
 {
@@ -18,8 +14,11 @@ namespace pc_client
         #region Variables
 
         ComWrapper _comWrapper = null;
+        Dispatcher _dispatcher = null;
+        Helper _helper = null;
         ErrorMessageBoxes _error = null;
         Settings _settings = null;
+        Data _data = null;
         int _waitCounter = 1;
 
         private bool _keyHandled = false;
@@ -28,8 +27,7 @@ namespace pc_client
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
         Object _lockObject = new Object();
-
-        private static byte[] _receivedInput = null;
+        
 
         delegate void NewDataReceivedDelegate(object sender, byte[] data);
 
@@ -40,36 +38,23 @@ namespace pc_client
 
         public MainForm()
         {
-            InitializeComponent();
-
             _comWrapper = new ComWrapper();
-            _comWrapper.NewDataReceivedEvent += new ComWrapper.NewDataReceivedEventHandler(ComWrapper_NewDataReceivedEvent);
+            _dispatcher = new Dispatcher(this, _comWrapper);
+            _data = Data.GetInstance;
+            _helper = new Helper();
             _settings = Settings.GetInstance;
             _error = new ErrorMessageBoxes();
             _windowDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
             _receiverForm = this;
-            _receivedInput = new byte[0];
 
+            InitializeComponent();
             InitializeControlValues();
             EnableControls();
             InitializeTimer();
+            RegisterEventHandlers(true);
+            RegisterMainBackGroundWorker(true);
         }
 
-
-        ~MainForm()
-        {
-            if (_comWrapper != null)
-            {
-                _comWrapper.NewDataReceivedEvent -= new ComWrapper.NewDataReceivedEventHandler(ComWrapper_NewDataReceivedEvent);
-            }
-        }
-
-        #endregion
-
-                           
-        
-        ///////////////////////////////////////////////////////////////////////
-        #region InitializeControlValues
 
         public void InitializeControlValues()
         {
@@ -88,7 +73,120 @@ namespace pc_client
 
         #endregion
 
+        ///////////////////////////////////////////////////////////////////////
+        #region EventHandlers
 
+        private void RegisterEventHandlers(bool register)
+        {
+            if (register)
+            {
+                _dispatcher.NewHardwareDataReceivedEvent += new Dispatcher.NewHardwareDataReceivedEventHandler(Dispatcher_NewHardwareDataReceivedEvent);
+                _dispatcher.NewTemperatureDataReceivedEvent += new Dispatcher.NewTemperatureDataReceivedEventHandler(Dispatcher_NewTemperatureDataReceivedEvent);
+                _dispatcher.NewADChannel1DataReceivedEvent += new Dispatcher.NewADChannel1DataReceivedEventHandler(Dispatcher_NewADChannel1DataReceivedEvent);
+                _dispatcher.NewHardwareDataReceivedEvent += new Dispatcher.NewHardwareDataReceivedEventHandler(Dispatcher_NewHardwareDataReceivedEvent);
+                _dispatcher.NewADChannel2DataReceivedEvent += new Dispatcher.NewADChannel2DataReceivedEventHandler(Dispatcher_NewADChannel2DataReceivedEvent);
+                _dispatcher.NewErrorReceivedEvent += new Dispatcher.NewErrorReceivedEventHandler(Dispatcher_NewErrorReceivedEvent);
+                _dispatcher.NewEpromDataReceivedEvent += new Dispatcher.NewEpromDataReceivedEventHandler(Dispatcher_NewEpromDataReceivedEvent);
+                _dispatcher.NewTerminalDataReceivedEvent += new Dispatcher.NewTerminalDataReceivedEventHandler(Dispatcher_NewTerminalDataReceivedEvent);
+            }
+            else
+            {
+                _dispatcher.NewHardwareDataReceivedEvent -= new Dispatcher.NewHardwareDataReceivedEventHandler(Dispatcher_NewHardwareDataReceivedEvent);
+                _dispatcher.NewTemperatureDataReceivedEvent -= new Dispatcher.NewTemperatureDataReceivedEventHandler(Dispatcher_NewTemperatureDataReceivedEvent);
+                _dispatcher.NewADChannel1DataReceivedEvent -= new Dispatcher.NewADChannel1DataReceivedEventHandler(Dispatcher_NewADChannel1DataReceivedEvent);
+                _dispatcher.NewHardwareDataReceivedEvent -= new Dispatcher.NewHardwareDataReceivedEventHandler(Dispatcher_NewHardwareDataReceivedEvent);
+                _dispatcher.NewADChannel2DataReceivedEvent -= new Dispatcher.NewADChannel2DataReceivedEventHandler(Dispatcher_NewADChannel2DataReceivedEvent);
+                _dispatcher.NewErrorReceivedEvent -= new Dispatcher.NewErrorReceivedEventHandler(Dispatcher_NewErrorReceivedEvent);
+                _dispatcher.NewEpromDataReceivedEvent -= new Dispatcher.NewEpromDataReceivedEventHandler(Dispatcher_NewEpromDataReceivedEvent);
+                _dispatcher.NewTerminalDataReceivedEvent -= new Dispatcher.NewTerminalDataReceivedEventHandler(Dispatcher_NewTerminalDataReceivedEvent);
+            }
+        }
+
+        #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region RegisterBackGroundWorkers
+
+        private void RegisterMainBackGroundWorker(bool register)
+        {
+            if (register)
+            {
+                _backgroundWorkerMainRead.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainRead_DoWork);
+                _backgroundWorkerMainStore.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainStore_DoWork);
+            }
+            else
+            {
+                _backgroundWorkerMainRead.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainRead_DoWork);
+                _backgroundWorkerMainStore.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainStore_DoWork);
+            }
+        }
+
+        #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region Receivers
+
+        void Dispatcher_NewHardwareDataReceivedEvent(object sender, byte[] value)
+        {
+            tbHardware.Text = _helper.HexToString(value[0]);
+        }
+
+
+        void Dispatcher_NewTemperatureDataReceivedEvent(object sender, byte[] value)
+        {
+            tbTemperatur.Text = _helper.HexToString(value[0]);
+        }
+
+
+        void Dispatcher_NewADChannel1DataReceivedEvent(object sender, byte[] value)
+        {
+            tbADChannel1.Text = _helper.HexToString(value[0]);
+        }
+
+
+        void Dispatcher_NewADChannel2DataReceivedEvent(object sender, byte[] value)
+        {
+            tbADChannel2.Text = _helper.HexToString(value[0]);
+        }
+
+
+        void Dispatcher_NewEpromDataReceivedEvent(object sender, byte[] value)
+        {
+            rtfEprom.Text = _helper.HexToString(value[0]);
+        }
+
+
+        void Dispatcher_NewTerminalDataReceivedEvent(object sender, byte[] data)
+        {
+            _data.AppendTerminalData(data);
+
+            if (chkInputType.Checked == true)
+            {
+                rtfTerminalIn.Clear();
+
+                rtfTerminalIn.AppendText(_helper.HexToString(_data.TerminalData[0]));
+                for (int i = 1; i < _data.TerminalData.Length; i++)
+                {
+                    rtfTerminalIn.AppendText(":");
+                    rtfTerminalIn.AppendText(_helper.HexToString(_data.TerminalData[i]));
+                }
+            }
+            else
+            {
+                rtfTerminalIn.Text = System.Text.Encoding.Default.GetString(_data.TerminalData);
+            }
+        }
+
+
+        void Dispatcher_NewErrorReceivedEvent(object sender, string text)
+        {
+            _error.SendingCommandError(text);
+        }
+       
+        #endregion
+ 
 
         ///////////////////////////////////////////////////////////////////////
         #region SaveSettings
@@ -115,8 +213,7 @@ namespace pc_client
         }
 
         #endregion
-
-        
+                
 
         ///////////////////////////////////////////////////////////////////////
         #region ClosePort
@@ -128,7 +225,6 @@ namespace pc_client
 
         #endregion
         
-
 
         ///////////////////////////////////////////////////////////////////////
         #region OpenPort
@@ -152,8 +248,7 @@ namespace pc_client
 
             rtfTerminalOut.Focus();
         }
-
-
+        
 
         public void open_port()
         {
@@ -185,7 +280,6 @@ namespace pc_client
         #endregion
         
 
-
         ///////////////////////////////////////////////////////////////////////
         #region RefreshComportList
 
@@ -202,8 +296,7 @@ namespace pc_client
                 cmbPortName.SelectedItem = selected;
             }
         }
-
-
+        
 
         private string[] OrderedPortNames()
         {
@@ -213,8 +306,7 @@ namespace pc_client
             // Order the serial port names in numberic order (if possible)
             return _comWrapper.GetAvailablePorts().OrderBy(a => a.Length > 3 && int.TryParse(a.Substring(3), out num) ? num : 0).ToArray();
         }
-
-
+        
 
         private string RefreshComPortList(IEnumerable<string> PreviousPortNames, string CurrentSelection, bool PortOpen)
         {
@@ -256,19 +348,11 @@ namespace pc_client
         }
 
         #endregion
-
-
+        
 
         ///////////////////////////////////////////////////////////////////////
-        #region MiscellaneousEvents
-
-        private void txtSendData_KeyPress(object sender, KeyPressEventArgs e)
-        { 
-            e.Handled = _keyHandled; 
-        }
-
-
-
+        #region UserInputEvents
+       
         private void cmbPortName_DropDown(object sender, EventArgs e)
         {
             RefreshComPortList();
@@ -287,17 +371,122 @@ namespace pc_client
             cmbDataBits.Items.Clear();
             cmbDataBits.Items.AddRange(_comWrapper.GetDataBitsRange());   
         }
-
-
+        
 
         private void OnMouseEntering(object sender, EventArgs e)
         {
             rtfTerminalOut.Focus();
         }
 
-        private void OnMouseMove(object sender, MouseEventArgs e)
+
+        private void btnSend_Click(object sender, EventArgs e)
         {
-            rtfTerminalOut.Focus();
+            TerminalSendData();
+        }
+
+
+        private void rtfTerminalOut_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyValue == (char)13)
+            {
+                TerminalSendData();
+            }
+        }
+
+
+        private void btnClearOut_Click(object sender, EventArgs e)
+        {
+            rtfTerminalOut.Clear();
+            btnClearOut.Enabled = false;
+        }
+
+
+        private void btnClearIn_Click(object sender, EventArgs e)
+        {
+            rtfTerminalIn.Clear();
+            btnClearIn.Enabled = false;
+            _data.TerminalData = new byte[0];
+        }
+
+
+        private void chkInputType_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_data.TerminalData.Length == 0)
+            {
+                return; // nothing to convert
+            }
+
+            rtfTerminalIn.Clear();
+
+            if (chkInputType.Checked == true)
+            {
+                rtfTerminalIn.AppendText(_helper.HexToString(_data.TerminalData[0]));
+                for (int i = 1; i < _data.TerminalData.Length; i++)
+                {
+                    rtfTerminalIn.AppendText(":");
+                    rtfTerminalIn.AppendText(_helper.HexToString(_data.TerminalData[i]));
+                }
+            }
+            else
+            {
+                rtfTerminalIn.AppendText(System.Text.Encoding.Default.GetString(_data.TerminalData));
+            }
+        }
+
+        private void rtfTerminalOut_TextChanged(object sender, EventArgs e)
+        {
+            if (rtfTerminalOut.Text.Length > 0)
+            {
+                btnClearOut.Enabled = true;
+            }
+
+            if (rtfTerminalOut.Lines.Length == 0)
+            {
+                btnSend.Enabled = false;
+                btnClearOut.Enabled = false;
+                return; //nothing left to do
+            }
+
+            if (rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1].Length > 0)
+            {
+                btnSend.Enabled = true;
+            }
+            else
+            {
+                btnSend.Enabled = false;
+            }
+        }
+
+
+        private void rtfTerminalIn_TextChanged(object sender, EventArgs e)
+        {
+            if (rtfTerminalIn.Text.Length > 0)
+            {
+                btnClearIn.Enabled = true;
+            }
+        }
+
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            RegisterEventHandlers(false);
+            RegisterMainBackGroundWorker(false);
+            SaveSettings();
+
+            try
+            {
+                _comWrapper.ComportDispose();
+            }
+            catch (Exception)
+            {
+                ;//Program should be able to close
+            }
+        }
+
+
+        private void mainTabControl_Enter(object sender, EventArgs e)
+        {
+            btnConnect.Focus();
         }
 
         #endregion
@@ -320,6 +509,7 @@ namespace pc_client
                 btnOpenPort.Text = "Open Port";
             }
         }
+
 
         public void EnableSettingsControls()
         {
@@ -345,8 +535,7 @@ namespace pc_client
             rbV2.Enabled = false;
             btnSend.Enabled = false;
         }
-
-
+        
 
         public void DisableSettingsControls()
         {
@@ -371,67 +560,30 @@ namespace pc_client
             rbV2.Enabled = true;
         }
 
-        # endregion
+        #endregion
 
 
+        ///////////////////////////////////////////////////////////////////////
+        #region Synchronisation
 
-        private void btnSend_Click(object sender, EventArgs e)
+        private bool WaitForPendingRequest()
         {
-            SendData();  
+            while (_dispatcher.IsRequestPendig())
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+            return true;
         }
 
+        #endregion
 
 
-        private void rtfTerminalOut_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyValue == (char)13)
-            {
-                SendData();               
-            }
-        }
-
-
-
-        public void ComWrapper_NewDataReceivedEvent(object sender, byte[] data)
-        {
-            byte[] newData = new byte[_receivedInput.Length + data.Length];
-
-            lock (_lockObject)
-            {
-                if (_receiverForm.InvokeRequired)
-                {
-                    _windowDispatcher.BeginInvoke(new NewDataReceivedDelegate(ComWrapper_NewDataReceivedEvent), new object[] { sender, data });
-                    return;
-                }
-
-                System.Buffer.BlockCopy(_receivedInput, 0, newData, 0, _receivedInput.Length);
-                System.Buffer.BlockCopy(data, 0, newData, _receivedInput.Length, data.Length);
-                _receivedInput = newData;                
-
-                if (chkInputType.Checked == true)
-                {
-                    rtfTerminalIn.Clear();
-
-                    rtfTerminalIn.AppendText(HexToString(_receivedInput[0]));
-                    for (int i = 1; i < _receivedInput.Length; i++)
-                    {
-                        rtfTerminalIn.AppendText(":");
-                        rtfTerminalIn.AppendText(HexToString(_receivedInput[i]));
-                    }
-                }
-                else
-                {
-                    rtfTerminalIn.Text  = System.Text.Encoding.Default.GetString(_receivedInput);
-                }                
-            }
+        ///////////////////////////////////////////////////////////////////////
+        #region TerminalSendData
             
-        }
-
-
-
-        private void SendData()
+        private void TerminalSendData()
         {
-            String sendData = ""; ;
+            String sendData = "";
 
             if (rtfTerminalOut.Lines.Length > 0)
             {
@@ -449,7 +601,7 @@ namespace pc_client
                         subString = sendData.Substring(i, 2);
                         int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
                         data = (char)intValue;
-                        _comWrapper.ComportWrite(data);
+                        _dispatcher.SendData("Terminal", data);
                     }
                     catch
                     {
@@ -459,78 +611,11 @@ namespace pc_client
             }
             else
             {
-                _comWrapper.ComportWrite(sendData, true);
+                _dispatcher.SendData("Terminal", sendData);
             } 
         }
 
-
-
-        private void chkInputType_CheckedChanged(object sender, EventArgs e)
-        {
-            if(_receivedInput.Length == 0)
-            {
-                return; // nothing to convert
-            }
-
-            rtfTerminalIn.Clear();
-
-            if (chkInputType.Checked == true)
-            {              
-                rtfTerminalIn.AppendText(HexToString(_receivedInput[0]));
-                for (int i = 1; i < _receivedInput.Length; i++)
-                {
-                    rtfTerminalIn.AppendText(":");
-                    rtfTerminalIn.AppendText(HexToString(_receivedInput[i]));
-                }
-            }
-            else
-            {
-                rtfTerminalIn.AppendText(System.Text.Encoding.Default.GetString(_receivedInput));
-            }
-        }
-
-
-
-        private String StringToHex(String value)
-        {
-            String returnValue = "";
-            // Convert the string into a byte[].
-            byte[] asciiBytes = Encoding.ASCII.GetBytes(value);
-            
-            for (int i = 0; i < asciiBytes.Length; i++)
-            {
-                // Convert integer byte as a hex in a string variable
-                string hexValue = asciiBytes[i].ToString("X");
-                returnValue += hexValue;
-            }
-            return returnValue;
-        }
-
-
-
-        private String HexToString(byte hexValue)
-        {
-            int value = Convert.ToInt32(hexValue);
-            string hexOutput = String.Format("{0:x}", value);
-            return hexOutput;
-        }        
-
-
-
-        private void btnClearOut_Click(object sender, EventArgs e)
-        {
-            rtfTerminalOut.Clear();
-            btnClearOut.Enabled = false;
-        }
-
-
-
-        private void btnClearIn_Click(object sender, EventArgs e)
-        {
-            rtfTerminalIn.Clear();
-            btnClearIn.Enabled = false;
-            _receivedInput = new byte[0]; 
-        }
+        #endregion
 
 
         ///////////////////////////////////////////////////////////////////////
@@ -618,40 +703,90 @@ namespace pc_client
         }
 
         #endregion
+        
 
+       
+        ///////////////////////////////////////////////////////////////////////
+        #region MainRead
 
-
-        private void rtfTerminalOut_TextChanged(object sender, EventArgs e)
+        void BackgroundWorkerMainRead_DoWork(object sender, EventArgs arg)
         {
-            if(rtfTerminalOut.Text.Length > 0)
+            try
             {
-                btnClearOut.Enabled = true;
-            }
+                _dispatcher.SendData("Hardware", (char)(Commands.MASTER | Commands.READ));
+                WaitForPendingRequest();
 
-            if (rtfTerminalOut.Lines.Length == 0)
-            {
-                btnSend.Enabled = false;
-                btnClearOut.Enabled = false;
-                return; //nothing left to do
-            }
+                _dispatcher.SendData("Temperature", (char)(Commands.ADW | Commands.READ));
+                WaitForPendingRequest();
 
-            if(rtfTerminalOut.Lines[rtfTerminalOut.Lines.Length - 1].Length > 0)
-            {
-                btnSend.Enabled = true;
+                _dispatcher.SendData("ADChannel1", (char)(Commands.ADT | Commands.RNG1));
+                WaitForPendingRequest();
+
+                _dispatcher.SendData("ADChannel2", (char)(Commands.ADT | Commands.RNG2));
+                WaitForPendingRequest();
+
+                _dispatcher.SendData("Eprom", (char)(Commands.EEPROM | Commands.READ));
+                WaitForPendingRequest();
             }
-            else
+            catch
             {
-                btnSend.Enabled = false;
+                _error.FatalError();
             }
         }
 
-        private void rtfTerminalIn_TextChanged(object sender, EventArgs e)
+        
+        private void OnReadButton_clicked(object sender, EventArgs e)
         {
-            if (rtfTerminalIn.Text.Length > 0)
+            if (!_backgroundWorkerMainRead.IsBusy)
             {
-                btnClearIn.Enabled = true;
+                _backgroundWorkerMainRead.RunWorkerAsync();
+            }
+        }
+        
+
+        private void _backgroundWorkerMainRead_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            //EnableMainTabTextboxes();
+            //EnableMainTabButtons();
+        }
+
+        #endregion
+        
+
+        ///////////////////////////////////////////////////////////////////////
+        #region MainStore
+
+        void BackgroundWorkerMainStore_DoWork(object sender, EventArgs arg)
+        {
+             try
+            {
+                _dispatcher.SendData("Eprom", (char)(Commands.EEPROM | Commands.WRITE));
+                WaitForPendingRequest();
+            }
+            catch
+            {
+                _error.FatalError();
             }
         }
 
+
+        private void OnStoreButton_Click(object sender, EventArgs e)
+        {
+           // DisableMainTabTextboxes();
+          //  DisableMainTabButtons();
+
+            if (_backgroundWorkerMainStore.IsBusy != true)
+            {
+                _backgroundWorkerMainStore.RunWorkerAsync();
+            }
+        }
+        
+
+        private void _backgroundWorkerMainStore_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+           // EnableMainTabButtons();
+        }
+
+        #endregion
     }
 }

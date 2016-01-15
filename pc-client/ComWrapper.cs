@@ -1,8 +1,6 @@
 ﻿using System;
 using System.IO.Ports;
 using System.IO;
-using System.Windows.Forms;
-using System.Text;
 
 namespace pc_client
 {
@@ -13,7 +11,7 @@ namespace pc_client
         public delegate void NewDataReceivedEventHandler(object sender, byte[] data);
         public event NewDataReceivedEventHandler NewDataReceivedEvent;
 
-        public delegate void NewRequestReceivedEventHandler(object sender, string data, bool logCommand);
+        public delegate void NewRequestReceivedEventHandler(object sender, string data);
         public event NewRequestReceivedEventHandler NewRequestReceivedEvent;
 
         #endregion
@@ -25,21 +23,18 @@ namespace pc_client
         public SerialPort Comport
         { get; set; }
 
-        string _input = null;
         ErrorMessageBoxes _error = null;
 
         #endregion
 
-
-
+        
         public ComWrapper()
         {
             Comport = null;
             _error = new ErrorMessageBoxes();
         }
 
-
-
+        
         ~ComWrapper()
         {
             if (Comport != null)
@@ -48,8 +43,7 @@ namespace pc_client
             }
         }
 
-
-
+        
         public bool ComportIsOpen()
         {
             if (Comport != null && Comport.IsOpen)
@@ -58,8 +52,7 @@ namespace pc_client
             }
             return false;
         }
-
-
+        
 
         public bool ComportDispose()
         {
@@ -78,7 +71,6 @@ namespace pc_client
                 {
                     Comport = null;
                 }
-
             }
             catch (Exception)
             {
@@ -88,8 +80,7 @@ namespace pc_client
 
             return retval;
         }
-
-
+        
 
         public bool ComportOpen()
         {
@@ -136,10 +127,9 @@ namespace pc_client
             }
             return retval;
         }
+        
 
-
-
-        public bool ComportWrite(string sendtext, bool logCommand)
+        public bool ComportWrite(string sendtext)
         {
             if ((Comport == null) || (!Comport.IsOpen))
             {
@@ -152,7 +142,7 @@ namespace pc_client
             {
                 if (NewRequestReceivedEvent != null)
                 {
-                    NewRequestReceivedEvent(this, sendtext, logCommand);
+                    NewRequestReceivedEvent(this, sendtext);
                 }
                 Comport.Write(sendtext);
             }
@@ -163,6 +153,7 @@ namespace pc_client
 
             return retval;
         }
+
 
         public bool ComportWrite(Char data)
         {
@@ -187,9 +178,7 @@ namespace pc_client
 
             return retval;
         }
-
-
-
+        
 
         public string ComportRead()
         {
@@ -197,8 +186,7 @@ namespace pc_client
             return data;
         }
 
-
-
+        
         public byte[] ComportReadBytes()
         {
             byte[] data = new byte[Comport.BytesToRead];
@@ -206,8 +194,7 @@ namespace pc_client
             return data;
         }
 
-
-
+        
         private void Port_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             byte[] data = ComportReadBytes();

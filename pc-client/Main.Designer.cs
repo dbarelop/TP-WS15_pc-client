@@ -46,7 +46,7 @@
             this.btnReadEprom = new System.Windows.Forms.Button();
             this.chkPollTemp = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
-            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.rtfEprom = new System.Windows.Forms.RichTextBox();
             this.btnReadADC2 = new System.Windows.Forms.Button();
             this.btnReadADC1 = new System.Windows.Forms.Button();
             this.label16 = new System.Windows.Forms.Label();
@@ -85,6 +85,8 @@
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this._backgroundWorkerMainRead = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerMainStore = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -102,6 +104,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(482, 469);
             this.tabControl1.TabIndex = 3;
+            this.tabControl1.Enter += new System.EventHandler(this.mainTabControl_Enter);
             this.tabControl1.MouseEnter += new System.EventHandler(this.OnMouseEntering);
             // 
             // tabPage1
@@ -114,7 +117,7 @@
             this.tabPage1.Controls.Add(this.btnReadEprom);
             this.tabPage1.Controls.Add(this.chkPollTemp);
             this.tabPage1.Controls.Add(this.label17);
-            this.tabPage1.Controls.Add(this.richTextBox1);
+            this.tabPage1.Controls.Add(this.rtfEprom);
             this.tabPage1.Controls.Add(this.btnReadADC2);
             this.tabPage1.Controls.Add(this.btnReadADC1);
             this.tabPage1.Controls.Add(this.label16);
@@ -274,14 +277,14 @@
             this.label17.TabIndex = 14;
             this.label17.Text = "EEPROM";
             // 
-            // richTextBox1
+            // rtfEprom
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(85, 241);
-            this.richTextBox1.MaxLength = 512;
-            this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(378, 155);
-            this.richTextBox1.TabIndex = 13;
-            this.richTextBox1.Text = "";
+            this.rtfEprom.Location = new System.Drawing.Point(85, 241);
+            this.rtfEprom.MaxLength = 512;
+            this.rtfEprom.Name = "rtfEprom";
+            this.rtfEprom.Size = new System.Drawing.Size(378, 155);
+            this.rtfEprom.TabIndex = 13;
+            this.rtfEprom.Text = "";
             // 
             // btnReadADC2
             // 
@@ -675,6 +678,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MainForm";
             this.Text = "PC-Client";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -729,7 +733,7 @@
         private System.Windows.Forms.TextBox tbADChannel2;
         private System.Windows.Forms.CheckBox chkPollTemp;
         private System.Windows.Forms.Label label17;
-        private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.RichTextBox rtfEprom;
         private System.Windows.Forms.Button btnWriteEprom;
         private System.Windows.Forms.Button btnReadEprom;
         private System.Windows.Forms.Panel panel1;
@@ -747,6 +751,8 @@
         private System.Windows.Forms.Button btnClearOut;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnConnect;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerMainRead;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerMainStore;
     }
 }
 
