@@ -39,6 +39,7 @@ namespace pc_client
         ///////////////////////////////////////////////////////////////////////
         #region member variables
         ComWrapper _comWrapper = null;
+        Helper _helper = null;
         string _sendCmd = null;
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
@@ -58,6 +59,7 @@ namespace pc_client
         public Dispatcher(Form form, ComWrapper comWrapper)
         {
             _comWrapper = comWrapper;
+            _helper = new Helper();
             _comWrapper.NewDataReceivedEvent += new ComWrapper.NewDataReceivedEventHandler(ComWrapper_NewDataReceivedEvent);
             _comWrapper.NewRequestReceivedEvent += new ComWrapper.NewRequestReceivedEventHandler(ComWrapper_NewRequestReceivedEvent);
             _windowDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
@@ -174,58 +176,56 @@ namespace pc_client
                     NewDataReceivedEvent(this, data);
                 }
 
-                if (Array.Exists(data, element => element == 0xaa))
+                if (Array.Exists(data, element => element == Commands.OK))
                 {
                     _requestPending = false;
-                    return;
                 }
 
-                else if (!Array.Exists(data, element => element == 0xaa))
+                switch (_sendCmd)
                 {
-                      switch (_sendCmd)
-                    {
-                        case ("Hardware"):
-                            if (NewHardwareDataReceivedEvent != null)
-                            {
-                                NewHardwareDataReceivedEvent(this, data);
-                            }
-                            break;
-                        case ("Temperature"):
-                            if (NewTemperatureDataReceivedEvent != null)
-                            {
-                                NewTemperatureDataReceivedEvent(this, data);
-                            }
-                            break;
-                        case ("ADChannel1"):
-                            if (NewADChannel1DataReceivedEvent != null)
-                            {
-                                NewADChannel1DataReceivedEvent(this, data);
-                            }
-                            break;
-                        case ("ADChannel2"):
-                            if (NewADChannel2DataReceivedEvent != null)
-                            {
-                                NewADChannel2DataReceivedEvent(this, data);
-                            }
-                            break;
-                        case ("Eprom"):
-                            if (NewEpromDataReceivedEvent != null)
-                            {
-                                NewEpromDataReceivedEvent(this, data);
-                            }
-                            break;
-                        case ("Terminal"):
-                            if (NewTerminalDataReceivedEvent != null)
-                            {
-                                NewTerminalDataReceivedEvent(this, data);
-                            }
-                            break;
-                        default:
-                            {
-                            }
-                            break;
+                    case (Commands.ID_HARDWARE):
+                        if (NewHardwareDataReceivedEvent != null)
+                        {
+                            NewHardwareDataReceivedEvent(this, _helper.RemoveOK(data));
+                        }
+                        break;
+                    case (Commands.ID_TEMPERATURE):
+                        if (NewTemperatureDataReceivedEvent != null)
+                        {
+                            NewTemperatureDataReceivedEvent(this, _helper.RemoveOK(data));
+                        }
+                        break;
+                    case (Commands.ID_ADCHANNEL1):
+                        if (NewADChannel1DataReceivedEvent != null)
+                        {
+                            NewADChannel1DataReceivedEvent(this, _helper.RemoveOK(data));
+                        }
+                        break;
+                    case (Commands.ID_ADCHANNEL2):
+                        if (NewADChannel2DataReceivedEvent != null)
+                        {
+                            NewADChannel2DataReceivedEvent(this, _helper.RemoveOK(data));
+                        }
+                        break;
+                    case (Commands.ID_EEPROM):
+                        if (NewEpromDataReceivedEvent != null)
+                        {
+                            NewEpromDataReceivedEvent(this, _helper.RemoveOK(data));
+                        }
+                        break;
+                    case (Commands.ID_TERMINAL):
+                        if (NewTerminalDataReceivedEvent != null)
+                        {
+                            NewTerminalDataReceivedEvent(this, data);
+                        }
+                        break;
+                    default:
+                        if (NewTerminalDataReceivedEvent != null)
+                        {
+                            NewTerminalDataReceivedEvent(this, data);
+                        }
+                        break;
                     }
-                }
             }
         }
         

@@ -601,7 +601,7 @@ namespace pc_client
                         subString = sendData.Substring(i, 2);
                         int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
                         data = (char)intValue;
-                        _dispatcher.SendData("Terminal", data);
+                        _dispatcher.SendData(Commands.ID_TERMINAL, data);
                     }
                     catch
                     {
@@ -611,7 +611,7 @@ namespace pc_client
             }
             else
             {
-                _dispatcher.SendData("Terminal", sendData);
+                _dispatcher.SendData(Commands.ID_TERMINAL, sendData);
             } 
         }
 
@@ -713,19 +713,19 @@ namespace pc_client
         {
             try
             {
-                _dispatcher.SendData("Hardware", (char)(Commands.MASTER | Commands.READ));
+                _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
                 WaitForPendingRequest();
 
-                _dispatcher.SendData("Temperature", (char)(Commands.ADW | Commands.READ));
+                _dispatcher.SendData(Commands.ID_TEMPERATURE, (char)(Commands.ADW | Commands.READ));
                 WaitForPendingRequest();
 
-                _dispatcher.SendData("ADChannel1", (char)(Commands.ADT | Commands.RNG1));
+                _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADT | Commands.RNG1));
                 WaitForPendingRequest();
 
-                _dispatcher.SendData("ADChannel2", (char)(Commands.ADT | Commands.RNG2));
+                _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADT | Commands.RNG2));
                 WaitForPendingRequest();
 
-                _dispatcher.SendData("Eprom", (char)(Commands.EEPROM | Commands.READ));
+                _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
                 WaitForPendingRequest();
             }
             catch
@@ -788,5 +788,10 @@ namespace pc_client
         }
 
         #endregion
+
+        private void btnResetHardware_Click(object sender, EventArgs e)
+        {
+            _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
+        }
     }
 }

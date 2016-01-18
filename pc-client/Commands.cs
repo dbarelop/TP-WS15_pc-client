@@ -6,7 +6,7 @@ namespace pc_client
     static class Commands
     {
         ///////////////////////////////////////////////////////////////////////
-        #region hex commands
+        #region constant hex commands
 
         // 0x<Baustein><Operation> z.B. 0x10 --> ADW(1)READ(0)
         // e.g. call it like --> public byte EEPROM_READ = EEPROM | READ;
@@ -31,16 +31,23 @@ namespace pc_client
         #endregion
 
 
+        ///////////////////////////////////////////////////////////////////////
+        #region constant responses
+
+        public const byte OK = 0xaa;
+
+        #endregion
+        
 
         ///////////////////////////////////////////////////////////////////////
-        #region constant commands
+        #region constant identifiers
 
-        public const string _cmdHardware = "Hardware";
-        public const string _cmdTemperature = "Temperature";
-        public const string _cmdADChannel1 = "ADChannel1";
-        public const string _cmdADChannel2 = "ADChannel2";
-        public const string _cmdEprom = "Eprom";
-        public const string _cmdTerminal = "Terminal";
+        public const string ID_HARDWARE = "Hardware";
+        public const string ID_TEMPERATURE = "Temperature";
+        public const string ID_ADCHANNEL1 = "ADChannel1";
+        public const string ID_ADCHANNEL2 = "ADChannel2";
+        public const string ID_EEPROM = "Eeprom";
+        public const string ID_TERMINAL = "Terminal";
 
         #endregion
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Linq;
 
 namespace pc_client
 {
@@ -31,5 +32,17 @@ namespace pc_client
             string hexOutput = String.Format("{0:x}", value);
             return hexOutput;
         }
+
+
+        public byte[] RemoveOK(byte[] rawData)
+        {
+            byte[] withoutOK = new byte[rawData.Length];
+            Array.Copy(rawData, withoutOK, rawData.Length);
+            byte toRemove = Commands.OK;
+            withoutOK = rawData.Where(val => val != toRemove).ToArray();
+
+            return withoutOK;
+        }
+
     }
 }

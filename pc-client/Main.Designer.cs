@@ -393,6 +393,7 @@
             this.btnResetHardware.TabIndex = 0;
             this.btnResetHardware.Text = "Reset";
             this.btnResetHardware.UseVisualStyleBackColor = true;
+            this.btnResetHardware.Click += new System.EventHandler(this.btnResetHardware_Click);
             // 
             // tabPage2
             // 

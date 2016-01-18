@@ -6,7 +6,14 @@ namespace pc_client
     {
 
         private Data()
-        { }
+        { 
+            TerminalData = new byte[0];
+            Firmware = "";
+            ADW1 = "";
+            ADW2 = "";
+            Eprom = "";
+            Temperature = 0;
+        }
 
         // singleton
         private static Data instance;
