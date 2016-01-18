@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.main = new System.Windows.Forms.TabPage();
             this.chkAD2 = new System.Windows.Forms.CheckBox();
             this.chkAD1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -59,7 +59,7 @@
             this.tbHardware = new System.Windows.Forms.TextBox();
             this.btnReadTemperatur = new System.Windows.Forms.Button();
             this.btnResetHardware = new System.Windows.Forms.Button();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.comport = new System.Windows.Forms.TabPage();
             this.btnClearIn = new System.Windows.Forms.Button();
             this.btnClearOut = new System.Windows.Forms.Button();
             this.btnSend = new System.Windows.Forms.Button();
@@ -84,21 +84,30 @@
             this.rtfTerminalIn = new System.Windows.Forms.RichTextBox();
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
+            this.about = new System.Windows.Forms.TabPage();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerMainRead = new System.ComponentModel.BackgroundWorker();
             this._backgroundWorkerMainStore = new System.ComponentModel.BackgroundWorker();
+            this.label13 = new System.Windows.Forms.Label();
+            this.log = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
+            this.rtfLog = new System.Windows.Forms.RichTextBox();
             this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.main.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.tabPage2.SuspendLayout();
+            this.comport.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.about.SuspendLayout();
+            this.log.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.main);
+            this.tabControl1.Controls.Add(this.comport);
+            this.tabControl1.Controls.Add(this.log);
+            this.tabControl1.Controls.Add(this.about);
             this.tabControl1.Location = new System.Drawing.Point(4, 1);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -107,36 +116,36 @@
             this.tabControl1.Enter += new System.EventHandler(this.mainTabControl_Enter);
             this.tabControl1.MouseEnter += new System.EventHandler(this.OnMouseEntering);
             // 
-            // tabPage1
+            // main
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.Gainsboro;
-            this.tabPage1.Controls.Add(this.chkAD2);
-            this.tabPage1.Controls.Add(this.chkAD1);
-            this.tabPage1.Controls.Add(this.panel2);
-            this.tabPage1.Controls.Add(this.btnWriteEprom);
-            this.tabPage1.Controls.Add(this.btnReadEprom);
-            this.tabPage1.Controls.Add(this.chkPollTemp);
-            this.tabPage1.Controls.Add(this.label17);
-            this.tabPage1.Controls.Add(this.rtfEprom);
-            this.tabPage1.Controls.Add(this.btnReadADC2);
-            this.tabPage1.Controls.Add(this.btnReadADC1);
-            this.tabPage1.Controls.Add(this.label16);
-            this.tabPage1.Controls.Add(this.tbADChannel2);
-            this.tabPage1.Controls.Add(this.label3);
-            this.tabPage1.Controls.Add(this.label2);
-            this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Controls.Add(this.tbTemperatur);
-            this.tabPage1.Controls.Add(this.tbADChannel1);
-            this.tabPage1.Controls.Add(this.tbHardware);
-            this.tabPage1.Controls.Add(this.btnReadTemperatur);
-            this.tabPage1.Controls.Add(this.btnResetHardware);
-            this.tabPage1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(474, 443);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Start";
+            this.main.BackColor = System.Drawing.Color.Gainsboro;
+            this.main.Controls.Add(this.chkAD2);
+            this.main.Controls.Add(this.chkAD1);
+            this.main.Controls.Add(this.panel2);
+            this.main.Controls.Add(this.btnWriteEprom);
+            this.main.Controls.Add(this.btnReadEprom);
+            this.main.Controls.Add(this.chkPollTemp);
+            this.main.Controls.Add(this.label17);
+            this.main.Controls.Add(this.rtfEprom);
+            this.main.Controls.Add(this.btnReadADC2);
+            this.main.Controls.Add(this.btnReadADC1);
+            this.main.Controls.Add(this.label16);
+            this.main.Controls.Add(this.tbADChannel2);
+            this.main.Controls.Add(this.label3);
+            this.main.Controls.Add(this.label2);
+            this.main.Controls.Add(this.label1);
+            this.main.Controls.Add(this.tbTemperatur);
+            this.main.Controls.Add(this.tbADChannel1);
+            this.main.Controls.Add(this.tbHardware);
+            this.main.Controls.Add(this.btnReadTemperatur);
+            this.main.Controls.Add(this.btnResetHardware);
+            this.main.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.main.Location = new System.Drawing.Point(4, 22);
+            this.main.Name = "main";
+            this.main.Padding = new System.Windows.Forms.Padding(3);
+            this.main.Size = new System.Drawing.Size(474, 443);
+            this.main.TabIndex = 0;
+            this.main.Text = "Start";
             // 
             // chkAD2
             // 
@@ -227,6 +236,7 @@
             this.rbV2.TabIndex = 1;
             this.rbV2.Text = "0.16 V";
             this.rbV2.UseVisualStyleBackColor = true;
+            this.rbV2.Click += new System.EventHandler(this.rbV2_Click);
             // 
             // rbV1
             // 
@@ -239,6 +249,7 @@
             this.rbV1.TabStop = true;
             this.rbV1.Text = "2.56 V";
             this.rbV1.UseVisualStyleBackColor = true;
+            this.rbV1.Click += new System.EventHandler(this.rbV1_Click);
             // 
             // btnWriteEprom
             // 
@@ -294,6 +305,7 @@
             this.btnReadADC2.TabIndex = 12;
             this.btnReadADC2.Text = "Read";
             this.btnReadADC2.UseVisualStyleBackColor = true;
+            this.btnReadADC2.Click += new System.EventHandler(this.btnReadADC2_Click);
             // 
             // btnReadADC1
             // 
@@ -303,6 +315,7 @@
             this.btnReadADC1.TabIndex = 11;
             this.btnReadADC1.Text = "Read";
             this.btnReadADC1.UseVisualStyleBackColor = true;
+            this.btnReadADC1.Click += new System.EventHandler(this.btnReadADC1_Click);
             // 
             // label16
             // 
@@ -384,6 +397,7 @@
             this.btnReadTemperatur.TabIndex = 1;
             this.btnReadTemperatur.Text = "Read";
             this.btnReadTemperatur.UseVisualStyleBackColor = true;
+            this.btnReadTemperatur.Click += new System.EventHandler(this.btnReadTemperatur_Click);
             // 
             // btnResetHardware
             // 
@@ -391,30 +405,30 @@
             this.btnResetHardware.Name = "btnResetHardware";
             this.btnResetHardware.Size = new System.Drawing.Size(75, 23);
             this.btnResetHardware.TabIndex = 0;
-            this.btnResetHardware.Text = "Reset";
+            this.btnResetHardware.Text = "Read";
             this.btnResetHardware.UseVisualStyleBackColor = true;
-            this.btnResetHardware.Click += new System.EventHandler(this.btnResetHardware_Click);
+            this.btnResetHardware.Click += new System.EventHandler(this.btnReadHardware_Click);
             // 
-            // tabPage2
+            // comport
             // 
-            this.tabPage2.BackColor = System.Drawing.Color.Gainsboro;
-            this.tabPage2.Controls.Add(this.btnClearIn);
-            this.tabPage2.Controls.Add(this.btnClearOut);
-            this.tabPage2.Controls.Add(this.btnSend);
-            this.tabPage2.Controls.Add(this.panel3);
-            this.tabPage2.Controls.Add(this.label10);
-            this.tabPage2.Controls.Add(this.chkHex);
-            this.tabPage2.Controls.Add(this.label9);
-            this.tabPage2.Controls.Add(this.rtfTerminalIn);
-            this.tabPage2.Controls.Add(this.chkInputType);
-            this.tabPage2.Controls.Add(this.rtfTerminalOut);
-            this.tabPage2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(474, 443);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "ComPort";
+            this.comport.BackColor = System.Drawing.Color.Gainsboro;
+            this.comport.Controls.Add(this.btnClearIn);
+            this.comport.Controls.Add(this.btnClearOut);
+            this.comport.Controls.Add(this.btnSend);
+            this.comport.Controls.Add(this.panel3);
+            this.comport.Controls.Add(this.label10);
+            this.comport.Controls.Add(this.chkHex);
+            this.comport.Controls.Add(this.label9);
+            this.comport.Controls.Add(this.rtfTerminalIn);
+            this.comport.Controls.Add(this.chkInputType);
+            this.comport.Controls.Add(this.rtfTerminalOut);
+            this.comport.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.comport.Location = new System.Drawing.Point(4, 22);
+            this.comport.Name = "comport";
+            this.comport.Padding = new System.Windows.Forms.Padding(3);
+            this.comport.Size = new System.Drawing.Size(474, 443);
+            this.comport.TabIndex = 1;
+            this.comport.Text = "ComPort";
             // 
             // btnClearIn
             // 
@@ -664,9 +678,60 @@
             this.rtfTerminalOut.TextChanged += new System.EventHandler(this.rtfTerminalOut_TextChanged);
             this.rtfTerminalOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rtfTerminalOut_KeyDown);
             // 
+            // about
+            // 
+            this.about.BackColor = System.Drawing.Color.Gainsboro;
+            this.about.Controls.Add(this.label13);
+            this.about.Location = new System.Drawing.Point(4, 22);
+            this.about.Name = "about";
+            this.about.Size = new System.Drawing.Size(474, 443);
+            this.about.TabIndex = 2;
+            this.about.Text = "About";
+            // 
             // timer1
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(14, 12);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(160, 176);
+            this.label13.TabIndex = 0;
+            this.label13.Text = "HTWG Konstanz\r\n\r\nTeamprojekt WS 15/16\r\nDaniel López\r\nAndreas Maier\r\nAndreas Reinh" +
+    "ardt\r\nLukas Stoppel\r\nMatthias Weis\r\nProf. Dr. Irenäus Schoppa\r\n\r\n© 2016\r\n";
+            // 
+            // log
+            // 
+            this.log.BackColor = System.Drawing.Color.Gainsboro;
+            this.log.Controls.Add(this.label14);
+            this.log.Controls.Add(this.rtfLog);
+            this.log.Location = new System.Drawing.Point(4, 22);
+            this.log.Name = "log";
+            this.log.Size = new System.Drawing.Size(474, 443);
+            this.log.TabIndex = 3;
+            this.log.Text = "Log";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label14.ForeColor = System.Drawing.SystemColors.ActiveCaptionText;
+            this.label14.Location = new System.Drawing.Point(14, 12);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(31, 16);
+            this.label14.TabIndex = 19;
+            this.label14.Text = "Log";
+            // 
+            // rtfLog
+            // 
+            this.rtfLog.Location = new System.Drawing.Point(7, 31);
+            this.rtfLog.Name = "rtfLog";
+            this.rtfLog.Size = new System.Drawing.Size(457, 396);
+            this.rtfLog.TabIndex = 18;
+            this.rtfLog.Text = "";
             // 
             // MainForm
             // 
@@ -681,16 +746,20 @@
             this.Text = "PC-Client";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
-            this.tabPage1.PerformLayout();
+            this.main.ResumeLayout(false);
+            this.main.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.tabPage2.ResumeLayout(false);
-            this.tabPage2.PerformLayout();
+            this.comport.ResumeLayout(false);
+            this.comport.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.about.ResumeLayout(false);
+            this.about.PerformLayout();
+            this.log.ResumeLayout(false);
+            this.log.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -698,8 +767,8 @@
         #endregion
 
         private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage main;
+        private System.Windows.Forms.TabPage comport;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -754,6 +823,11 @@
         private System.Windows.Forms.Button btnConnect;
         private System.ComponentModel.BackgroundWorker _backgroundWorkerMainRead;
         private System.ComponentModel.BackgroundWorker _backgroundWorkerMainStore;
+        private System.Windows.Forms.TabPage about;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.TabPage log;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.RichTextBox rtfLog;
     }
 }
 

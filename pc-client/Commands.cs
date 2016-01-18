@@ -36,6 +36,7 @@ namespace pc_client
         #region constant responses
 
         public const byte OK = 0xaa;
+        public const byte DONE = 0xbb;
 
         #endregion
         
@@ -49,6 +50,7 @@ namespace pc_client
         public const string ID_ADCHANNEL2 = "ADChannel2";
         public const string ID_EEPROM = "Eeprom";
         public const string ID_TERMINAL = "Terminal";
+        public const string ID_VOID = "Void";
 
         #endregion
     }

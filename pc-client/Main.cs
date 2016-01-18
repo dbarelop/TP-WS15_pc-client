@@ -160,6 +160,7 @@ namespace pc_client
 
         void Dispatcher_NewTerminalDataReceivedEvent(object sender, byte[] data)
         {
+            logInput(data);
             _data.AppendTerminalData(data);
 
             if (chkInputType.Checked == true)
@@ -602,6 +603,7 @@ namespace pc_client
                         int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
                         data = (char)intValue;
                         _dispatcher.SendData(Commands.ID_TERMINAL, data);
+                        logOutput(data);
                     }
                     catch
                     {
@@ -612,6 +614,7 @@ namespace pc_client
             else
             {
                 _dispatcher.SendData(Commands.ID_TERMINAL, sendData);
+                logOutput(sendData);
             } 
         }
 
@@ -713,18 +716,6 @@ namespace pc_client
         {
             try
             {
-                _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
-                WaitForPendingRequest();
-
-                _dispatcher.SendData(Commands.ID_TEMPERATURE, (char)(Commands.ADW | Commands.READ));
-                WaitForPendingRequest();
-
-                _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADT | Commands.RNG1));
-                WaitForPendingRequest();
-
-                _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADT | Commands.RNG2));
-                WaitForPendingRequest();
-
                 _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
                 WaitForPendingRequest();
             }
@@ -789,9 +780,87 @@ namespace pc_client
 
         #endregion
 
-        private void btnResetHardware_Click(object sender, EventArgs e)
+
+        private void btnReadHardware_Click(object sender, EventArgs e)
         {
             _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
+            WaitForPendingRequest();
         }
+
+
+        private void btnReadTemperatur_Click(object sender, EventArgs e)
+        {
+            _dispatcher.SendData(Commands.ID_TEMPERATURE, (char)(Commands.ADW | Commands.READ));
+            WaitForPendingRequest();
+        }
+
+
+        private void btnReadADC1_Click(object sender, EventArgs e)
+        {
+            _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADT | Commands.RNG1));
+            WaitForPendingRequest();
+        }
+
+
+        private void btnReadADC2_Click(object sender, EventArgs e)
+        {
+            _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADT | Commands.RNG2));
+            WaitForPendingRequest();
+        }
+
+
+        private void rbV1_Click(object sender, EventArgs e)
+        {
+            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADT | Commands.RNG1));
+            WaitForPendingRequest();
+        }
+
+
+        private void rbV2_Click(object sender, EventArgs e)
+        {
+            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADT | Commands.RNG2));
+            WaitForPendingRequest();
+        }
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region Logging
+
+        private void logOutput(char output)
+        {
+            logOutput(output.ToString());
+        }
+
+
+        private void logOutput(byte[] output)
+        {
+            logOutput(output.ToString());
+        }
+
+
+        private void logOutput(String output)
+        {
+            rtfLog.AppendText("OUT:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t- " + output);
+        }
+
+
+        private void logInput(char input)
+        {
+            logOutput(input.ToString());
+        }
+
+
+        private void logInput(byte[] input)
+        {
+            logOutput(input.ToString());
+        }
+
+
+        private void logInput(String input)
+        {
+            rtfLog.AppendText("In:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t- " + input);
+        }
+
+        #endregion
     }
 }
