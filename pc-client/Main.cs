@@ -21,7 +21,6 @@ namespace pc_client
         Data _data = null;
         int _waitCounter = 1;
 
-        private bool _keyHandled = false;
         List<string> _commandHistory = new List<string>();
 
         System.Windows.Threading.Dispatcher _windowDispatcher;
@@ -600,10 +599,10 @@ namespace pc_client
                     try
                     {
                         subString = sendData.Substring(i, 2);
+                        logOutput(subString);
                         int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
                         data = (char)intValue;
                         _dispatcher.SendData(Commands.ID_TERMINAL, data);
-                        logOutput(data);
                     }
                     catch
                     {
@@ -834,31 +833,38 @@ namespace pc_client
 
         private void logOutput(byte[] output)
         {
-            logOutput(output.ToString());
+            String logValue = System.Text.Encoding.Default.GetString(output);
+            logOutput(logValue);
         }
 
 
         private void logOutput(String output)
         {
-            rtfLog.AppendText("OUT:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t- " + output);
+            rtfLog.AppendText("OUT:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + output + "\n");
         }
 
 
         private void logInput(char input)
         {
-            logOutput(input.ToString());
+            logInput(input.ToString());
         }
 
 
         private void logInput(byte[] input)
         {
-            logOutput(input.ToString());
+            string logValue = "";
+            for (int i = 0; i < input.Length; i++)
+            {
+                // Convert integer byte as a hex in a string variable
+                logValue += input[i].ToString("X");
+            }
+            logInput(logValue);
         }
 
 
         private void logInput(String input)
         {
-            rtfLog.AppendText("In:\t" + DateTime.Now.ToString("hh:mm:ss") + "\t- " + input);
+            rtfLog.AppendText("IN:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + input + "\n");
         }
 
         #endregion

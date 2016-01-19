@@ -84,22 +84,22 @@
             this.rtfTerminalIn = new System.Windows.Forms.RichTextBox();
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
-            this.about = new System.Windows.Forms.TabPage();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this._backgroundWorkerMainRead = new System.ComponentModel.BackgroundWorker();
-            this._backgroundWorkerMainStore = new System.ComponentModel.BackgroundWorker();
-            this.label13 = new System.Windows.Forms.Label();
             this.log = new System.Windows.Forms.TabPage();
             this.label14 = new System.Windows.Forms.Label();
             this.rtfLog = new System.Windows.Forms.RichTextBox();
+            this.about = new System.Windows.Forms.TabPage();
+            this.label13 = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this._backgroundWorkerMainRead = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerMainStore = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
             this.comport.SuspendLayout();
             this.panel3.SuspendLayout();
-            this.about.SuspendLayout();
             this.log.SuspendLayout();
+            this.about.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -111,7 +111,7 @@
             this.tabControl1.Location = new System.Drawing.Point(4, 1);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(482, 469);
+            this.tabControl1.Size = new System.Drawing.Size(496, 469);
             this.tabControl1.TabIndex = 3;
             this.tabControl1.Enter += new System.EventHandler(this.mainTabControl_Enter);
             this.tabControl1.MouseEnter += new System.EventHandler(this.OnMouseEntering);
@@ -143,7 +143,7 @@
             this.main.Location = new System.Drawing.Point(4, 22);
             this.main.Name = "main";
             this.main.Padding = new System.Windows.Forms.Padding(3);
-            this.main.Size = new System.Drawing.Size(474, 443);
+            this.main.Size = new System.Drawing.Size(488, 443);
             this.main.TabIndex = 0;
             this.main.Text = "Start";
             // 
@@ -426,7 +426,7 @@
             this.comport.Location = new System.Drawing.Point(4, 22);
             this.comport.Name = "comport";
             this.comport.Padding = new System.Windows.Forms.Padding(3);
-            this.comport.Size = new System.Drawing.Size(474, 443);
+            this.comport.Size = new System.Drawing.Size(491, 443);
             this.comport.TabIndex = 1;
             this.comport.Text = "ComPort";
             // 
@@ -678,31 +678,6 @@
             this.rtfTerminalOut.TextChanged += new System.EventHandler(this.rtfTerminalOut_TextChanged);
             this.rtfTerminalOut.KeyDown += new System.Windows.Forms.KeyEventHandler(this.rtfTerminalOut_KeyDown);
             // 
-            // about
-            // 
-            this.about.BackColor = System.Drawing.Color.Gainsboro;
-            this.about.Controls.Add(this.label13);
-            this.about.Location = new System.Drawing.Point(4, 22);
-            this.about.Name = "about";
-            this.about.Size = new System.Drawing.Size(474, 443);
-            this.about.TabIndex = 2;
-            this.about.Text = "About";
-            // 
-            // timer1
-            // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(14, 12);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(160, 176);
-            this.label13.TabIndex = 0;
-            this.label13.Text = "HTWG Konstanz\r\n\r\nTeamprojekt WS 15/16\r\nDaniel López\r\nAndreas Maier\r\nAndreas Reinh" +
-    "ardt\r\nLukas Stoppel\r\nMatthias Weis\r\nProf. Dr. Irenäus Schoppa\r\n\r\n© 2016\r\n";
-            // 
             // log
             // 
             this.log.BackColor = System.Drawing.Color.Gainsboro;
@@ -710,7 +685,7 @@
             this.log.Controls.Add(this.rtfLog);
             this.log.Location = new System.Drawing.Point(4, 22);
             this.log.Name = "log";
-            this.log.Size = new System.Drawing.Size(474, 443);
+            this.log.Size = new System.Drawing.Size(488, 443);
             this.log.TabIndex = 3;
             this.log.Text = "Log";
             // 
@@ -732,6 +707,31 @@
             this.rtfLog.Size = new System.Drawing.Size(457, 396);
             this.rtfLog.TabIndex = 18;
             this.rtfLog.Text = "";
+            // 
+            // about
+            // 
+            this.about.BackColor = System.Drawing.Color.Gainsboro;
+            this.about.Controls.Add(this.label13);
+            this.about.Location = new System.Drawing.Point(4, 22);
+            this.about.Name = "about";
+            this.about.Size = new System.Drawing.Size(488, 443);
+            this.about.TabIndex = 2;
+            this.about.Text = "About";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(14, 12);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(160, 192);
+            this.label13.TabIndex = 0;
+            this.label13.Text = "HTWG Konstanz\r\n\r\nTeamprojekt WS 15/16\r\n\r\nDaniel López\r\nAndreas Maier\r\nAndreas Rei" +
+    "nhardt\r\nLukas Stoppel\r\nMatthias Weis\r\nProf. Dr. Irenäus Schoppa\r\n\r\n© 2016\r\n";
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // MainForm
             // 
@@ -756,10 +756,10 @@
             this.comport.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
-            this.about.ResumeLayout(false);
-            this.about.PerformLayout();
             this.log.ResumeLayout(false);
             this.log.PerformLayout();
+            this.about.ResumeLayout(false);
+            this.about.PerformLayout();
             this.ResumeLayout(false);
 
         }
