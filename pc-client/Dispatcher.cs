@@ -33,6 +33,12 @@ namespace pc_client
         public delegate void NewTerminalDataReceivedEventHandler(object sender, byte[] data);
         public event NewTerminalDataReceivedEventHandler NewTerminalDataReceivedEvent;
 
+        public delegate void NewLogOutputDataReceivedEventHandler(object sender, String data);
+        public event NewLogOutputDataReceivedEventHandler NewLogOutputDataReceivedEvent;
+
+        public delegate void NewLogInputDataReceivedEventHandler(object sender, byte[] data);
+        public event NewLogInputDataReceivedEventHandler NewLogInputDataReceivedEvent;
+
         #endregion
 
 
@@ -110,6 +116,10 @@ namespace pc_client
             {
                 _requestPending = true;
                 _lastSendCommand = data;
+                if (NewLogOutputDataReceivedEvent != null)
+                {
+                    NewLogOutputDataReceivedEvent(this, _helper.StringToHex(data));
+                }
             }
         }
 
@@ -131,6 +141,10 @@ namespace pc_client
                 _requestPending = true;
                 Helper helper = new Helper();
                 _lastSendCommand = helper.HexToString((byte)data);
+                if (NewLogOutputDataReceivedEvent != null)
+                {
+                    NewLogOutputDataReceivedEvent(this, helper.HexToString((byte)data));
+                }
             }
         }
 
@@ -174,6 +188,11 @@ namespace pc_client
                 if (NewDataReceivedEvent != null)
                 {
                     NewDataReceivedEvent(this, data);
+                }
+
+                if (NewLogInputDataReceivedEvent != null)
+                {
+                    NewLogInputDataReceivedEvent(this, data);
                 }
 
                 if (Array.Exists(data, element => element == Commands.OK))

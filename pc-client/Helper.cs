@@ -29,8 +29,20 @@ namespace pc_client
         public String HexToString(byte hexValue)
         {
             int value = Convert.ToInt32(hexValue);
-            string hexOutput = String.Format("{0:x}", value);
-            return hexOutput;
+            return String.Format("{0:x}", value);
+        }
+
+
+        public String HexArrayToString(byte[] hexValues)
+        {
+            string retval = "";
+            for (int i = 0; i < hexValues.Length; i++)
+            {
+                // Convert integer byte as a hex in a string variable
+                retval += hexValues[i].ToString("X");
+            }
+
+            return retval;
         }
 
 

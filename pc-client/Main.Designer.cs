@@ -67,7 +67,6 @@
             this.chkDTR = new System.Windows.Forms.CheckBox();
             this.btnOpenPort = new System.Windows.Forms.Button();
             this.chkRTS = new System.Windows.Forms.CheckBox();
-            this.chkSimulation = new System.Windows.Forms.CheckBox();
             this.cmbPortName = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.cmbBaudRate = new System.Windows.Forms.ComboBox();
@@ -92,6 +91,7 @@
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerMainRead = new System.ComponentModel.BackgroundWorker();
             this._backgroundWorkerMainStore = new System.ComponentModel.BackgroundWorker();
+            this.chkSimulation = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -170,6 +170,7 @@
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.Silver;
+            this.panel2.Controls.Add(this.chkSimulation);
             this.panel2.Controls.Add(this.btnConnect);
             this.panel2.Controls.Add(this._portLabel);
             this.panel2.Controls.Add(this.label12);
@@ -224,7 +225,7 @@
             this.panel1.Controls.Add(this.rbV1);
             this.panel1.Location = new System.Drawing.Point(92, 8);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(172, 25);
+            this.panel1.Size = new System.Drawing.Size(154, 25);
             this.panel1.TabIndex = 15;
             // 
             // rbV2
@@ -241,12 +242,10 @@
             // rbV1
             // 
             this.rbV1.AutoSize = true;
-            this.rbV1.Checked = true;
             this.rbV1.Location = new System.Drawing.Point(3, 1);
             this.rbV1.Name = "rbV1";
             this.rbV1.Size = new System.Drawing.Size(62, 20);
             this.rbV1.TabIndex = 0;
-            this.rbV1.TabStop = true;
             this.rbV1.Text = "2.56 V";
             this.rbV1.UseVisualStyleBackColor = true;
             this.rbV1.Click += new System.EventHandler(this.rbV1_Click);
@@ -426,7 +425,7 @@
             this.comport.Location = new System.Drawing.Point(4, 22);
             this.comport.Name = "comport";
             this.comport.Padding = new System.Windows.Forms.Padding(3);
-            this.comport.Size = new System.Drawing.Size(491, 443);
+            this.comport.Size = new System.Drawing.Size(488, 443);
             this.comport.TabIndex = 1;
             this.comport.Text = "ComPort";
             // 
@@ -468,7 +467,6 @@
             this.panel3.Controls.Add(this.chkDTR);
             this.panel3.Controls.Add(this.btnOpenPort);
             this.panel3.Controls.Add(this.chkRTS);
-            this.panel3.Controls.Add(this.chkSimulation);
             this.panel3.Controls.Add(this.cmbPortName);
             this.panel3.Controls.Add(this.label8);
             this.panel3.Controls.Add(this.cmbBaudRate);
@@ -513,16 +511,6 @@
             this.chkRTS.TabIndex = 12;
             this.chkRTS.Text = "RTS";
             this.chkRTS.UseVisualStyleBackColor = true;
-            // 
-            // chkSimulation
-            // 
-            this.chkSimulation.AutoSize = true;
-            this.chkSimulation.Location = new System.Drawing.Point(188, 67);
-            this.chkSimulation.Name = "chkSimulation";
-            this.chkSimulation.Size = new System.Drawing.Size(89, 20);
-            this.chkSimulation.TabIndex = 11;
-            this.chkSimulation.Text = "Simulation";
-            this.chkSimulation.UseVisualStyleBackColor = true;
             // 
             // cmbPortName
             // 
@@ -733,6 +721,16 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // chkSimulation
+            // 
+            this.chkSimulation.AutoSize = true;
+            this.chkSimulation.Location = new System.Drawing.Point(387, 12);
+            this.chkSimulation.Name = "chkSimulation";
+            this.chkSimulation.Size = new System.Drawing.Size(89, 20);
+            this.chkSimulation.TabIndex = 21;
+            this.chkSimulation.Text = "Simulation";
+            this.chkSimulation.UseVisualStyleBackColor = true;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -787,7 +785,6 @@
         private System.Windows.Forms.ComboBox cmbBaudRate;
         private System.Windows.Forms.ComboBox cmbPortName;
         private System.Windows.Forms.RichTextBox rtfTerminalOut;
-        private System.Windows.Forms.CheckBox chkSimulation;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.ComboBox cmbStopBits;
         private System.Windows.Forms.CheckBox chkDTR;
@@ -828,6 +825,7 @@
         private System.Windows.Forms.TabPage log;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.RichTextBox rtfLog;
+        private System.Windows.Forms.CheckBox chkSimulation;
     }
 }
 

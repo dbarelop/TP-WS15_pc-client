@@ -87,6 +87,8 @@ namespace pc_client
                 _dispatcher.NewErrorReceivedEvent += new Dispatcher.NewErrorReceivedEventHandler(Dispatcher_NewErrorReceivedEvent);
                 _dispatcher.NewEpromDataReceivedEvent += new Dispatcher.NewEpromDataReceivedEventHandler(Dispatcher_NewEpromDataReceivedEvent);
                 _dispatcher.NewTerminalDataReceivedEvent += new Dispatcher.NewTerminalDataReceivedEventHandler(Dispatcher_NewTerminalDataReceivedEvent);
+                _dispatcher.NewLogOutputDataReceivedEvent += new Dispatcher.NewLogOutputDataReceivedEventHandler(Dispatcher_NewLogOutputDataReceivedEvent);
+                _dispatcher.NewLogInputDataReceivedEvent += new Dispatcher.NewLogInputDataReceivedEventHandler(Dispatcher_NewLogInputDataReceivedEvent);
             }
             else
             {
@@ -98,6 +100,8 @@ namespace pc_client
                 _dispatcher.NewErrorReceivedEvent -= new Dispatcher.NewErrorReceivedEventHandler(Dispatcher_NewErrorReceivedEvent);
                 _dispatcher.NewEpromDataReceivedEvent -= new Dispatcher.NewEpromDataReceivedEventHandler(Dispatcher_NewEpromDataReceivedEvent);
                 _dispatcher.NewTerminalDataReceivedEvent -= new Dispatcher.NewTerminalDataReceivedEventHandler(Dispatcher_NewTerminalDataReceivedEvent);
+                _dispatcher.NewLogOutputDataReceivedEvent -= new Dispatcher.NewLogOutputDataReceivedEventHandler(Dispatcher_NewLogOutputDataReceivedEvent);
+                _dispatcher.NewLogInputDataReceivedEvent -= new Dispatcher.NewLogInputDataReceivedEventHandler(Dispatcher_NewLogInputDataReceivedEvent);
             }
         }
 
@@ -129,37 +133,51 @@ namespace pc_client
 
         void Dispatcher_NewHardwareDataReceivedEvent(object sender, byte[] value)
         {
-            tbHardware.Text = _helper.HexToString(value[0]);
+            if(value != null)
+            {
+                tbHardware.Text = _helper.HexArrayToString(value);
+            }
         }
 
 
         void Dispatcher_NewTemperatureDataReceivedEvent(object sender, byte[] value)
         {
-            tbTemperatur.Text = _helper.HexToString(value[0]);
+             if (value != null)
+            {
+                tbTemperatur.Text = _helper.HexArrayToString(value);
+            }
         }
 
 
         void Dispatcher_NewADChannel1DataReceivedEvent(object sender, byte[] value)
         {
-            tbADChannel1.Text = _helper.HexToString(value[0]);
+            if (value != null)
+            {
+                tbADChannel1.Text = _helper.HexArrayToString(value);
+            }
         }
 
 
         void Dispatcher_NewADChannel2DataReceivedEvent(object sender, byte[] value)
         {
-            tbADChannel2.Text = _helper.HexToString(value[0]);
+            if (value != null)
+            {
+                tbADChannel2.Text = _helper.HexArrayToString(value);
+            }
         }
 
 
         void Dispatcher_NewEpromDataReceivedEvent(object sender, byte[] value)
         {
-            rtfEprom.Text = _helper.HexToString(value[0]);
+            if (value != null)
+            {
+                rtfEprom.Text = _helper.HexArrayToString(value);
+            }
         }
 
 
         void Dispatcher_NewTerminalDataReceivedEvent(object sender, byte[] data)
         {
-            logInput(data);
             _data.AppendTerminalData(data);
 
             if (chkInputType.Checked == true)
@@ -184,9 +202,27 @@ namespace pc_client
         {
             _error.SendingCommandError(text);
         }
-       
+
+
+        void Dispatcher_NewLogInputDataReceivedEvent(object sender, byte[] value)
+        {
+            if (value != null)
+            {
+                logInput(value);
+            }
+        }
+
+
+        void Dispatcher_NewLogOutputDataReceivedEvent(object sender, String value)
+        {
+            if (value != null)
+            {
+                logOutput(value);
+            }
+        }
+
         #endregion
- 
+
 
         ///////////////////////////////////////////////////////////////////////
         #region SaveSettings
@@ -599,7 +635,7 @@ namespace pc_client
                     try
                     {
                         subString = sendData.Substring(i, 2);
-                        logOutput(subString);
+                       // logOutput(subString);
                         int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
                         data = (char)intValue;
                         _dispatcher.SendData(Commands.ID_TERMINAL, data);
@@ -613,7 +649,6 @@ namespace pc_client
             else
             {
                 _dispatcher.SendData(Commands.ID_TERMINAL, sendData);
-                logOutput(sendData);
             } 
         }
 
@@ -783,42 +818,46 @@ namespace pc_client
         private void btnReadHardware_Click(object sender, EventArgs e)
         {
             _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
-            WaitForPendingRequest();
+//WaitForPendingRequest();
         }
 
 
         private void btnReadTemperatur_Click(object sender, EventArgs e)
         {
-            _dispatcher.SendData(Commands.ID_TEMPERATURE, (char)(Commands.ADW | Commands.READ));
-            WaitForPendingRequest();
+            _dispatcher.SendData(Commands.ID_TEMPERATURE, (char)(Commands.ADT | Commands.READ));
+           // WaitForPendingRequest();
         }
 
 
         private void btnReadADC1_Click(object sender, EventArgs e)
         {
-            _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADT | Commands.RNG1));
-            WaitForPendingRequest();
+            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.CH1));
+         //   WaitForPendingRequest();
+            _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADW | Commands.READ));
+          //  WaitForPendingRequest();
         }
 
 
         private void btnReadADC2_Click(object sender, EventArgs e)
         {
-            _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADT | Commands.RNG2));
-            WaitForPendingRequest();
+            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.CH2));
+         //   WaitForPendingRequest();
+            _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADW | Commands.READ));
+          //  WaitForPendingRequest();
         }
 
 
         private void rbV1_Click(object sender, EventArgs e)
         {
-            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADT | Commands.RNG1));
-            WaitForPendingRequest();
+            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.RNG1));
+          //  WaitForPendingRequest();
         }
 
 
         private void rbV2_Click(object sender, EventArgs e)
         {
-            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADT | Commands.RNG2));
-            WaitForPendingRequest();
+            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.RNG2));
+          //  WaitForPendingRequest();
         }
 
 
@@ -852,13 +891,7 @@ namespace pc_client
 
         private void logInput(byte[] input)
         {
-            string logValue = "";
-            for (int i = 0; i < input.Length; i++)
-            {
-                // Convert integer byte as a hex in a string variable
-                logValue += input[i].ToString("X");
-            }
-            logInput(logValue);
+            logInput(_helper.HexArrayToString(input));
         }
 
 
