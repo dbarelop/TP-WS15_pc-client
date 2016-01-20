@@ -20,6 +20,7 @@ namespace pc_client
         Settings _settings = null;
         Data _data = null;
         int _waitCounter = 1;
+        char _lastSendCommand;
 
         List<string> _commandHistory = new List<string>();
 
@@ -49,9 +50,8 @@ namespace pc_client
             InitializeComponent();
             InitializeControlValues();
             EnableControls();
-            InitializeTimer();
+            InitializePortTimer();
             RegisterEventHandlers(true);
-            RegisterMainBackGroundWorker(true);
         }
 
 
@@ -109,26 +109,6 @@ namespace pc_client
 
 
         ///////////////////////////////////////////////////////////////////////
-        #region RegisterBackGroundWorkers
-
-        private void RegisterMainBackGroundWorker(bool register)
-        {
-            if (register)
-            {
-                _backgroundWorkerEepromRead.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromRead_DoWork);
-                _backgroundWorkerEepromWrite.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromWrite_DoWork);
-            }
-            else
-            {
-                _backgroundWorkerEepromRead.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromRead_DoWork);
-                _backgroundWorkerEepromWrite.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromWrite_DoWork);
-            }
-        }
-
-        #endregion
-
-
-        ///////////////////////////////////////////////////////////////////////
         #region Receivers
 
         void Dispatcher_NewHardwareDataReceivedEvent(object sender, byte[] value)
@@ -136,6 +116,7 @@ namespace pc_client
             if(value != null)
             {
                 tbHardware.Text = _helper.HexArrayToString(value);
+                StopBGWTimer();
             }
         }
 
@@ -145,6 +126,7 @@ namespace pc_client
              if (value != null)
             {
                 tbTemperatur.Text = _helper.HexArrayToString(value);
+                StopBGWTimer();
             }
         }
 
@@ -257,6 +239,8 @@ namespace pc_client
         public void close_port()
         {
             _comWrapper.ComportDispose();
+            _backgroundWorker.CancelAsync();
+            _backgroundWorker.Dispose();
         }
 
         #endregion
@@ -384,11 +368,60 @@ namespace pc_client
         }
 
         #endregion
-        
+
 
         ///////////////////////////////////////////////////////////////////////
-        #region UserInputEvents
-       
+        #region BackgroundWorker
+
+        void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                List<object> genericlist = e.Argument as List<object>;
+                _dispatcher.SendData((String)genericlist[0], (char)genericlist[1]);
+            }
+            catch
+            {
+                _error.FatalError();
+            }
+        }
+
+
+        private void _backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            DisableSettingsControls();
+        }
+
+
+        private void InitializeBGWTimer()
+        {
+            portTimer.Interval = 5000;
+            portTimer.Enabled = true;
+            this.portTimer.Tick += new System.EventHandler(this.bgwTimer_Tick);
+        }
+
+
+        private void StopBGWTimer()
+        {
+            bgwTimer.Stop();
+            portTimer.Enabled = false;
+            this.portTimer.Tick -= new System.EventHandler(this.bgwTimer_Tick);
+        }
+
+
+        private void bgwTimer_Tick(object sender, System.EventArgs e)
+        {
+            StopBGWTimer();
+            _error.TimeOutError(_lastSendCommand);
+            _backgroundWorker.CancelAsync();
+            DisableSettingsControls();
+        }
+
+        #endregion
+
+            ///////////////////////////////////////////////////////////////////////
+            #region UserInputEvents
+
         private void cmbPortName_DropDown(object sender, EventArgs e)
         {
             RefreshComPortList();
@@ -506,7 +539,6 @@ namespace pc_client
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             RegisterEventHandlers(false);
-            RegisterMainBackGroundWorker(false);
             SaveSettings();
 
             try
@@ -523,6 +555,119 @@ namespace pc_client
         private void mainTabControl_Enter(object sender, EventArgs e)
         {
             btnConnect.Focus();
+        }
+               
+        
+        private void btnReadHardware_Click(object sender, EventArgs e)
+        {
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_HARDWARE;
+                object command = (char)(Commands.MASTER | Commands.READ);
+
+                EnableSettingsControls();
+                _lastSendCommand = (char)command;
+                InitializeBGWTimer();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+        }
+
+
+        private void btnReadTemperatur_Click(object sender, EventArgs e)
+        {
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_TEMPERATURE;
+                object command = (char)(Commands.ADT | Commands.READ);
+
+                EnableSettingsControls();
+                _lastSendCommand = (char)command;
+                InitializeBGWTimer();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+        }
+
+
+        private void btnReadADC1_Click(object sender, EventArgs e)
+        {
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_VOID;
+                object command = (char)(Commands.ADW | Commands.CH1);
+
+                EnableSettingsControls();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_ADCHANNEL1;
+                object command = (char)(Commands.ADW | Commands.READ);
+
+                EnableSettingsControls();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+        }
+
+
+        private void btnReadADC2_Click(object sender, EventArgs e)
+        {
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_VOID;
+                object command = (char)(Commands.ADW | Commands.CH2);
+
+                EnableSettingsControls();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_ADCHANNEL2;
+                object command = (char)(Commands.ADW | Commands.READ);
+
+                EnableSettingsControls();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+        }
+
+
+        private void rbV1_Click(object sender, EventArgs e)
+        {
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_VOID;
+                object command = (char)(Commands.ADW | Commands.RNG1);
+
+                EnableSettingsControls();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+        }
+
+
+        private void rbV2_Click(object sender, EventArgs e)
+        {
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_VOID;
+                object command = (char)(Commands.ADW | Commands.RNG2);
+
+                EnableSettingsControls();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
+        }
+
+
+        private void btnReadEeprom_Click(object sender, EventArgs e)
+        {
+            if (!_backgroundWorker.IsBusy)
+            {
+                object identifier = Commands.ID_EEPROM;
+                object command = (char)(Commands.EEPROM | Commands.READ);
+
+                EnableSettingsControls();
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+            }
         }
 
         #endregion
@@ -716,14 +861,14 @@ namespace pc_client
         ///////////////////////////////////////////////////////////////////////
         #region PortStatus
 
-        private void InitializeTimer()
+        private void InitializePortTimer()
         {
-            timer1.Interval = 600;
-            timer1.Enabled = true;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            portTimer.Interval = 600;
+            portTimer.Enabled = true;
+            this.portTimer.Tick += new System.EventHandler(this.portTimer_Tick);
         }
 
-        private void timer1_Tick(object sender, System.EventArgs e)
+        private void portTimer_Tick(object sender, System.EventArgs e)
         {
             bool portAvailable = false;
             string[] availablePortNames = SerialPort.GetPortNames();
@@ -799,126 +944,5 @@ namespace pc_client
 
         #endregion
         
-
-       
-        ///////////////////////////////////////////////////////////////////////
-        #region EepromRead
-
-        void BackgroundWorkerEepromRead_DoWork(object sender, EventArgs arg)
-        {
-            try
-            {
-                _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADW | Commands.READ));
-                WaitForPendingRequest();
-               // _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
-             //   WaitForPendingRequest();
-            }
-            catch
-            {
-                _error.FatalError();
-            }
-        }
-
-
-        private void btnReadEeprom_Click(object sender, EventArgs e)
-        {
-            if (!_backgroundWorkerEepromRead.IsBusy)
-            {
-                _backgroundWorkerEepromRead.RunWorkerAsync();
-            }
-        }
-        
-
-        private void _backgroundWorkerEepromRead_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            //EnableMainTabTextboxes();
-            //EnableMainTabButtons();
-        }
-
-        #endregion
-        
-
-        ///////////////////////////////////////////////////////////////////////
-        #region Eeprom write
-
-        void BackgroundWorkerEepromWrite_DoWork(object sender, EventArgs arg)
-        {
-             try
-            {
-                _dispatcher.SendData("Eprom", (char)(Commands.EEPROM | Commands.WRITE));
-                WaitForPendingRequest();
-            }
-            catch
-            {
-                _error.FatalError();
-            }
-        }
-
-
-        private void btnWriteEeprom_Click(object sender, EventArgs e)
-        {
-           // DisableMainTabTextboxes();
-          //  DisableMainTabButtons();
-
-            if (_backgroundWorkerEepromWrite.IsBusy != true)
-            {
-                _backgroundWorkerEepromWrite.RunWorkerAsync();
-            }
-        }
-        
-
-        private void _backgroundWorkerEepromWrite_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-           // EnableMainTabButtons();
-        }
-
-        #endregion
-
-
-        private void btnReadHardware_Click(object sender, EventArgs e)
-        {
-            _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
-            //WaitForPendingRequest();
-        }
-
-
-        private void btnReadTemperatur_Click(object sender, EventArgs e)
-        {
-            _dispatcher.SendData(Commands.ID_TEMPERATURE, (char)(Commands.ADT | Commands.READ));
-           // WaitForPendingRequest();
-        }
-
-
-        private void btnReadADC1_Click(object sender, EventArgs e)
-        {
-            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.CH1));
-         //   WaitForPendingRequest();
-            _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADW | Commands.READ));
-          //  WaitForPendingRequest();
-        }
-
-
-        private void btnReadADC2_Click(object sender, EventArgs e)
-        {
-            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.CH2));
-         //   WaitForPendingRequest();
-            _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADW | Commands.READ));
-           // WaitForPendingRequest();
-        }
-
-
-        private void rbV1_Click(object sender, EventArgs e)
-        {
-            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.RNG1));
-          //  WaitForPendingRequest();
-        }
-
-
-        private void rbV2_Click(object sender, EventArgs e)
-        {
-            _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.RNG2));
-          //  WaitForPendingRequest();
-        }
-
     }
 }

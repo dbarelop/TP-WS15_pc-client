@@ -27,6 +27,16 @@ namespace pc_client
         }
 
 
+        public void TimeOutError(char command)
+        {
+            MessageBox.Show("Timeout occurred while sending " + command,
+            "Timeout Error Occurred",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Error,
+            MessageBoxDefaultButton.Button1);
+        }
+
+
         public void SendingCommandError(string text)
         {
             MessageBox.Show("Error occurred while sending command: " + text,

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace pc_client
 {
@@ -54,6 +55,15 @@ namespace pc_client
             withoutOK = rawData.Where(val => val != toRemove).ToArray();
 
             return withoutOK;
+        }
+
+
+        public List<object> CreateObjectList(object o1, object o2)
+        {
+            List<object> arguments = new List<object>();
+            arguments.Add(o1);
+            arguments.Add(o2);
+            return arguments;
         }
 
     }

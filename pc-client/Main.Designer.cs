@@ -35,6 +35,7 @@
             this.chkAD2 = new System.Windows.Forms.CheckBox();
             this.chkAD1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.chkSimulation = new System.Windows.Forms.CheckBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this._portLabel = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -88,10 +89,9 @@
             this.rtfLog = new System.Windows.Forms.RichTextBox();
             this.about = new System.Windows.Forms.TabPage();
             this.label13 = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this._backgroundWorkerEepromRead = new System.ComponentModel.BackgroundWorker();
-            this._backgroundWorkerEepromWrite = new System.ComponentModel.BackgroundWorker();
-            this.chkSimulation = new System.Windows.Forms.CheckBox();
+            this.portTimer = new System.Windows.Forms.Timer(this.components);
+            this._backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this.bgwTimer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -181,6 +181,16 @@
             this.panel2.Size = new System.Drawing.Size(504, 67);
             this.panel2.TabIndex = 17;
             // 
+            // chkSimulation
+            // 
+            this.chkSimulation.AutoSize = true;
+            this.chkSimulation.Location = new System.Drawing.Point(387, 12);
+            this.chkSimulation.Name = "chkSimulation";
+            this.chkSimulation.Size = new System.Drawing.Size(89, 20);
+            this.chkSimulation.TabIndex = 21;
+            this.chkSimulation.Text = "Simulation";
+            this.chkSimulation.UseVisualStyleBackColor = true;
+            // 
             // btnConnect
             // 
             this.btnConnect.BackColor = System.Drawing.Color.Gainsboro;
@@ -258,7 +268,6 @@
             this.btnWriteEprom.TabIndex = 16;
             this.btnWriteEprom.Text = "Write";
             this.btnWriteEprom.UseVisualStyleBackColor = true;
-            this.btnWriteEprom.Click += new System.EventHandler(this.btnWriteEeprom_Click);
             // 
             // btnReadEprom
             // 
@@ -719,19 +728,19 @@
             this.label13.Text = "HTWG Konstanz\r\n\r\nTeamprojekt WS 15/16\r\n\r\nDaniel López\r\nAndreas Maier\r\nAndreas Rei" +
     "nhardt\r\nLukas Stoppel\r\nMatthias Weis\r\nProf. Dr. Irenäus Schoppa\r\n\r\n© 2016\r\n";
             // 
-            // timer1
+            // portTimer
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.portTimer.Tick += new System.EventHandler(this.portTimer_Tick);
             // 
-            // chkSimulation
+            // _backgroundWorker
             // 
-            this.chkSimulation.AutoSize = true;
-            this.chkSimulation.Location = new System.Drawing.Point(387, 12);
-            this.chkSimulation.Name = "chkSimulation";
-            this.chkSimulation.Size = new System.Drawing.Size(89, 20);
-            this.chkSimulation.TabIndex = 21;
-            this.chkSimulation.Text = "Simulation";
-            this.chkSimulation.UseVisualStyleBackColor = true;
+            this._backgroundWorker.WorkerSupportsCancellation = true;
+            this._backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            this._backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorker_RunWorkerCompleted);
+            // 
+            // bgwTimer
+            // 
+            this.bgwTimer.Tick += new System.EventHandler(this.bgwTimer_Tick);
             // 
             // MainForm
             // 
@@ -818,16 +827,16 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.Button btnClearIn;
         private System.Windows.Forms.Button btnClearOut;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer portTimer;
         private System.Windows.Forms.Button btnConnect;
-        private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromRead;
-        private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromWrite;
+        private System.ComponentModel.BackgroundWorker _backgroundWorker;
         private System.Windows.Forms.TabPage about;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TabPage log;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.RichTextBox rtfLog;
         private System.Windows.Forms.CheckBox chkSimulation;
+        private System.Windows.Forms.Timer bgwTimer;
     }
 }
 
