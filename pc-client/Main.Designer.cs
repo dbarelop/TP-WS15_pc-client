@@ -89,8 +89,8 @@
             this.about = new System.Windows.Forms.TabPage();
             this.label13 = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this._backgroundWorkerMainRead = new System.ComponentModel.BackgroundWorker();
-            this._backgroundWorkerMainStore = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerEepromRead = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerEepromWrite = new System.ComponentModel.BackgroundWorker();
             this.chkSimulation = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
@@ -258,6 +258,7 @@
             this.btnWriteEprom.TabIndex = 16;
             this.btnWriteEprom.Text = "Write";
             this.btnWriteEprom.UseVisualStyleBackColor = true;
+            this.btnWriteEprom.Click += new System.EventHandler(this.btnWriteEeprom_Click);
             // 
             // btnReadEprom
             // 
@@ -267,6 +268,7 @@
             this.btnReadEprom.TabIndex = 15;
             this.btnReadEprom.Text = "Read";
             this.btnReadEprom.UseVisualStyleBackColor = true;
+            this.btnReadEprom.Click += new System.EventHandler(this.btnReadEeprom_Click);
             // 
             // chkPollTemp
             // 
@@ -818,8 +820,8 @@
         private System.Windows.Forms.Button btnClearOut;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnConnect;
-        private System.ComponentModel.BackgroundWorker _backgroundWorkerMainRead;
-        private System.ComponentModel.BackgroundWorker _backgroundWorkerMainStore;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromRead;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromWrite;
         private System.Windows.Forms.TabPage about;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TabPage log;

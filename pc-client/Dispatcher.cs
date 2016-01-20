@@ -50,6 +50,7 @@ namespace pc_client
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
         volatile bool _requestPending = false;
+        volatile bool _eepromBusy = false;
         Object _lockObject = new Object();
 
         String _lastSendCommand;
@@ -163,7 +164,6 @@ namespace pc_client
                 if (tmp == false)
                 {
                     _error.CanNotOpenComportError(tmpPort);
-                    throw new System.IO.InvalidDataException();
                 }
             }
         }
@@ -173,7 +173,13 @@ namespace pc_client
         {
             return _requestPending;
         }
-        
+
+
+        public bool EepromISBusy()
+        {
+            return _eepromBusy;
+        }
+
 
         public void ComWrapper_NewDataReceivedEvent(object sender, byte[] data)
         {
@@ -199,6 +205,11 @@ namespace pc_client
                 {
                     _requestPending = false;
                 }
+
+             //   if (Array.Exists(data, element => element == Commands.DONE))
+             //   {
+            //        _eepromBusy = false;
+             //   }
 
                 switch (_sendCmd)
                 {

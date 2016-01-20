@@ -53,5 +53,34 @@ namespace pc_client
         public const string ID_VOID = "Void";
 
         #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region ADT Calculation
+
+        public static double calculateVoltage(double range, double decimalInput)
+        {
+            const double REFERENCE_VOLTAGE = 2.5;
+            const int NUMBER_OF_BITS = 24;
+            double analogInput;
+            int gain;
+
+            if(range == 2.56)
+            {
+                gain = 1;
+            }
+            else
+            {
+                gain = 16;
+            }
+
+            double v = 1.024 * REFERENCE_VOLTAGE;
+            int a = (2 * NUMBER_OF_BITS) - 1;
+            analogInput = (v * ((decimalInput / a) - 1) / gain);
+
+            return analogInput;
+        }
+
+        #endregion
     }
 }

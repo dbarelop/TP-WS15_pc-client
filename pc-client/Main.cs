@@ -115,13 +115,13 @@ namespace pc_client
         {
             if (register)
             {
-                _backgroundWorkerMainRead.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainRead_DoWork);
-                _backgroundWorkerMainStore.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainStore_DoWork);
+                _backgroundWorkerEepromRead.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromRead_DoWork);
+                _backgroundWorkerEepromWrite.DoWork += new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromWrite_DoWork);
             }
             else
             {
-                _backgroundWorkerMainRead.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainRead_DoWork);
-                _backgroundWorkerMainStore.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerMainStore_DoWork);
+                _backgroundWorkerEepromRead.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromRead_DoWork);
+                _backgroundWorkerEepromWrite.DoWork -= new System.ComponentModel.DoWorkEventHandler(BackgroundWorkerEepromWrite_DoWork);
             }
         }
 
@@ -611,12 +611,22 @@ namespace pc_client
             return true;
         }
 
+
+        private bool EepromCompleted()
+        {
+            while (_dispatcher.EepromISBusy())
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+            return true;
+        }
+
         #endregion
 
 
         ///////////////////////////////////////////////////////////////////////
         #region TerminalSendData
-            
+
         private void TerminalSendData()
         {
             String sendData = "";
@@ -650,6 +660,54 @@ namespace pc_client
             {
                 _dispatcher.SendData(Commands.ID_TERMINAL, sendData);
             } 
+        }
+
+        #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region Logging
+
+        private void logOutput(char output)
+        {
+            logOutput(output.ToString());
+        }
+
+
+        private void logOutput(byte[] output)
+        {
+            String logValue = System.Text.Encoding.Default.GetString(output);
+            logOutput(logValue);
+        }
+
+        
+        private void logOutput(String output)
+        {
+            Invoke(new MethodInvoker(delegate
+            {
+                rtfLog.AppendText("OUT:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + output + "\n");
+            }));
+        }
+
+
+        private void logInput(char input)
+        {
+            logInput(input.ToString());
+        }
+
+
+        private void logInput(byte[] input)
+        {
+            logInput(_helper.HexArrayToString(input));
+        }
+
+
+        private void logInput(String input)
+        {
+            Invoke(new MethodInvoker(delegate
+            {
+                rtfLog.AppendText("IN:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + input + "\n");
+            }));
         }
 
         #endregion
@@ -744,14 +802,16 @@ namespace pc_client
 
        
         ///////////////////////////////////////////////////////////////////////
-        #region MainRead
+        #region EepromRead
 
-        void BackgroundWorkerMainRead_DoWork(object sender, EventArgs arg)
+        void BackgroundWorkerEepromRead_DoWork(object sender, EventArgs arg)
         {
             try
             {
-                _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
+                _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADW | Commands.READ));
                 WaitForPendingRequest();
+               // _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
+             //   WaitForPendingRequest();
             }
             catch
             {
@@ -759,17 +819,17 @@ namespace pc_client
             }
         }
 
-        
-        private void OnReadButton_clicked(object sender, EventArgs e)
+
+        private void btnReadEeprom_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorkerMainRead.IsBusy)
+            if (!_backgroundWorkerEepromRead.IsBusy)
             {
-                _backgroundWorkerMainRead.RunWorkerAsync();
+                _backgroundWorkerEepromRead.RunWorkerAsync();
             }
         }
         
 
-        private void _backgroundWorkerMainRead_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void _backgroundWorkerEepromRead_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             //EnableMainTabTextboxes();
             //EnableMainTabButtons();
@@ -779,9 +839,9 @@ namespace pc_client
         
 
         ///////////////////////////////////////////////////////////////////////
-        #region MainStore
+        #region Eeprom write
 
-        void BackgroundWorkerMainStore_DoWork(object sender, EventArgs arg)
+        void BackgroundWorkerEepromWrite_DoWork(object sender, EventArgs arg)
         {
              try
             {
@@ -795,19 +855,19 @@ namespace pc_client
         }
 
 
-        private void OnStoreButton_Click(object sender, EventArgs e)
+        private void btnWriteEeprom_Click(object sender, EventArgs e)
         {
            // DisableMainTabTextboxes();
           //  DisableMainTabButtons();
 
-            if (_backgroundWorkerMainStore.IsBusy != true)
+            if (_backgroundWorkerEepromWrite.IsBusy != true)
             {
-                _backgroundWorkerMainStore.RunWorkerAsync();
+                _backgroundWorkerEepromWrite.RunWorkerAsync();
             }
         }
         
 
-        private void _backgroundWorkerMainStore_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void _backgroundWorkerEepromWrite_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
            // EnableMainTabButtons();
         }
@@ -818,7 +878,7 @@ namespace pc_client
         private void btnReadHardware_Click(object sender, EventArgs e)
         {
             _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
-//WaitForPendingRequest();
+            //WaitForPendingRequest();
         }
 
 
@@ -843,7 +903,7 @@ namespace pc_client
             _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.ADW | Commands.CH2));
          //   WaitForPendingRequest();
             _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADW | Commands.READ));
-          //  WaitForPendingRequest();
+           // WaitForPendingRequest();
         }
 
 
@@ -860,46 +920,5 @@ namespace pc_client
           //  WaitForPendingRequest();
         }
 
-
-        ///////////////////////////////////////////////////////////////////////
-        #region Logging
-
-        private void logOutput(char output)
-        {
-            logOutput(output.ToString());
-        }
-
-
-        private void logOutput(byte[] output)
-        {
-            String logValue = System.Text.Encoding.Default.GetString(output);
-            logOutput(logValue);
-        }
-
-
-        private void logOutput(String output)
-        {
-            rtfLog.AppendText("OUT:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + output + "\n");
-        }
-
-
-        private void logInput(char input)
-        {
-            logInput(input.ToString());
-        }
-
-
-        private void logInput(byte[] input)
-        {
-            logInput(_helper.HexArrayToString(input));
-        }
-
-
-        private void logInput(String input)
-        {
-            rtfLog.AppendText("IN:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + input + "\n");
-        }
-
-        #endregion
     }
 }
