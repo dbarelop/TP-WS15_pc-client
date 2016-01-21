@@ -85,18 +85,19 @@
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
             this.log = new System.Windows.Forms.TabPage();
+            this.btnExport = new System.Windows.Forms.Button();
             this.btnLogClear = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.rtfLog = new System.Windows.Forms.RichTextBox();
             this.about = new System.Windows.Forms.TabPage();
+            this.label15 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label18 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.portTimer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.bgwTimer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerADW = new System.ComponentModel.BackgroundWorker();
-            this.label18 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.label15 = new System.Windows.Forms.Label();
             this.tempTimer = new System.Windows.Forms.Timer(this.components);
             this.ad1Timer = new System.Windows.Forms.Timer(this.components);
             this.ad2Timer = new System.Windows.Forms.Timer(this.components);
@@ -694,6 +695,7 @@
             // log
             // 
             this.log.BackColor = System.Drawing.Color.Gainsboro;
+            this.log.Controls.Add(this.btnExport);
             this.log.Controls.Add(this.btnLogClear);
             this.log.Controls.Add(this.label14);
             this.log.Controls.Add(this.rtfLog);
@@ -702,11 +704,23 @@
             this.log.Size = new System.Drawing.Size(488, 443);
             this.log.TabIndex = 3;
             this.log.Text = "Log";
+            this.log.Click += new System.EventHandler(this.logExport_Click);
+            // 
+            // btnExport
+            // 
+            this.btnExport.Enabled = false;
+            this.btnExport.Location = new System.Drawing.Point(253, 401);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(83, 28);
+            this.btnExport.TabIndex = 21;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.logExport_Click);
             // 
             // btnLogClear
             // 
             this.btnLogClear.Enabled = false;
-            this.btnLogClear.Location = new System.Drawing.Point(191, 401);
+            this.btnLogClear.Location = new System.Drawing.Point(144, 401);
             this.btnLogClear.Name = "btnLogClear";
             this.btnLogClear.Size = new System.Drawing.Size(83, 28);
             this.btnLogClear.TabIndex = 20;
@@ -729,9 +743,9 @@
             // 
             this.rtfLog.Enabled = false;
             this.rtfLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rtfLog.Location = new System.Drawing.Point(7, 31);
+            this.rtfLog.Location = new System.Drawing.Point(4, 31);
             this.rtfLog.Name = "rtfLog";
-            this.rtfLog.Size = new System.Drawing.Size(457, 364);
+            this.rtfLog.Size = new System.Drawing.Size(460, 364);
             this.rtfLog.TabIndex = 18;
             this.rtfLog.Text = "";
             this.rtfLog.TextChanged += new System.EventHandler(this.rtfLog_TextChanged);
@@ -748,6 +762,35 @@
             this.about.Size = new System.Drawing.Size(488, 443);
             this.about.TabIndex = 2;
             this.about.Text = "About";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(17, 414);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(47, 16);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "© 2016\r\n";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(19, 25);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(308, 99);
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(14, 149);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(310, 31);
+            this.label18.TabIndex = 2;
+            this.label18.Text = "Teamprojekt WS 15/16\r\n";
             // 
             // label13
             // 
@@ -779,35 +822,6 @@
             this._backgroundWorkerADW.WorkerSupportsCancellation = true;
             this._backgroundWorkerADW.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerADW_DoWork);
             this._backgroundWorkerADW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerADW_RunWorkerCompleted);
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label18.Location = new System.Drawing.Point(14, 149);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(310, 31);
-            this.label18.TabIndex = 2;
-            this.label18.Text = "Teamprojekt WS 15/16\r\n";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(19, 25);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(308, 99);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label15.Location = new System.Drawing.Point(17, 414);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(47, 16);
-            this.label15.TabIndex = 4;
-            this.label15.Text = "© 2016\r\n";
             // 
             // tempTimer
             // 
@@ -925,6 +939,7 @@
         private System.Windows.Forms.Timer tempTimer;
         private System.Windows.Forms.Timer ad1Timer;
         private System.Windows.Forms.Timer ad2Timer;
+        private System.Windows.Forms.Button btnExport;
     }
 }
 

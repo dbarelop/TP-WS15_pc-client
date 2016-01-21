@@ -683,11 +683,23 @@ namespace pc_client
             if (rtfLog.Text.Length > 0)
             {
                 btnLogClear.Enabled = true;
+                btnExport.Enabled = true;
             }
             else
             {
                 btnLogClear.Enabled = false;
+                btnExport.Enabled = false;
             }
+        }
+
+        private void logExport_Click(object sender, EventArgs e)
+        {
+            String logString = "";
+            for (int i = 0; i < rtfLog.Lines.Length; i++)
+            {
+                logString += rtfLog.Lines[i] + Environment.NewLine;
+            }
+            System.IO.File.WriteAllText(@"log.txt", logString);
         }
 
         #endregion
@@ -1111,5 +1123,6 @@ namespace pc_client
         {
 
         }
+
     }
 }
