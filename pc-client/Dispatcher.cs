@@ -270,7 +270,7 @@ namespace pc_client
                             NewTerminalDataReceivedEvent(this, data);
                         }
                         break;
-                    }
+                }
             }
         }
         

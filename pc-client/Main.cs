@@ -16,11 +16,13 @@ namespace pc_client
         ComWrapper _comWrapper = null;
         Dispatcher _dispatcher = null;
         Helper _helper = null;
+        Simulator _simulator = null;
         ErrorMessageBoxes _error = null;
         Settings _settings = null;
         Data _data = null;
         int _waitCounter = 1;
-        char _lastSendCommand;
+        volatile char _lastSendCommand;
+        bool _simulateResponses = false;
 
         List<string> _commandHistory = new List<string>();
 
@@ -43,6 +45,7 @@ namespace pc_client
             _dispatcher = new Dispatcher(this, _comWrapper);
             _data = Data.GetInstance;
             _helper = new Helper();
+            _simulator = new Simulator(_dispatcher);
             _settings = Settings.GetInstance;
             _error = new ErrorMessageBoxes();
             _windowDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
@@ -200,6 +203,11 @@ namespace pc_client
             if (value != null)
             {
                 logInput(value);
+            }
+
+            if (_simulateResponses == true)
+            {
+                _simulator.SimulateResponses(value[0]);
             }
         }
 
@@ -1119,10 +1127,22 @@ namespace pc_client
         #endregion
 
 
+        ///////////////////////////////////////////////////////////////////////
+        #region Simulation
+
         private void chkSimulation_CheckedChanged(object sender, EventArgs e)
         {
-
+            if(chkSimulation.Checked == true)
+            {
+                _simulateResponses = true;
+            }
+            else
+            {
+                _simulateResponses = false;
+            }
         }
+
+        #endregion
 
     }
 }
