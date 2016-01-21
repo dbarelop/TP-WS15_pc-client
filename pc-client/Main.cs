@@ -719,6 +719,12 @@ namespace pc_client
 
         private void btnReadTemperatur_Click(object sender, EventArgs e)
         {
+            ReadTemperature();
+        }
+
+
+        private void ReadTemperature()
+        {
             if (!_backgroundWorker.IsBusy)
             {
                 object identifier = Commands.ID_TEMPERATURE;
@@ -734,6 +740,12 @@ namespace pc_client
 
         private void btnReadADC1_Click(object sender, EventArgs e)
         {
+            ReadADC1();
+        }
+
+
+        private void ReadADC1()
+        {
             if (!_backgroundWorkerADW.IsBusy)
             {
                 object identifier = Commands.ID_ADCHANNEL1;
@@ -747,6 +759,12 @@ namespace pc_client
 
 
         private void btnReadADC2_Click(object sender, EventArgs e)
+        {
+            ReadADC2();
+        }
+
+
+        private void ReadADC2()
         {
             if (!_backgroundWorkerADW.IsBusy)
             {
@@ -1012,10 +1030,86 @@ namespace pc_client
             _portLabel.ForeColor = System.Drawing.Color.DimGray;
         }
 
+        #endregion
 
+
+        ///////////////////////////////////////////////////////////////////////
+        #region Polling
+
+        private void chkPollTemp_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkPollTemp.Checked == true)
+            {
+                tempTimer.Interval = 5000;
+                tempTimer.Enabled = true;
+                this.tempTimer.Tick += new System.EventHandler(this.tempTimer_Tick);
+            }
+            else
+            {
+                tempTimer.Stop();
+                tempTimer.Enabled = false;
+                this.tempTimer.Tick -= new System.EventHandler(this.tempTimer_Tick);
+            }
+        }
+
+
+        private void tempTimer_Tick(object sender, EventArgs e)
+        {
+            ReadTemperature();
+        }
+
+
+        private void chkAD1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkAD1.Checked == true)
+            {
+                ad1Timer.Interval = 5000;
+                ad1Timer.Enabled = true;
+                this.ad1Timer.Tick += new System.EventHandler(this.ad1Timer_Tick);
+            }
+            else
+            {
+                ad1Timer.Stop();
+                ad1Timer.Enabled = false;
+                this.ad1Timer.Tick -= new System.EventHandler(this.ad1Timer_Tick);
+            }
+        }
+
+
+        private void ad1Timer_Tick(object sender, EventArgs e)
+        {
+            ReadADC1();
+        }
+
+
+        private void chkAD2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkAD2.Checked == true)
+            {
+                ad2Timer.Interval = 5000;
+                ad2Timer.Enabled = true;
+                this.ad2Timer.Tick += new System.EventHandler(this.ad2Timer_Tick);
+            }
+            else
+            {
+                ad2Timer.Stop();
+                ad2Timer.Enabled = false;
+                this.ad2Timer.Tick -= new System.EventHandler(this.ad2Timer_Tick);
+            }
+        }
+
+
+        private void ad2Timer_Tick(object sender, EventArgs e)
+        {
+            ReadADC2();
+        }
 
         #endregion
 
 
+        private void chkSimulation_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

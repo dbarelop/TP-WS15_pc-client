@@ -16,6 +16,8 @@ namespace pc_client
         public const int FIRMWARE = 4;
 
         #endregion
+
+        public byte[] eeprom = { 0xFF };
     }
 
 }

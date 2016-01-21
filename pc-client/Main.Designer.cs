@@ -94,6 +94,12 @@
             this._backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.bgwTimer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerADW = new System.ComponentModel.BackgroundWorker();
+            this.label18 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.tempTimer = new System.Windows.Forms.Timer(this.components);
+            this.ad1Timer = new System.Windows.Forms.Timer(this.components);
+            this.ad2Timer = new System.Windows.Forms.Timer(this.components);
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -102,6 +108,7 @@
             this.panel3.SuspendLayout();
             this.log.SuspendLayout();
             this.about.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -158,6 +165,7 @@
             this.chkAD2.TabIndex = 19;
             this.chkAD2.Text = "Poll";
             this.chkAD2.UseVisualStyleBackColor = true;
+            this.chkAD2.CheckedChanged += new System.EventHandler(this.chkAD2_CheckedChanged);
             // 
             // chkAD1
             // 
@@ -168,6 +176,7 @@
             this.chkAD1.TabIndex = 18;
             this.chkAD1.Text = "Poll";
             this.chkAD1.UseVisualStyleBackColor = true;
+            this.chkAD1.CheckedChanged += new System.EventHandler(this.chkAD1_CheckedChanged);
             // 
             // panel2
             // 
@@ -192,6 +201,7 @@
             this.chkSimulation.TabIndex = 21;
             this.chkSimulation.Text = "Simulation";
             this.chkSimulation.UseVisualStyleBackColor = true;
+            this.chkSimulation.CheckedChanged += new System.EventHandler(this.chkSimulation_CheckedChanged);
             // 
             // btnConnect
             // 
@@ -291,6 +301,7 @@
             this.chkPollTemp.TabIndex = 14;
             this.chkPollTemp.Text = "Poll";
             this.chkPollTemp.UseVisualStyleBackColor = true;
+            this.chkPollTemp.CheckedChanged += new System.EventHandler(this.chkPollTemp_CheckedChanged);
             // 
             // label17
             // 
@@ -717,6 +728,7 @@
             // rtfLog
             // 
             this.rtfLog.Enabled = false;
+            this.rtfLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtfLog.Location = new System.Drawing.Point(7, 31);
             this.rtfLog.Name = "rtfLog";
             this.rtfLog.Size = new System.Drawing.Size(457, 364);
@@ -727,6 +739,9 @@
             // about
             // 
             this.about.BackColor = System.Drawing.Color.Gainsboro;
+            this.about.Controls.Add(this.label15);
+            this.about.Controls.Add(this.pictureBox1);
+            this.about.Controls.Add(this.label18);
             this.about.Controls.Add(this.label13);
             this.about.Location = new System.Drawing.Point(4, 22);
             this.about.Name = "about";
@@ -737,13 +752,13 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(14, 12);
+            this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label13.Location = new System.Drawing.Point(15, 205);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(160, 192);
+            this.label13.Size = new System.Drawing.Size(225, 168);
             this.label13.TabIndex = 0;
-            this.label13.Text = "HTWG Konstanz\r\n\r\nTeamprojekt WS 15/16\r\n\r\nDaniel López\r\nAndreas Maier\r\nAndreas Rei" +
-    "nhardt\r\nLukas Stoppel\r\nMatthias Weis\r\nProf. Dr. Irenäus Schoppa\r\n\r\n© 2016\r\n";
+            this.label13.Text = "Prof. Dr. Irenäus Schoppa\r\n\r\nDaniel Barea López\r\nAndreas Maier\r\nAndreas Reinhardt" +
+    "\r\nLukas Stoppel\r\nMatthias Weis";
             // 
             // portTimer
             // 
@@ -764,6 +779,47 @@
             this._backgroundWorkerADW.WorkerSupportsCancellation = true;
             this._backgroundWorkerADW.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerADW_DoWork);
             this._backgroundWorkerADW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerADW_RunWorkerCompleted);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label18.Location = new System.Drawing.Point(14, 149);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(310, 31);
+            this.label18.TabIndex = 2;
+            this.label18.Text = "Teamprojekt WS 15/16\r\n";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(19, 25);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(308, 99);
+            this.pictureBox1.TabIndex = 3;
+            this.pictureBox1.TabStop = false;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label15.Location = new System.Drawing.Point(17, 414);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(47, 16);
+            this.label15.TabIndex = 4;
+            this.label15.Text = "© 2016\r\n";
+            // 
+            // tempTimer
+            // 
+            this.tempTimer.Tick += new System.EventHandler(this.tempTimer_Tick);
+            // 
+            // ad1Timer
+            // 
+            this.ad1Timer.Tick += new System.EventHandler(this.ad1Timer_Tick);
+            // 
+            // ad2Timer
+            // 
+            this.ad2Timer.Tick += new System.EventHandler(this.ad2Timer_Tick);
             // 
             // MainForm
             // 
@@ -792,6 +848,7 @@
             this.log.PerformLayout();
             this.about.ResumeLayout(false);
             this.about.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -862,6 +919,12 @@
         private System.Windows.Forms.Timer bgwTimer;
         private System.ComponentModel.BackgroundWorker _backgroundWorkerADW;
         private System.Windows.Forms.Button btnLogClear;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Timer tempTimer;
+        private System.Windows.Forms.Timer ad1Timer;
+        private System.Windows.Forms.Timer ad2Timer;
     }
 }
 
