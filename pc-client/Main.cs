@@ -33,6 +33,7 @@ namespace pc_client
 
         #endregion
 
+
         ///////////////////////////////////////////////////////////////////////
         #region Initialization
 
@@ -72,6 +73,7 @@ namespace pc_client
 
         #endregion
 
+
         ///////////////////////////////////////////////////////////////////////
         #region EventHandlers
 
@@ -87,6 +89,7 @@ namespace pc_client
                 _dispatcher.NewErrorReceivedEvent += new Dispatcher.NewErrorReceivedEventHandler(Dispatcher_NewErrorReceivedEvent);
                 _dispatcher.NewEpromDataReceivedEvent += new Dispatcher.NewEpromDataReceivedEventHandler(Dispatcher_NewEpromDataReceivedEvent);
                 _dispatcher.NewTerminalDataReceivedEvent += new Dispatcher.NewTerminalDataReceivedEventHandler(Dispatcher_NewTerminalDataReceivedEvent);
+                _dispatcher.NewVoidDataReceivedEvent += new Dispatcher.NewVoidDataReceivedEventHandler(Dispatcher_NewVoidDataReceivedEvent);
                 _dispatcher.NewLogOutputDataReceivedEvent += new Dispatcher.NewLogOutputDataReceivedEventHandler(Dispatcher_NewLogOutputDataReceivedEvent);
                 _dispatcher.NewLogInputDataReceivedEvent += new Dispatcher.NewLogInputDataReceivedEventHandler(Dispatcher_NewLogInputDataReceivedEvent);
             }
@@ -100,6 +103,7 @@ namespace pc_client
                 _dispatcher.NewErrorReceivedEvent -= new Dispatcher.NewErrorReceivedEventHandler(Dispatcher_NewErrorReceivedEvent);
                 _dispatcher.NewEpromDataReceivedEvent -= new Dispatcher.NewEpromDataReceivedEventHandler(Dispatcher_NewEpromDataReceivedEvent);
                 _dispatcher.NewTerminalDataReceivedEvent -= new Dispatcher.NewTerminalDataReceivedEventHandler(Dispatcher_NewTerminalDataReceivedEvent);
+                _dispatcher.NewVoidDataReceivedEvent -= new Dispatcher.NewVoidDataReceivedEventHandler(Dispatcher_NewVoidDataReceivedEvent);
                 _dispatcher.NewLogOutputDataReceivedEvent -= new Dispatcher.NewLogOutputDataReceivedEventHandler(Dispatcher_NewLogOutputDataReceivedEvent);
                 _dispatcher.NewLogInputDataReceivedEvent -= new Dispatcher.NewLogInputDataReceivedEventHandler(Dispatcher_NewLogInputDataReceivedEvent);
             }
@@ -136,6 +140,7 @@ namespace pc_client
             if (value != null)
             {
                 tbADChannel1.Text = _helper.HexArrayToString(value);
+                StopBGWTimer();
             }
         }
 
@@ -145,6 +150,7 @@ namespace pc_client
             if (value != null)
             {
                 tbADChannel2.Text = _helper.HexArrayToString(value);
+                StopBGWTimer();
             }
         }
 
@@ -154,12 +160,14 @@ namespace pc_client
             if (value != null)
             {
                 rtfEprom.Text = _helper.HexArrayToString(value);
+                StopBGWTimer();
             }
         }
 
 
         void Dispatcher_NewTerminalDataReceivedEvent(object sender, byte[] data)
         {
+            StopBGWTimer();
             _data.AppendTerminalData(data);
 
             if (chkInputType.Checked == true)
@@ -183,6 +191,7 @@ namespace pc_client
         void Dispatcher_NewErrorReceivedEvent(object sender, string text)
         {
             _error.SendingCommandError(text);
+            StopBGWTimer();
         }
 
 
@@ -201,6 +210,12 @@ namespace pc_client
             {
                 logOutput(value);
             }
+        }
+
+
+        void Dispatcher_NewVoidDataReceivedEvent(object sender, byte[] value)
+        {
+            StopBGWTimer();
         }
 
         #endregion
@@ -371,7 +386,7 @@ namespace pc_client
 
 
         ///////////////////////////////////////////////////////////////////////
-        #region BackgroundWorker
+        #region BackgroundWorkers
 
         void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
@@ -379,6 +394,7 @@ namespace pc_client
             {
                 List<object> genericlist = e.Argument as List<object>;
                 _dispatcher.SendData((String)genericlist[0], (char)genericlist[1]);
+                WaitForPendingRequest();
             }
             catch
             {
@@ -392,6 +408,35 @@ namespace pc_client
             DisableSettingsControls();
         }
 
+
+        private void _backgroundWorkerADW_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                List<object> genericlist = e.Argument as List<object>;
+
+                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[0]);
+                WaitForPendingRequest();
+                _dispatcher.SendData((String)genericlist[1], (char)genericlist[2]);
+                WaitForPendingRequest();
+            }
+            catch
+            {
+                _error.FatalError();
+            }
+        }
+
+
+        private void _backgroundWorkerADW_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            DisableSettingsControls();
+        }
+
+        #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region Sending-Timer
 
         private void InitializeBGWTimer()
         {
@@ -415,12 +460,84 @@ namespace pc_client
             _error.TimeOutError(_lastSendCommand);
             _backgroundWorker.CancelAsync();
             DisableSettingsControls();
+            _dispatcher.SetRequestPendig(false);
         }
 
         #endregion
 
-            ///////////////////////////////////////////////////////////////////////
-            #region UserInputEvents
+
+        ///////////////////////////////////////////////////////////////////////
+        #region EnableSettingsControls
+
+        public void EnableControls()
+        {
+            if (_comWrapper.ComportIsOpen())
+            {
+                DisableSettingsControls();
+                btnOpenPort.Text = "Close Port";
+            }
+            else
+            {
+                EnableSettingsControls();
+                btnOpenPort.Text = "Open Port";
+            }
+        }
+
+
+        public void EnableSettingsControls()
+        {
+            chkDTR.Enabled = true;
+            chkRTS.Enabled = true;
+            cmbPortName.Enabled = true;
+            cmbParity.Enabled = true;
+            cmbBaudRate.Enabled = true;
+            cmbStopBits.Enabled = true;
+            cmbDataBits.Enabled = true;
+            chkSimulation.Enabled = true;
+
+            btnReadADC1.Enabled = false;
+            btnReadADC2.Enabled = false;
+            btnReadEprom.Enabled = false;
+            btnReadTemperatur.Enabled = false;
+            btnResetHardware.Enabled = false;
+            btnWriteEprom.Enabled = false;
+            chkPollTemp.Enabled = false;
+            chkAD1.Enabled = false;
+            chkAD2.Enabled = false;
+            rbV1.Enabled = false;
+            rbV2.Enabled = false;
+            btnSend.Enabled = false;
+        }
+
+
+        public void DisableSettingsControls()
+        {
+            chkDTR.Enabled = false;
+            chkRTS.Enabled = false;
+            cmbPortName.Enabled = false;
+            cmbParity.Enabled = false;
+            cmbBaudRate.Enabled = false;
+            cmbStopBits.Enabled = false;
+            cmbDataBits.Enabled = false;
+
+            btnReadADC1.Enabled = true;
+            btnReadADC2.Enabled = true;
+            btnReadEprom.Enabled = true;
+            btnReadTemperatur.Enabled = true;
+            btnResetHardware.Enabled = true;
+            btnWriteEprom.Enabled = true;
+            chkPollTemp.Enabled = true;
+            chkAD1.Enabled = true;
+            chkAD2.Enabled = true;
+            rbV1.Enabled = true;
+            rbV2.Enabled = true;
+        }
+
+        #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region Comport-Tab-InputEvents
 
         private void cmbPortName_DropDown(object sender, EventArgs e)
         {
@@ -552,6 +669,33 @@ namespace pc_client
         }
 
 
+        private void btnLogClear_Click(object sender, EventArgs e)
+        {
+            if(rtfLog.Text.Length > 0)
+            {
+                rtfLog.Clear();
+            }
+        }
+
+
+        private void rtfLog_TextChanged(object sender, EventArgs e)
+        {
+            if (rtfLog.Text.Length > 0)
+            {
+                btnLogClear.Enabled = true;
+            }
+            else
+            {
+                btnLogClear.Enabled = false;
+            }
+        }
+
+        #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region Main-Tab-InputEvents
+
         private void mainTabControl_Enter(object sender, EventArgs e)
         {
             btnConnect.Focus();
@@ -590,44 +734,28 @@ namespace pc_client
 
         private void btnReadADC1_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorker.IsBusy)
-            {
-                object identifier = Commands.ID_VOID;
-                object command = (char)(Commands.ADW | Commands.CH1);
-
-                EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
-            }
-
-            if (!_backgroundWorker.IsBusy)
+            if (!_backgroundWorkerADW.IsBusy)
             {
                 object identifier = Commands.ID_ADCHANNEL1;
+                object channel = (char)(Commands.ADW | Commands.CH1);
                 object command = (char)(Commands.ADW | Commands.READ);
 
                 EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
             }
         }
 
 
         private void btnReadADC2_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorker.IsBusy)
-            {
-                object identifier = Commands.ID_VOID;
-                object command = (char)(Commands.ADW | Commands.CH2);
-
-                EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
-            }
-
-            if (!_backgroundWorker.IsBusy)
+            if (!_backgroundWorkerADW.IsBusy)
             {
                 object identifier = Commands.ID_ADCHANNEL2;
+                object channel = (char)(Commands.ADW | Commands.CH2);
                 object command = (char)(Commands.ADW | Commands.READ);
 
                 EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
             }
         }
 
@@ -670,75 +798,17 @@ namespace pc_client
             }
         }
 
-        #endregion
 
-
-
-        ///////////////////////////////////////////////////////////////////////
-        #region EnableSettingsControls
-
-        public void EnableControls()
+        private void btnWriteEprom_Click(object sender, EventArgs e)
         {
-            if (_comWrapper.ComportIsOpen())
+            if (!_backgroundWorker.IsBusy)
             {
-                DisableSettingsControls();
-                btnOpenPort.Text = "Close Port";
-            }
-            else
-            {
+                object identifier = Commands.ID_EEPROM;
+                object command = (char)(Commands.EEPROM | Commands.READ);
+
                 EnableSettingsControls();
-                btnOpenPort.Text = "Open Port";
+                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
             }
-        }
-
-
-        public void EnableSettingsControls()
-        {
-            chkDTR.Enabled = true;
-            chkRTS.Enabled = true;
-            cmbPortName.Enabled = true;
-            cmbParity.Enabled = true;
-            cmbBaudRate.Enabled = true;
-            cmbStopBits.Enabled = true;
-            cmbDataBits.Enabled = true;
-            chkSimulation.Enabled = true;
-
-            btnReadADC1.Enabled = false;
-            btnReadADC2.Enabled = false;
-            btnReadEprom.Enabled = false;
-            btnReadTemperatur.Enabled = false;
-            btnResetHardware.Enabled = false;
-            btnWriteEprom.Enabled = false;
-            chkPollTemp.Enabled = false;
-            chkAD1.Enabled = false;
-            chkAD2.Enabled = false;
-            rbV1.Enabled = false;
-            rbV2.Enabled = false;
-            btnSend.Enabled = false;
-        }
-        
-
-        public void DisableSettingsControls()
-        {
-            chkDTR.Enabled = false;
-            chkRTS.Enabled = false;
-            cmbPortName.Enabled = false;
-            cmbParity.Enabled = false;
-            cmbBaudRate.Enabled = false;
-            cmbStopBits.Enabled = false;
-            cmbDataBits.Enabled = false;
-
-            btnReadADC1.Enabled = true;
-            btnReadADC2.Enabled = true;
-            btnReadEprom.Enabled = true;
-            btnReadTemperatur.Enabled = true;
-            btnResetHardware.Enabled = true;
-            btnWriteEprom.Enabled = true;
-            chkPollTemp.Enabled = true;
-            chkAD1.Enabled = true;
-            chkAD2.Enabled = true;
-            rbV1.Enabled = true;
-            rbV2.Enabled = true;
         }
 
         #endregion
@@ -942,7 +1012,10 @@ namespace pc_client
             _portLabel.ForeColor = System.Drawing.Color.DimGray;
         }
 
+
+
         #endregion
-        
+
+
     }
 }

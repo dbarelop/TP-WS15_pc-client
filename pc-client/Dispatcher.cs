@@ -33,6 +33,9 @@ namespace pc_client
         public delegate void NewTerminalDataReceivedEventHandler(object sender, byte[] data);
         public event NewTerminalDataReceivedEventHandler NewTerminalDataReceivedEvent;
 
+        public delegate void NewVoidDataReceivedEventHandler(object sender, byte[] data);
+        public event NewVoidDataReceivedEventHandler NewVoidDataReceivedEvent;
+
         public delegate void NewLogOutputDataReceivedEventHandler(object sender, String data);
         public event NewLogOutputDataReceivedEventHandler NewLogOutputDataReceivedEvent;
 
@@ -175,6 +178,12 @@ namespace pc_client
         }
 
 
+        public void SetRequestPendig(bool isPending)
+        {
+            _requestPending = isPending;
+        }
+
+
         public bool EepromISBusy()
         {
             return _eepromBusy;
@@ -247,6 +256,12 @@ namespace pc_client
                         if (NewTerminalDataReceivedEvent != null)
                         {
                             NewTerminalDataReceivedEvent(this, data);
+                        }
+                        break;
+                    case (Commands.ID_VOID):
+                        if (NewVoidDataReceivedEvent != null)
+                        {
+                            NewVoidDataReceivedEvent(this, data);
                         }
                         break;
                     default:

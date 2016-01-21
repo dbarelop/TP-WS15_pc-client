@@ -85,6 +85,7 @@
             this.chkInputType = new System.Windows.Forms.CheckBox();
             this.rtfTerminalOut = new System.Windows.Forms.RichTextBox();
             this.log = new System.Windows.Forms.TabPage();
+            this.btnLogClear = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.rtfLog = new System.Windows.Forms.RichTextBox();
             this.about = new System.Windows.Forms.TabPage();
@@ -92,6 +93,7 @@
             this.portTimer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.bgwTimer = new System.Windows.Forms.Timer(this.components);
+            this._backgroundWorkerADW = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -184,7 +186,7 @@
             // chkSimulation
             // 
             this.chkSimulation.AutoSize = true;
-            this.chkSimulation.Location = new System.Drawing.Point(387, 12);
+            this.chkSimulation.Location = new System.Drawing.Point(387, 38);
             this.chkSimulation.Name = "chkSimulation";
             this.chkSimulation.Size = new System.Drawing.Size(89, 20);
             this.chkSimulation.TabIndex = 21;
@@ -268,6 +270,7 @@
             this.btnWriteEprom.TabIndex = 16;
             this.btnWriteEprom.Text = "Write";
             this.btnWriteEprom.UseVisualStyleBackColor = true;
+            this.btnWriteEprom.Click += new System.EventHandler(this.btnWriteEprom_Click);
             // 
             // btnReadEprom
             // 
@@ -680,6 +683,7 @@
             // log
             // 
             this.log.BackColor = System.Drawing.Color.Gainsboro;
+            this.log.Controls.Add(this.btnLogClear);
             this.log.Controls.Add(this.label14);
             this.log.Controls.Add(this.rtfLog);
             this.log.Location = new System.Drawing.Point(4, 22);
@@ -687,6 +691,17 @@
             this.log.Size = new System.Drawing.Size(488, 443);
             this.log.TabIndex = 3;
             this.log.Text = "Log";
+            // 
+            // btnLogClear
+            // 
+            this.btnLogClear.Enabled = false;
+            this.btnLogClear.Location = new System.Drawing.Point(191, 401);
+            this.btnLogClear.Name = "btnLogClear";
+            this.btnLogClear.Size = new System.Drawing.Size(83, 28);
+            this.btnLogClear.TabIndex = 20;
+            this.btnLogClear.Text = "Clear";
+            this.btnLogClear.UseVisualStyleBackColor = true;
+            this.btnLogClear.Click += new System.EventHandler(this.btnLogClear_Click);
             // 
             // label14
             // 
@@ -701,11 +716,13 @@
             // 
             // rtfLog
             // 
+            this.rtfLog.Enabled = false;
             this.rtfLog.Location = new System.Drawing.Point(7, 31);
             this.rtfLog.Name = "rtfLog";
-            this.rtfLog.Size = new System.Drawing.Size(457, 396);
+            this.rtfLog.Size = new System.Drawing.Size(457, 364);
             this.rtfLog.TabIndex = 18;
             this.rtfLog.Text = "";
+            this.rtfLog.TextChanged += new System.EventHandler(this.rtfLog_TextChanged);
             // 
             // about
             // 
@@ -741,6 +758,12 @@
             // bgwTimer
             // 
             this.bgwTimer.Tick += new System.EventHandler(this.bgwTimer_Tick);
+            // 
+            // _backgroundWorkerADW
+            // 
+            this._backgroundWorkerADW.WorkerSupportsCancellation = true;
+            this._backgroundWorkerADW.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerADW_DoWork);
+            this._backgroundWorkerADW.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerADW_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -837,6 +860,8 @@
         private System.Windows.Forms.RichTextBox rtfLog;
         private System.Windows.Forms.CheckBox chkSimulation;
         private System.Windows.Forms.Timer bgwTimer;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerADW;
+        private System.Windows.Forms.Button btnLogClear;
     }
 }
 

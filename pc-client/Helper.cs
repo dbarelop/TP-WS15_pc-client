@@ -66,5 +66,15 @@ namespace pc_client
             return arguments;
         }
 
+
+        public List<object> CreateObjectList(object o1, object o2, object o3)
+        {
+            List<object> arguments = new List<object>();
+            arguments.Add(o1);
+            arguments.Add(o2);
+            arguments.Add(o3);
+            return arguments;
+        }
+
     }
 }
