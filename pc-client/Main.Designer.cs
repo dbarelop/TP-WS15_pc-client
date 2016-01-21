@@ -101,6 +101,8 @@
             this.tempTimer = new System.Windows.Forms.Timer(this.components);
             this.ad1Timer = new System.Windows.Forms.Timer(this.components);
             this.ad2Timer = new System.Windows.Forms.Timer(this.components);
+            this._backgroundWorkerEepromRead = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerEepromWrite = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -741,10 +743,10 @@
             // 
             // rtfLog
             // 
-            this.rtfLog.Enabled = false;
             this.rtfLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.rtfLog.Location = new System.Drawing.Point(4, 31);
             this.rtfLog.Name = "rtfLog";
+            this.rtfLog.ReadOnly = true;
             this.rtfLog.Size = new System.Drawing.Size(460, 364);
             this.rtfLog.TabIndex = 18;
             this.rtfLog.Text = "";
@@ -834,6 +836,16 @@
             // ad2Timer
             // 
             this.ad2Timer.Tick += new System.EventHandler(this.ad2Timer_Tick);
+            // 
+            // _backgroundWorkerEepromRead
+            // 
+            this._backgroundWorkerEepromRead.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerEepromRead_DoWork);
+            this._backgroundWorkerEepromRead.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerEepromRead_RunWorkerCompleted);
+            // 
+            // _backgroundWorkerEepromWrite
+            // 
+            this._backgroundWorkerEepromWrite.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerEepromWrite_DoWork);
+            this._backgroundWorkerEepromWrite.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerEepromWrite_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -940,6 +952,8 @@
         private System.Windows.Forms.Timer ad1Timer;
         private System.Windows.Forms.Timer ad2Timer;
         private System.Windows.Forms.Button btnExport;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromRead;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromWrite;
     }
 }
 

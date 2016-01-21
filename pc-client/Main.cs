@@ -440,6 +440,30 @@ namespace pc_client
             DisableSettingsControls();
         }
 
+
+        private void _backgroundWorkerEepromRead_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+
+        }
+
+
+        private void _backgroundWorkerEepromRead_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            DisableSettingsControls();
+        }
+
+
+        private void _backgroundWorkerEepromWrite_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+
+        }
+
+
+        private void _backgroundWorkerEepromWrite_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            DisableSettingsControls();
+        }
+
         #endregion
 
 
@@ -528,15 +552,26 @@ namespace pc_client
             cmbStopBits.Enabled = false;
             cmbDataBits.Enabled = false;
 
-            btnReadADC1.Enabled = true;
-            btnReadADC2.Enabled = true;
+            if(rbV1.Checked == false && rbV2.Checked == false)
+            {
+                btnReadADC1.Enabled = false;
+                btnReadADC2.Enabled = false;
+                chkAD1.Enabled = false;
+                chkAD2.Enabled = false;
+            }
+            else
+            {
+                btnReadADC1.Enabled = true;
+                btnReadADC2.Enabled = true;
+                chkAD1.Enabled = true;
+                chkAD2.Enabled = true;
+            }
+
             btnReadEprom.Enabled = true;
             btnReadTemperatur.Enabled = true;
             btnResetHardware.Enabled = true;
             btnWriteEprom.Enabled = true;
             chkPollTemp.Enabled = true;
-            chkAD1.Enabled = true;
-            chkAD2.Enabled = true;
             rbV1.Enabled = true;
             rbV2.Enabled = true;
         }
