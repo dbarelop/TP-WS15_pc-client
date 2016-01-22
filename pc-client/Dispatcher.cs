@@ -53,7 +53,6 @@ namespace pc_client
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
         volatile bool _requestPending = false;
-        volatile bool _eepromBusy = false;
         Object _lockObject = new Object();
 
         String _lastSendCommand;
@@ -181,12 +180,6 @@ namespace pc_client
         public void SetRequestPendig(bool isPending)
         {
             _requestPending = isPending;
-        }
-
-
-        public bool EepromISBusy()
-        {
-            return _eepromBusy;
         }
 
 

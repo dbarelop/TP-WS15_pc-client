@@ -22,7 +22,7 @@ namespace pc_client
         Data _data = null;
         int _waitCounter = 1;
         volatile char _lastSendCommand;
-        bool _simulateResponses = false;
+        volatile bool _simulateResponses = false;
         double _range = 0;
 
         List<string> _commandHistory = new List<string>();
@@ -283,17 +283,23 @@ namespace pc_client
         {
             if (btnOpenPort.Text == "Open Port")
             {
-                btnOpenPort.Text = "Close Port";
-                btnConnect.Text = "Close";
-                DisableSettingsControls();
                 open_port();
+                if(_comWrapper.ComportIsOpen() == true)
+                {
+                    btnOpenPort.Text = "Close Port";
+                    btnConnect.Text = "Close";
+                    DisableSettingsControls();
+                }
             }
             else if (btnOpenPort.Text == "Close Port")
             {
-                btnOpenPort.Text = "Open Port";
-                btnConnect.Text = "Connect";
-                EnableSettingsControls();
                 close_port();
+                if(_comWrapper.ComportIsOpen() == false)
+                {
+                    btnOpenPort.Text = "Open Port";
+                    btnConnect.Text = "Connect";
+                    EnableSettingsControls();
+                }
             }
 
             rtfTerminalOut.Focus();
@@ -909,16 +915,6 @@ namespace pc_client
         private bool WaitForPendingRequest()
         {
             while (_dispatcher.IsRequestPendig())
-            {
-                System.Threading.Thread.Sleep(10);
-            }
-            return true;
-        }
-
-
-        private bool EepromCompleted()
-        {
-            while (_dispatcher.EepromISBusy())
             {
                 System.Threading.Thread.Sleep(10);
             }
