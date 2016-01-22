@@ -9,8 +9,10 @@ namespace pc_client
         { 
             TerminalData = new byte[0];
             Firmware = "";
-            ADW1 = "";
-            ADW2 = "";
+            ADW1 = 0;
+            ADW2 = 0;
+            ADW1_Raw = "";
+            ADW2_Raw = "";
             Eprom = "";
             Temperature = 0;
         }
@@ -39,10 +41,16 @@ namespace pc_client
         public String Firmware
         { get; set; }
 
-        public String ADW1
+        public double ADW1
         { get; set; }
 
-        public String ADW2
+        public String ADW1_Raw
+        { get; set; }
+
+        public double ADW2
+        { get; set; }
+
+        public String ADW2_Raw
         { get; set; }
 
         public String Eprom
@@ -50,6 +58,18 @@ namespace pc_client
 
         public double Temperature
         { get; set; }
+
+        private const double RNG1 = 2.56;
+        public double getRNG1()
+        {
+            return RNG1;
+        }
+
+        private const double RNG2 = 0.16;
+        public double getRNG2()
+        {
+            return RNG2;
+        }
 
         #endregion
 

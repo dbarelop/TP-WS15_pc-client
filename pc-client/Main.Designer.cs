@@ -686,6 +686,7 @@
             // 
             // rtfTerminalOut
             // 
+            this.rtfTerminalOut.Enabled = false;
             this.rtfTerminalOut.Location = new System.Drawing.Point(7, 31);
             this.rtfTerminalOut.Name = "rtfTerminalOut";
             this.rtfTerminalOut.Size = new System.Drawing.Size(356, 130);

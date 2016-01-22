@@ -34,6 +34,20 @@ namespace pc_client
         }
 
 
+        public int HexStringToDecimal(String hex)
+        {
+            if(hex.Length > 0)
+            {
+                int decValue = int.Parse(hex, System.Globalization.NumberStyles.HexNumber);
+                return decValue;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+
         public String HexArrayToString(byte[] hexValues)
         {
             string retval = "";

@@ -23,6 +23,7 @@ namespace pc_client
         int _waitCounter = 1;
         volatile char _lastSendCommand;
         bool _simulateResponses = false;
+        double _range = 0;
 
         List<string> _commandHistory = new List<string>();
 
@@ -132,7 +133,7 @@ namespace pc_client
         {
              if (value != null)
             {
-                tbTemperatur.Text = _helper.HexArrayToString(value);
+                tbTemperatur.AppendText(_helper.HexArrayToString(value));
                 StopBGWTimer();
             }
         }
@@ -142,7 +143,10 @@ namespace pc_client
         {
             if (value != null)
             {
-                tbADChannel1.Text = _helper.HexArrayToString(value);
+                _data.ADW1_Raw += _helper.HexArrayToString(value);
+                _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
+                tbADChannel1.Text = _data.ADW1_Raw;
+                tbTemperatur.Text = _data.ADW1.ToString();
                 StopBGWTimer();
             }
         }
@@ -152,7 +156,10 @@ namespace pc_client
         {
             if (value != null)
             {
-                tbADChannel2.Text = _helper.HexArrayToString(value);
+                _data.ADW2_Raw += _helper.HexArrayToString(value);
+                _data.ADW2 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW2_Raw));
+                tbADChannel2.Text = _data.ADW2_Raw;
+                tbTemperatur.Text = _data.ADW2.ToString();
                 StopBGWTimer();
             }
         }
@@ -162,7 +169,7 @@ namespace pc_client
         {
             if (value != null)
             {
-                rtfEprom.Text = _helper.HexArrayToString(value);
+                rtfEprom.AppendText(_helper.HexArrayToString(value));
                 StopBGWTimer();
             }
         }
@@ -567,6 +574,7 @@ namespace pc_client
                 chkAD2.Enabled = true;
             }
 
+            rtfTerminalOut.Enabled = true;
             btnReadEprom.Enabled = true;
             btnReadTemperatur.Enabled = true;
             btnResetHardware.Enabled = true;
@@ -785,6 +793,7 @@ namespace pc_client
                 object identifier = Commands.ID_TEMPERATURE;
                 object command = (char)(Commands.ADT | Commands.READ);
 
+                tbTemperatur.Clear();
                 EnableSettingsControls();
                 _lastSendCommand = (char)command;
                 InitializeBGWTimer();
@@ -807,6 +816,8 @@ namespace pc_client
                 object channel = (char)(Commands.ADW | Commands.CH1);
                 object command = (char)(Commands.ADW | Commands.READ);
 
+                tbADChannel1.Clear();
+                _data.ADW1_Raw = "";
                 EnableSettingsControls();
                 _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
             }
@@ -827,6 +838,8 @@ namespace pc_client
                 object channel = (char)(Commands.ADW | Commands.CH2);
                 object command = (char)(Commands.ADW | Commands.READ);
 
+                tbADChannel2.Clear();
+                _data.ADW2_Raw = "";
                 EnableSettingsControls();
                 _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
             }
@@ -840,6 +853,7 @@ namespace pc_client
                 object identifier = Commands.ID_VOID;
                 object command = (char)(Commands.ADW | Commands.RNG1);
 
+                _range = _data.getRNG1();
                 EnableSettingsControls();
                 _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
             }
@@ -853,6 +867,7 @@ namespace pc_client
                 object identifier = Commands.ID_VOID;
                 object command = (char)(Commands.ADW | Commands.RNG2);
 
+                _range = _data.getRNG2();
                 EnableSettingsControls();
                 _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
             }
@@ -866,6 +881,7 @@ namespace pc_client
                 object identifier = Commands.ID_EEPROM;
                 object command = (char)(Commands.EEPROM | Commands.READ);
 
+                rtfEprom.Clear();
                 EnableSettingsControls();
                 _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
             }

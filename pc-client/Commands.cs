@@ -56,9 +56,9 @@ namespace pc_client
 
 
         ///////////////////////////////////////////////////////////////////////
-        #region ADT Calculation
+        #region ADW Calculation
 
-        public static double calculateVoltage(double range, double decimalInput)
+        public static double calculateVoltage(double range, int decimalInput)
         {
             const double REFERENCE_VOLTAGE = 2.5;
             const int NUMBER_OF_BITS = 24;
