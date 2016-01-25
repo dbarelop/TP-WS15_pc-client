@@ -23,6 +23,7 @@ namespace pc_client
         int _waitCounter = 1;
         volatile char _lastSendCommand;
         volatile bool _simulateResponses = false;
+        volatile bool _stopReceivingEepromData = false;
         double _range = 0;
 
         List<string> _commandHistory = new List<string>();
@@ -147,8 +148,7 @@ namespace pc_client
             if (value != null && !(value.Length == 0))
             {
                 _data.ADW1_Raw += _helper.HexArrayToString(value);
-                //String mockValue = "800003";
-                _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));//mockValue));
+                _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
                 tbADChannel1.Text = _data.ADW1.ToString();
                 StopBGWTimer();
             }
@@ -169,7 +169,11 @@ namespace pc_client
 
         void Dispatcher_NewEpromDataReceivedEvent(object sender, byte[] value)
         {
-            if (value != null )
+            if (_dispatcher.EepromIsReceivingEmptyData() || Array.Exists(value, element => element == Commands.EMPTY) || Array.Exists(value, element => element == 0x3f))
+            {
+                _stopReceivingEepromData = true;
+            }
+            if (value != null && !_stopReceivingEepromData)
             {
                 _data.Eprom += System.Text.Encoding.Default.GetString(value);
                 rtfEprom.Text = _data.Eprom;
@@ -988,6 +992,7 @@ namespace pc_client
                 {
                     rtfEprom.Clear();
                     _data.Eprom = "";
+                    _stopReceivingEepromData = false;
                     EnableSettingsControls();
                     _dispatcher.SetReceivingEmptyData(false);
 

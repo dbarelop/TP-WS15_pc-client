@@ -295,14 +295,14 @@ namespace pc_client
                     case (Commands.ID_EEPROM):
                         if (NewEpromDataReceivedEvent != null)
                         {
-                            if (_eepromReceivingEmptyData == true)
-                            {
-                                return;
-                            }
-                            else
-                            {
+                            //if (_eepromReceivingEmptyData == true)
+                            //{
+                            //    return;
+                            //}
+                            //else
+                            //{
                                 NewEpromDataReceivedEvent(this, _helper.RemoveOK(data));
-                            }
+                            //}
                         }
                         break;
                     case (Commands.ID_TERMINAL):
