@@ -37,6 +37,7 @@ namespace pc_client
 
         public const byte OK = 0xaa;
         public const byte DONE = 0xbb;
+        public const byte EMPTY = 0xff;
 
         #endregion
         

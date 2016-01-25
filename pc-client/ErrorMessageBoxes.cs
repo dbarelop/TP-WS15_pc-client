@@ -59,7 +59,7 @@ namespace pc_client
 
         public void FatalError()
         {
-            MessageBox.Show("Library has crashed. Please restart Application",
+            MessageBox.Show("Software has crashed. Please restart Application",
             "Fatal error",
             MessageBoxButtons.OK,
             MessageBoxIcon.Exclamation,

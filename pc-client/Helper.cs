@@ -72,6 +72,17 @@ namespace pc_client
         }
 
 
+        public byte[] RemoveEMPTY(byte[] rawData)
+        {
+            byte[] withoutEMPTY = new byte[rawData.Length];
+            Array.Copy(rawData, withoutEMPTY, rawData.Length);
+            byte toRemove = Commands.EMPTY;
+            withoutEMPTY = rawData.Where(val => val != toRemove).ToArray();
+
+            return withoutEMPTY;
+        }
+
+
         public List<object> CreateObjectList(object o1, object o2)
         {
             List<object> arguments = new List<object>();

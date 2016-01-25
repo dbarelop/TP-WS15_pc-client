@@ -53,6 +53,7 @@ namespace pc_client
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
         volatile bool _requestPending = false;
+        volatile bool _eepromReceivingEmptyData = false;
         Object _lockObject = new Object();
 
         String _lastSendCommand;
@@ -183,6 +184,18 @@ namespace pc_client
         }
 
 
+        public bool EepromIsReceivingEmptyData()
+        {
+            return _eepromReceivingEmptyData;
+        }
+
+
+        public void SetReceivingEmptyData(bool isEmpty)
+        {
+            _eepromReceivingEmptyData = isEmpty;
+        }
+
+
         public void ComWrapper_NewDataReceivedEvent(object sender, byte[] data)
         {
             lock (_lockObject)
@@ -208,10 +221,10 @@ namespace pc_client
                     _requestPending = false;
                 }
 
-             //   if (Array.Exists(data, element => element == Commands.DONE))
-             //   {
-            //        _eepromBusy = false;
-             //   }
+                if (Array.Exists(data, element => element == Commands.EMPTY))
+                {
+                    _eepromReceivingEmptyData = true;
+                }
 
                 switch (_sendCmd)
                 {
@@ -242,7 +255,7 @@ namespace pc_client
                     case (Commands.ID_EEPROM):
                         if (NewEpromDataReceivedEvent != null)
                         {
-                            NewEpromDataReceivedEvent(this, _helper.RemoveOK(data));
+                            NewEpromDataReceivedEvent(this, _helper.RemoveEMPTY(_helper.RemoveOK(data)));
                         }
                         break;
                     case (Commands.ID_TERMINAL):

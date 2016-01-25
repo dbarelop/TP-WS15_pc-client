@@ -840,6 +840,7 @@
             // 
             // _backgroundWorkerEepromRead
             // 
+            this._backgroundWorkerEepromRead.WorkerSupportsCancellation = true;
             this._backgroundWorkerEepromRead.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerEepromRead_DoWork);
             this._backgroundWorkerEepromRead.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerEepromRead_RunWorkerCompleted);
             // 

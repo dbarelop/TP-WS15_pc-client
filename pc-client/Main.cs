@@ -145,8 +145,7 @@ namespace pc_client
             {
                 _data.ADW1_Raw += _helper.HexArrayToString(value);
                 _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
-                tbADChannel1.Text = _data.ADW1_Raw;
-                tbTemperatur.Text = _data.ADW1.ToString();
+                tbADChannel1.Text = _data.ADW1.ToString();
                 StopBGWTimer();
             }
         }
@@ -158,8 +157,7 @@ namespace pc_client
             {
                 _data.ADW2_Raw += _helper.HexArrayToString(value);
                 _data.ADW2 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW2_Raw));
-                tbADChannel2.Text = _data.ADW2_Raw;
-                tbTemperatur.Text = _data.ADW2.ToString();
+                tbADChannel2.Text = _data.ADW2.ToString();
                 StopBGWTimer();
             }
         }
@@ -167,9 +165,10 @@ namespace pc_client
 
         void Dispatcher_NewEpromDataReceivedEvent(object sender, byte[] value)
         {
-            if (value != null)
+            if (value != null )
             {
-                rtfEprom.AppendText(_helper.HexArrayToString(value));
+                _data.Eprom += System.Text.Encoding.Default.GetString(value);
+                rtfEprom.Text = _data.Eprom;
                 StopBGWTimer();
             }
         }
@@ -456,19 +455,51 @@ namespace pc_client
 
         private void _backgroundWorkerEepromRead_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-
+            try
+            {
+                for (int i = 0x0; i < 0x200; i++)
+                {
+                    if(_dispatcher.EepromIsReceivingEmptyData() == true)
+                    {
+                        _dispatcher.SetReceivingEmptyData(false);
+                        return;
+                    }
+                    byte firstByte = unchecked((byte)(i >> 8));
+                    byte secondByte = unchecked((byte)(i << 256));
+                    _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
+                    _dispatcher.SendData(Commands.ID_EEPROM, (char)firstByte);
+                    _dispatcher.SendData(Commands.ID_EEPROM, (char)secondByte);
+                }
+            }
+            catch
+            {
+                _error.FatalError();
+            }
         }
 
 
         private void _backgroundWorkerEepromRead_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
+            _dispatcher.SetReceivingEmptyData(false);
             DisableSettingsControls();
         }
 
 
         private void _backgroundWorkerEepromWrite_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
+            try
+            {
+                List<object> genericlist = e.Argument as List<object>;
 
+                _dispatcher.SendData(Commands.ID_EEPROM, (char)Commands.READ);
+                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[0]);
+                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[1]);
+                WaitForPendingRequest();
+            }
+            catch
+            {
+                _error.FatalError();
+            }
         }
 
 
@@ -802,7 +833,6 @@ namespace pc_client
                 tbTemperatur.Clear();
                 EnableSettingsControls();
                 _lastSendCommand = (char)command;
-                InitializeBGWTimer();
                 _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
             }
         }
@@ -823,6 +853,7 @@ namespace pc_client
                 object command = (char)(Commands.ADW | Commands.READ);
 
                 tbADChannel1.Clear();
+                _lastSendCommand = (char)command;
                 _data.ADW1_Raw = "";
                 EnableSettingsControls();
                 _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
@@ -846,6 +877,7 @@ namespace pc_client
 
                 tbADChannel2.Clear();
                 _data.ADW2_Raw = "";
+                _lastSendCommand = (char)command;
                 EnableSettingsControls();
                 _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
             }
@@ -882,27 +914,27 @@ namespace pc_client
 
         private void btnReadEeprom_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorker.IsBusy)
+            if (!_backgroundWorkerEepromRead.IsBusy)
             {
-                object identifier = Commands.ID_EEPROM;
-                object command = (char)(Commands.EEPROM | Commands.READ);
-
                 rtfEprom.Clear();
+                _data.Eprom = "";
                 EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+
+                _backgroundWorkerEepromRead.RunWorkerAsync();
+
             }
         }
 
 
         private void btnWriteEprom_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorker.IsBusy)
+            if (!_backgroundWorkerEepromWrite.IsBusy)
             {
                 object identifier = Commands.ID_EEPROM;
-                object command = (char)(Commands.EEPROM | Commands.READ);
+                object command = (char)(Commands.EEPROM | Commands.WRITE);
 
                 EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                _backgroundWorkerEepromWrite.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
             }
         }
 
@@ -945,7 +977,6 @@ namespace pc_client
                     try
                     {
                         subString = sendData.Substring(i, 2);
-                       // logOutput(subString);
                         int intValue = int.Parse(subString, System.Globalization.NumberStyles.HexNumber);
                         data = (char)intValue;
                         _dispatcher.SendData(Commands.ID_TERMINAL, data);
@@ -985,7 +1016,7 @@ namespace pc_client
         {
             Invoke(new MethodInvoker(delegate
             {
-                rtfLog.AppendText("OUT:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + output + "\n");
+                rtfLog.AppendText("OUT:\t" + DateTime.Now.ToString("HH:mm:ss") + "\t" + output + "\n");
             }));
         }
 
@@ -1006,7 +1037,7 @@ namespace pc_client
         {
             Invoke(new MethodInvoker(delegate
             {
-                rtfLog.AppendText("IN:\t" + DateTime.Now.ToString("HH:mm:ss:ffff") + "\t" + input + "\n");
+                rtfLog.AppendText("IN:\t" + DateTime.Now.ToString("HH:mm:ss") + "\t" + input + "\n");
             }));
         }
 
