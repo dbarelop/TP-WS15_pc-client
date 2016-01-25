@@ -178,7 +178,29 @@ namespace pc_client
 
             return retval;
         }
-        
+
+
+        public bool ComportWrite(byte[] data)
+        {
+            if ((Comport == null) || (!Comport.IsOpen))
+            {
+                return false;
+            }
+
+            bool retval = true;
+
+            try
+            {
+                Comport.Write(data, 0, data.Length);
+            }
+            catch (Exception)
+            {
+                retval = false;
+            }
+
+            return retval;
+        }
+
 
         public string ComportRead()
         {

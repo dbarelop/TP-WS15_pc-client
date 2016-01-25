@@ -7,8 +7,8 @@
 
         Dispatcher _dispatcher = null;
         Helper _helper = null;
-        public byte[] eeprom = { 0xFF };
-
+        public byte[] eeprom = new byte[512];
+        
         #endregion
 
 
@@ -17,8 +17,7 @@
 
         public const byte OK = 0xaa;
         public const byte DONE = 0xbb;
-        public const int FIRMWARE = 4;
-        public const int RANDOM = 0xff;
+        public const byte FIRMWARE = 6;
 
         #endregion
 
@@ -27,54 +26,68 @@
         {
             _dispatcher = dispatcher;
             _helper = new Helper();
+            for(int i = 0; i < eeprom.Length; i++)
+            {
+                eeprom[i] = 0xff;
+            }
+            eeprom[0] = 0x61;
+            eeprom[1] = 0x62;
         }
 
 
         public void SimulateResponses(byte command)
         {
-            char data;
             switch (command)
             {
                     //Read Firmware
                 case (Commands.MASTER|Commands.READ):
-                    data = (char)OK;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
-                    data = (char)FIRMWARE;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
+                    byte[] sendMaster = { OK, FIRMWARE };
+                    _dispatcher.SendData(sendMaster);
                     break;
-                    //Read ADT
+                //Read Eeprom
+                case (Commands.EEPROM | Commands.READ):
+                    byte[] sendEeprom = { OK, eeprom[0], eeprom[1], 0xff };
+                    _dispatcher.SendData(sendEeprom);
+                    break;
+                //Write Eeprom
+                case (Commands.EEPROM | Commands.WRITE):
+                    byte[] sendEepromWrite = { OK, DONE };
+                    _dispatcher.SendData(sendEepromWrite);
+                    break;
+                //erease Eeprom
+                case (Commands.EEPROM | Commands.ERASE):
+                    byte[] sendEepromErease = { OK};
+                    _dispatcher.SendData(sendEepromErease);
+                    break;
+                //Read ADT
                 case (Commands.ADT | Commands.READ):
-                    data = (char)OK;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
-                    data = (char)RANDOM;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
+                    byte[] sendADT = { OK, 0x03, 0x80 };
+                    _dispatcher.SendData(sendADT);
                     break;
                     //Read ADW
                 case (Commands.ADW | Commands.READ):
-                    data = (char)OK;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
-                    data = (char)RANDOM;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
+                    byte[] sendADW = { OK, 0xcb, 0x38, 0x14 };
+                    _dispatcher.SendData(sendADW);
                     break;
                 //Set ADW Range 1
                 case (Commands.ADW | Commands.RNG1):
-                    data = (char)OK;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
+                    byte[] sendRNG1 = { OK };
+                    _dispatcher.SendData(sendRNG1);
                     break;
                 //Set ADW Range 2
                 case (Commands.ADW | Commands.RNG2):
-                    data = (char)OK;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
+                    byte[] sendRNG2 = { OK };
+                    _dispatcher.SendData(sendRNG2);
                     break;
                 //Set ADW Channel 1
                 case (Commands.ADW | Commands.CH1):
-                    data = (char)OK;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
+                    byte[] sendCH1 = { OK};
+                    _dispatcher.SendData(sendCH1);
                     break;
                 //Set ADW Channel 2
                 case (Commands.ADW | Commands.CH2):
-                    data = (char)OK;
-                    _dispatcher.SendData(Commands.ID_VOID, data);
+                    byte[] sendCH2 = { OK };
+                    _dispatcher.SendData(sendCH2);
                     break;
 
                  default:

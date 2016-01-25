@@ -129,6 +129,28 @@ namespace pc_client
         }
 
 
+        public void SendData(byte[] data)
+        {
+            CheckIfPortIsOpen();
+
+            if (!_comWrapper.ComportWrite(data))
+            {
+                if (NewErrorReceivedEvent != null)
+                {
+                    NewErrorReceivedEvent(this, "Comport is closed");
+                }
+                throw new System.IO.InvalidDataException();
+            }
+            else
+            {
+                if (NewLogOutputDataReceivedEvent != null)
+                {
+                    NewLogOutputDataReceivedEvent(this, _helper.HexArrayToString(data));
+                }
+            }
+        }
+
+
         public void SendData(char data)
         {
             CheckIfPortIsOpen();
