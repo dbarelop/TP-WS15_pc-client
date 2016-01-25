@@ -32,6 +32,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.main = new System.Windows.Forms.TabPage();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
             this.chkAD2 = new System.Windows.Forms.CheckBox();
             this.chkAD1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -103,9 +106,6 @@
             this.ad2Timer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerEepromRead = new System.ComponentModel.BackgroundWorker();
             this._backgroundWorkerEepromWrite = new System.ComponentModel.BackgroundWorker();
-            this.label19 = new System.Windows.Forms.Label();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -165,10 +165,37 @@
             this.main.TabIndex = 0;
             this.main.Text = "Start";
             // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(279, 133);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(17, 16);
+            this.label21.TabIndex = 22;
+            this.label21.Text = "V";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(279, 95);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(17, 16);
+            this.label20.TabIndex = 21;
+            this.label20.Text = "V";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(279, 57);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(21, 16);
+            this.label19.TabIndex = 20;
+            this.label19.Text = "°C";
+            // 
             // chkAD2
             // 
             this.chkAD2.AutoSize = true;
-            this.chkAD2.Location = new System.Drawing.Point(375, 132);
+            this.chkAD2.Location = new System.Drawing.Point(414, 132);
             this.chkAD2.Name = "chkAD2";
             this.chkAD2.Size = new System.Drawing.Size(50, 20);
             this.chkAD2.TabIndex = 19;
@@ -179,7 +206,7 @@
             // chkAD1
             // 
             this.chkAD1.AutoSize = true;
-            this.chkAD1.Location = new System.Drawing.Point(375, 94);
+            this.chkAD1.Location = new System.Drawing.Point(414, 94);
             this.chkAD1.Name = "chkAD1";
             this.chkAD1.Size = new System.Drawing.Size(50, 20);
             this.chkAD1.TabIndex = 18;
@@ -304,7 +331,7 @@
             // chkPollTemp
             // 
             this.chkPollTemp.AutoSize = true;
-            this.chkPollTemp.Location = new System.Drawing.Point(375, 56);
+            this.chkPollTemp.Location = new System.Drawing.Point(414, 56);
             this.chkPollTemp.Name = "chkPollTemp";
             this.chkPollTemp.Size = new System.Drawing.Size(50, 20);
             this.chkPollTemp.TabIndex = 14;
@@ -332,7 +359,7 @@
             // 
             // btnReadADC2
             // 
-            this.btnReadADC2.Location = new System.Drawing.Point(256, 130);
+            this.btnReadADC2.Location = new System.Drawing.Point(313, 130);
             this.btnReadADC2.Name = "btnReadADC2";
             this.btnReadADC2.Size = new System.Drawing.Size(75, 23);
             this.btnReadADC2.TabIndex = 12;
@@ -342,7 +369,7 @@
             // 
             // btnReadADC1
             // 
-            this.btnReadADC1.Location = new System.Drawing.Point(256, 92);
+            this.btnReadADC1.Location = new System.Drawing.Point(313, 92);
             this.btnReadADC1.Name = "btnReadADC1";
             this.btnReadADC1.Size = new System.Drawing.Size(75, 23);
             this.btnReadADC1.TabIndex = 11;
@@ -365,7 +392,7 @@
             this.tbADChannel2.Location = new System.Drawing.Point(123, 130);
             this.tbADChannel2.Name = "tbADChannel2";
             this.tbADChannel2.ReadOnly = true;
-            this.tbADChannel2.Size = new System.Drawing.Size(100, 22);
+            this.tbADChannel2.Size = new System.Drawing.Size(155, 22);
             this.tbADChannel2.TabIndex = 9;
             // 
             // label3
@@ -401,7 +428,7 @@
             this.tbTemperatur.Location = new System.Drawing.Point(123, 54);
             this.tbTemperatur.Name = "tbTemperatur";
             this.tbTemperatur.ReadOnly = true;
-            this.tbTemperatur.Size = new System.Drawing.Size(100, 22);
+            this.tbTemperatur.Size = new System.Drawing.Size(155, 22);
             this.tbTemperatur.TabIndex = 4;
             // 
             // tbADChannel1
@@ -410,7 +437,7 @@
             this.tbADChannel1.Location = new System.Drawing.Point(123, 92);
             this.tbADChannel1.Name = "tbADChannel1";
             this.tbADChannel1.ReadOnly = true;
-            this.tbADChannel1.Size = new System.Drawing.Size(100, 22);
+            this.tbADChannel1.Size = new System.Drawing.Size(155, 22);
             this.tbADChannel1.TabIndex = 3;
             // 
             // tbHardware
@@ -419,12 +446,12 @@
             this.tbHardware.Location = new System.Drawing.Point(123, 16);
             this.tbHardware.Name = "tbHardware";
             this.tbHardware.ReadOnly = true;
-            this.tbHardware.Size = new System.Drawing.Size(100, 22);
+            this.tbHardware.Size = new System.Drawing.Size(155, 22);
             this.tbHardware.TabIndex = 2;
             // 
             // btnReadTemperatur
             // 
-            this.btnReadTemperatur.Location = new System.Drawing.Point(256, 53);
+            this.btnReadTemperatur.Location = new System.Drawing.Point(313, 53);
             this.btnReadTemperatur.Name = "btnReadTemperatur";
             this.btnReadTemperatur.Size = new System.Drawing.Size(75, 23);
             this.btnReadTemperatur.TabIndex = 1;
@@ -434,7 +461,7 @@
             // 
             // btnResetHardware
             // 
-            this.btnResetHardware.Location = new System.Drawing.Point(256, 15);
+            this.btnResetHardware.Location = new System.Drawing.Point(313, 15);
             this.btnResetHardware.Name = "btnResetHardware";
             this.btnResetHardware.Size = new System.Drawing.Size(75, 23);
             this.btnResetHardware.TabIndex = 0;
@@ -855,33 +882,6 @@
             this._backgroundWorkerEepromWrite.WorkerSupportsCancellation = true;
             this._backgroundWorkerEepromWrite.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerEepromWrite_DoWork);
             this._backgroundWorkerEepromWrite.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerEepromWrite_RunWorkerCompleted);
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(224, 57);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(21, 16);
-            this.label19.TabIndex = 20;
-            this.label19.Text = "°C";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(224, 95);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(17, 16);
-            this.label20.TabIndex = 21;
-            this.label20.Text = "V";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(224, 133);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(17, 16);
-            this.label21.TabIndex = 22;
-            this.label21.Text = "V";
             // 
             // MainForm
             // 

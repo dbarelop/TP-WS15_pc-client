@@ -121,7 +121,7 @@ namespace pc_client
 
         void Dispatcher_NewHardwareDataReceivedEvent(object sender, byte[] value)
         {
-            if(value != null)
+            if(value != null && value.Length != 0)
             {
                 byte first4Bit = unchecked((byte)(value[0] >> 4));
                 byte last4Bit = unchecked((byte)(value[0] & 15));
