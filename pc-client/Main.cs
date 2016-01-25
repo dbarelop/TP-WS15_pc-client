@@ -498,12 +498,28 @@ namespace pc_client
         {
             try
             {
-                List<object> genericlist = e.Argument as List<object>;
-
-                _dispatcher.SendData(Commands.ID_EEPROM, (char)Commands.READ);
-                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[0]);
-                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[1]);
-                WaitForPendingRequest();
+                String sendString = _data.Eprom;
+                int lastAdress = 0;
+                for (int i = 0x0; i < Math.Min(0x200, sendString.Length); i++)
+                {
+                    _dispatcher.SetEepromWritingData(true);
+                    byte firstByte = unchecked((byte)(i >> 8));
+                    byte secondByte = unchecked((byte)(i << 256));
+                    char sendChar = sendString[i];
+                    _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.EEPROM | Commands.WRITE));
+                    _dispatcher.SendData(Commands.ID_VOID, (char)firstByte);
+                    _dispatcher.SendData(Commands.ID_VOID, (char)secondByte);
+                    _dispatcher.SendData(Commands.ID_VOID, sendChar);
+                    lastAdress = i+1;
+                    WaitForEepromWritingData();
+                }
+                _dispatcher.SetEepromWritingData(true);
+                byte firstB = unchecked((byte)(lastAdress >> 8));
+                byte secondB = unchecked((byte)(lastAdress << 256));
+                _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.EEPROM | Commands.WRITE));
+                _dispatcher.SendData(Commands.ID_VOID, (char)firstB);
+                _dispatcher.SendData(Commands.ID_VOID, (char)secondB);
+                _dispatcher.SendData(Commands.ID_VOID, (char)0xff);
             }
             catch
             {
@@ -940,11 +956,10 @@ namespace pc_client
         {
             if (!_backgroundWorkerEepromWrite.IsBusy)
             {
-                object identifier = Commands.ID_EEPROM;
-                object command = (char)(Commands.EEPROM | Commands.WRITE);
-
+                _data.Eprom = rtfEprom.Text;
                 EnableSettingsControls();
-                _backgroundWorkerEepromWrite.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+
+                _backgroundWorkerEepromWrite.RunWorkerAsync();
             }
         }
 
@@ -957,6 +972,16 @@ namespace pc_client
         private bool WaitForPendingRequest()
         {
             while (_dispatcher.IsRequestPendig())
+            {
+                System.Threading.Thread.Sleep(10);
+            }
+            return true;
+        }
+
+
+        private bool WaitForEepromWritingData()
+        {
+            while (_dispatcher.EepromIsWritingData())
             {
                 System.Threading.Thread.Sleep(10);
             }

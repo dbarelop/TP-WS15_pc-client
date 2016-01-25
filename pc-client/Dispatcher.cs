@@ -54,6 +54,7 @@ namespace pc_client
         Form _receiverForm = null;
         volatile bool _requestPending = false;
         volatile bool _eepromReceivingEmptyData = false;
+        volatile bool _eepromWritingData = false;
         Object _lockObject = new Object();
 
         String _lastSendCommand;
@@ -184,6 +185,18 @@ namespace pc_client
         }
 
 
+        public bool EepromIsWritingData()
+        {
+            return _eepromWritingData;
+        }
+
+
+        public void SetEepromWritingData(bool isWriting)
+        {
+            _eepromWritingData = isWriting;
+        }
+
+
         public bool EepromIsReceivingEmptyData()
         {
             return _eepromReceivingEmptyData;
@@ -221,9 +234,14 @@ namespace pc_client
                     _requestPending = false;
                 }
 
-                if (Array.Exists(data, element => element == Commands.EMPTY))
+                if (Array.Exists(data, element => element == Commands.EMPTY) || Array.Exists(data, element => element == 0x3f))
                 {
                     _eepromReceivingEmptyData = true;
+                }
+
+                if (Array.Exists(data, element => element == Commands.DONE))
+                {
+                    _eepromWritingData = false;
                 }
 
                 switch (_sendCmd)
@@ -255,7 +273,14 @@ namespace pc_client
                     case (Commands.ID_EEPROM):
                         if (NewEpromDataReceivedEvent != null)
                         {
-                            NewEpromDataReceivedEvent(this, _helper.RemoveEMPTY(_helper.RemoveOK(data)));
+                            if (_eepromReceivingEmptyData == true)
+                            {
+                                return;
+                            }
+                            else
+                            {
+                                NewEpromDataReceivedEvent(this, _helper.RemoveOK(data));
+                            }
                         }
                         break;
                     case (Commands.ID_TERMINAL):

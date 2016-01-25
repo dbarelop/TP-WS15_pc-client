@@ -846,6 +846,7 @@
             // 
             // _backgroundWorkerEepromWrite
             // 
+            this._backgroundWorkerEepromWrite.WorkerSupportsCancellation = true;
             this._backgroundWorkerEepromWrite.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerEepromWrite_DoWork);
             this._backgroundWorkerEepromWrite.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerEepromWrite_RunWorkerCompleted);
             // 
