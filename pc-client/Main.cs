@@ -29,8 +29,7 @@ namespace pc_client
 
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
-        Object _lockObject = new Object();
-        
+       
 
         delegate void NewDataReceivedDelegate(object sender, byte[] data);
 
@@ -270,6 +269,16 @@ namespace pc_client
             _comWrapper.ComportDispose();
             _backgroundWorker.CancelAsync();
             _backgroundWorker.Dispose();
+            StopBGWTimer();
+            tempTimer.Stop();
+            tempTimer.Enabled = false;
+            this.tempTimer.Tick -= new System.EventHandler(this.tempTimer_Tick);
+            ad1Timer.Stop();
+            ad1Timer.Enabled = false;
+            this.ad1Timer.Tick -= new System.EventHandler(this.ad1Timer_Tick);
+            ad2Timer.Stop();
+            ad2Timer.Enabled = false;
+            this.ad2Timer.Tick -= new System.EventHandler(this.ad2Timer_Tick);
         }
 
         #endregion
@@ -919,6 +928,7 @@ namespace pc_client
                 rtfEprom.Clear();
                 _data.Eprom = "";
                 EnableSettingsControls();
+                _dispatcher.SetReceivingEmptyData(false);
 
                 _backgroundWorkerEepromRead.RunWorkerAsync();
 
