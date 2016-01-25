@@ -76,8 +76,8 @@ namespace pc_client
             }
 
             double v = 1.024 * REFERENCE_VOLTAGE;
-            int a = (2 * NUMBER_OF_BITS) - 1;
-            analogInput = (v * ((decimalInput / a) - 1) / gain);
+            double a = Math.Pow(2, NUMBER_OF_BITS - 1);
+            analogInput = v * ((decimalInput / a) - 1) / gain;
 
             return analogInput;
         }

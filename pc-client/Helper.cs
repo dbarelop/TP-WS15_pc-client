@@ -54,7 +54,12 @@ namespace pc_client
             for (int i = 0; i < hexValues.Length; i++)
             {
                 // Convert integer byte as a hex in a string variable
-                retval += hexValues[i].ToString("X");
+                string digit = hexValues[i].ToString("X");
+                if(digit.Length == 1)
+                {
+                    digit = "0" + hexValues[i].ToString("X");
+                }
+                retval += digit;
             }
 
             return retval;

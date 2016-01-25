@@ -122,7 +122,9 @@ namespace pc_client
         {
             if(value != null)
             {
-                tbHardware.Text = _helper.HexArrayToString(value);
+                String hardware = "0.";
+                hardware += _helper.HexArrayToString(value);
+                tbHardware.Text = hardware;
                 StopBGWTimer();
             }
         }
@@ -142,10 +144,11 @@ namespace pc_client
 
         void Dispatcher_NewADChannel1DataReceivedEvent(object sender, byte[] value)
         {
-            if (value != null)
+            if (value != null && !(value.Length == 0))
             {
                 _data.ADW1_Raw += _helper.HexArrayToString(value);
-                _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
+                //String mockValue = "800003";
+                _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));//mockValue));
                 tbADChannel1.Text = _data.ADW1.ToString();
                 StopBGWTimer();
             }
@@ -154,7 +157,7 @@ namespace pc_client
 
         void Dispatcher_NewADChannel2DataReceivedEvent(object sender, byte[] value)
         {
-            if (value != null)
+            if (value != null && !(value.Length == 0))
             {
                 _data.ADW2_Raw += _helper.HexArrayToString(value);
                 _data.ADW2 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW2_Raw));
@@ -1224,7 +1227,7 @@ namespace pc_client
         {
             if (chkPollTemp.Checked == true)
             {
-                tempTimer.Interval = 5000;
+                tempTimer.Interval = 500;
                 tempTimer.Enabled = true;
                 this.tempTimer.Tick += new System.EventHandler(this.tempTimer_Tick);
             }
@@ -1247,7 +1250,7 @@ namespace pc_client
         {
             if (chkAD1.Checked == true)
             {
-                ad1Timer.Interval = 5000;
+                ad1Timer.Interval = 500;
                 ad1Timer.Enabled = true;
                 this.ad1Timer.Tick += new System.EventHandler(this.ad1Timer_Tick);
             }
@@ -1270,7 +1273,7 @@ namespace pc_client
         {
             if (chkAD2.Checked == true)
             {
-                ad2Timer.Interval = 5000;
+                ad2Timer.Interval = 500;
                 ad2Timer.Enabled = true;
                 this.ad2Timer.Tick += new System.EventHandler(this.ad2Timer_Tick);
             }

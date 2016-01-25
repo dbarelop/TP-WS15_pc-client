@@ -103,6 +103,9 @@
             this.ad2Timer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerEepromRead = new System.ComponentModel.BackgroundWorker();
             this._backgroundWorkerEepromWrite = new System.ComponentModel.BackgroundWorker();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -131,6 +134,9 @@
             // main
             // 
             this.main.BackColor = System.Drawing.Color.Gainsboro;
+            this.main.Controls.Add(this.label21);
+            this.main.Controls.Add(this.label20);
+            this.main.Controls.Add(this.label19);
             this.main.Controls.Add(this.chkAD2);
             this.main.Controls.Add(this.chkAD1);
             this.main.Controls.Add(this.panel2);
@@ -850,6 +856,33 @@
             this._backgroundWorkerEepromWrite.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerEepromWrite_DoWork);
             this._backgroundWorkerEepromWrite.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerEepromWrite_RunWorkerCompleted);
             // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(224, 57);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(21, 16);
+            this.label19.TabIndex = 20;
+            this.label19.Text = "°C";
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(224, 95);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(17, 16);
+            this.label20.TabIndex = 21;
+            this.label20.Text = "V";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(224, 133);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(17, 16);
+            this.label21.TabIndex = 22;
+            this.label21.Text = "V";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -957,6 +990,9 @@
         private System.Windows.Forms.Button btnExport;
         private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromRead;
         private System.ComponentModel.BackgroundWorker _backgroundWorkerEepromWrite;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.Label label19;
     }
 }
 
