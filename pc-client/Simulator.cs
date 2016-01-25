@@ -56,7 +56,7 @@
                     break;
                 //erease Eeprom
                 case (Commands.EEPROM | Commands.ERASE):
-                    byte[] sendEepromErease = { OK};
+                    byte[] sendEepromErease = { OK, DONE};
                     _dispatcher.SendData(sendEepromErease);
                     break;
                 //Read ADT
