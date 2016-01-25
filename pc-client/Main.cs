@@ -123,8 +123,9 @@ namespace pc_client
         {
             if(value != null)
             {
-                String hardware = "0.";
-                hardware += _helper.HexArrayToString(value);
+                byte first4Bit = unchecked((byte)(value[0] >> 4));
+                byte last4Bit = unchecked((byte)(value[0] & 15));
+                String hardware = _helper.HexToString(first4Bit) + "." + _helper.HexToString(last4Bit);
                 tbHardware.Text = hardware;
                 StopBGWTimer();
             }
