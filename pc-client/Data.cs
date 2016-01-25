@@ -13,6 +13,7 @@ namespace pc_client
             ADW2 = 0;
             ADW1_Raw = "";
             ADW2_Raw = "";
+            ADT_Raw = "";
             Eprom = "";
             Temperature = 0;
         }
@@ -54,6 +55,9 @@ namespace pc_client
         { get; set; }
 
         public String Eprom
+        { get; set; }
+
+        public String ADT_Raw
         { get; set; }
 
         public double Temperature

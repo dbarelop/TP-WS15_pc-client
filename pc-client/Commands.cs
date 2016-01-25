@@ -83,5 +83,30 @@ namespace pc_client
         }
 
         #endregion
+
+
+        ///////////////////////////////////////////////////////////////////////
+        #region ADT Calculation
+
+        public static double calculateTemperature(int input)
+        {
+            double analogInput;
+            byte first4Bit = unchecked((byte)(input >> 12));
+ 
+            //positive
+            if (first4Bit < 2)
+            {
+                analogInput = input / 32.0;
+            }
+            //negative
+            else
+            {
+                analogInput = (input - 16384) / 32.0;
+            }
+
+            return analogInput;
+        }
+
+        #endregion
     }
 }

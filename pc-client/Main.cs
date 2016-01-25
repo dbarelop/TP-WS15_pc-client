@@ -132,7 +132,9 @@ namespace pc_client
         {
              if (value != null)
             {
-                tbTemperatur.AppendText(_helper.HexArrayToString(value));
+                _data.ADT_Raw += _helper.HexArrayToString(value);
+                _data.Temperature = Commands.calculateTemperature(_helper.HexStringToDecimal(_data.ADT_Raw));
+                tbTemperatur.Text = _data.Temperature.ToString();
                 StopBGWTimer();
             }
         }
@@ -864,6 +866,8 @@ namespace pc_client
                     object command = (char)(Commands.ADT | Commands.READ);
 
                     tbTemperatur.Clear();
+                    _data.Temperature = 0;
+                    _data.ADT_Raw = "";
                     EnableSettingsControls();
                     _lastSendCommand = (char)command;
                     _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
