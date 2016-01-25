@@ -829,15 +829,21 @@ namespace pc_client
         
         private void btnReadHardware_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorker.IsBusy)
+            try
             {
-                object identifier = Commands.ID_HARDWARE;
-                object command = (char)(Commands.MASTER | Commands.READ);
+                if (!_backgroundWorker.IsBusy)
+                {
+                    object identifier = Commands.ID_HARDWARE;
+                    object command = (char)(Commands.MASTER | Commands.READ);
 
-                EnableSettingsControls();
-                _lastSendCommand = (char)command;
-                InitializeBGWTimer();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    EnableSettingsControls();
+                    _lastSendCommand = (char)command;
+                    InitializeBGWTimer();
+                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -850,15 +856,21 @@ namespace pc_client
 
         private void ReadTemperature()
         {
-            if (!_backgroundWorker.IsBusy)
+            try
             {
-                object identifier = Commands.ID_TEMPERATURE;
-                object command = (char)(Commands.ADT | Commands.READ);
+                if (!_backgroundWorker.IsBusy)
+                {
+                    object identifier = Commands.ID_TEMPERATURE;
+                    object command = (char)(Commands.ADT | Commands.READ);
 
-                tbTemperatur.Clear();
-                EnableSettingsControls();
-                _lastSendCommand = (char)command;
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    tbTemperatur.Clear();
+                    EnableSettingsControls();
+                    _lastSendCommand = (char)command;
+                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -871,17 +883,23 @@ namespace pc_client
 
         private void ReadADC1()
         {
-            if (!_backgroundWorkerADW.IsBusy)
+            try
             {
-                object identifier = Commands.ID_ADCHANNEL1;
-                object channel = (char)(Commands.ADW | Commands.CH1);
-                object command = (char)(Commands.ADW | Commands.READ);
+                if (!_backgroundWorkerADW.IsBusy)
+                {
+                    object identifier = Commands.ID_ADCHANNEL1;
+                    object channel = (char)(Commands.ADW | Commands.CH1);
+                    object command = (char)(Commands.ADW | Commands.READ);
 
-                tbADChannel1.Clear();
-                _lastSendCommand = (char)command;
-                _data.ADW1_Raw = "";
-                EnableSettingsControls();
-                _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
+                    tbADChannel1.Clear();
+                    _lastSendCommand = (char)command;
+                    _data.ADW1_Raw = "";
+                    EnableSettingsControls();
+                    _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -894,72 +912,101 @@ namespace pc_client
 
         private void ReadADC2()
         {
-            if (!_backgroundWorkerADW.IsBusy)
+            try
             {
-                object identifier = Commands.ID_ADCHANNEL2;
-                object channel = (char)(Commands.ADW | Commands.CH2);
-                object command = (char)(Commands.ADW | Commands.READ);
+                if (!_backgroundWorkerADW.IsBusy)
+                {
+                    object identifier = Commands.ID_ADCHANNEL2;
+                    object channel = (char)(Commands.ADW | Commands.CH2);
+                    object command = (char)(Commands.ADW | Commands.READ);
 
-                tbADChannel2.Clear();
-                _data.ADW2_Raw = "";
-                _lastSendCommand = (char)command;
-                EnableSettingsControls();
-                _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
+                    tbADChannel2.Clear();
+                    _data.ADW2_Raw = "";
+                    _lastSendCommand = (char)command;
+                    EnableSettingsControls();
+                    _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
 
         private void rbV1_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorker.IsBusy)
+            try
             {
-                object identifier = Commands.ID_VOID;
-                object command = (char)(Commands.ADW | Commands.RNG1);
+                if (!_backgroundWorker.IsBusy)
+                {
+                    object identifier = Commands.ID_VOID;
+                    object command = (char)(Commands.ADW | Commands.RNG1);
 
-                _range = _data.getRNG1();
-                EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    _range = _data.getRNG1();
+                    EnableSettingsControls();
+                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
 
         private void rbV2_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorker.IsBusy)
+            try
             {
-                object identifier = Commands.ID_VOID;
-                object command = (char)(Commands.ADW | Commands.RNG2);
+                if (!_backgroundWorker.IsBusy)
+                {
+                    object identifier = Commands.ID_VOID;
+                    object command = (char)(Commands.ADW | Commands.RNG2);
 
-                _range = _data.getRNG2();
-                EnableSettingsControls();
-                _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    _range = _data.getRNG2();
+                    EnableSettingsControls();
+                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
 
         private void btnReadEeprom_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorkerEepromRead.IsBusy)
+            try
             {
-                rtfEprom.Clear();
-                _data.Eprom = "";
-                EnableSettingsControls();
-                _dispatcher.SetReceivingEmptyData(false);
+                if (!_backgroundWorkerEepromRead.IsBusy)
+                {
+                    rtfEprom.Clear();
+                    _data.Eprom = "";
+                    EnableSettingsControls();
+                    _dispatcher.SetReceivingEmptyData(false);
 
-                _backgroundWorkerEepromRead.RunWorkerAsync();
-
+                    _backgroundWorkerEepromRead.RunWorkerAsync();
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
 
         private void btnWriteEprom_Click(object sender, EventArgs e)
         {
-            if (!_backgroundWorkerEepromWrite.IsBusy)
+            try
             {
-                _data.Eprom = rtfEprom.Text;
-                EnableSettingsControls();
+                if (!_backgroundWorkerEepromWrite.IsBusy)
+                {
+                    _data.Eprom = rtfEprom.Text;
+                    EnableSettingsControls();
 
-                _backgroundWorkerEepromWrite.RunWorkerAsync();
+                    _backgroundWorkerEepromWrite.RunWorkerAsync();
+                }
+            }
+            catch (Exception)
+            {
             }
         }
 
