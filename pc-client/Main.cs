@@ -134,10 +134,11 @@ namespace pc_client
 
         void Dispatcher_NewTemperatureDataReceivedEvent(object sender, byte[] value)
         {
-             if (value != null)
+             if (value != null && value.Length <= 2)
             {
                 _data.ADT_Raw += _helper.HexArrayToString(value);
-                _data.Temperature = Commands.calculateTemperature(_helper.HexStringToDecimal(_data.ADT_Raw));
+                int temp = _helper.HexStringToDecimal(_data.ADT_Raw);
+                _data.Temperature = Commands.calculateTemperature(temp);
                 tbTemperatur.Text = _data.Temperature.ToString();
                 StopBGWTimer();
             }
@@ -873,7 +874,6 @@ namespace pc_client
                     object identifier = Commands.ID_TEMPERATURE;
                     object command = (char)(Commands.ADT | Commands.READ);
 
-                    tbTemperatur.Clear();
                     _data.Temperature = 0;
                     _data.ADT_Raw = "";
                     EnableSettingsControls();
@@ -903,7 +903,6 @@ namespace pc_client
                     object channel = (char)(Commands.ADW | Commands.CH1);
                     object command = (char)(Commands.ADW | Commands.READ);
 
-                    tbADChannel1.Clear();
                     _lastSendCommand = (char)command;
                     _data.ADW1_Raw = "";
                     EnableSettingsControls();
@@ -932,7 +931,6 @@ namespace pc_client
                     object channel = (char)(Commands.ADW | Commands.CH2);
                     object command = (char)(Commands.ADW | Commands.READ);
 
-                    tbADChannel2.Clear();
                     _data.ADW2_Raw = "";
                     _lastSendCommand = (char)command;
                     EnableSettingsControls();

@@ -61,12 +61,12 @@
                     break;
                 //Read ADT
                 case (Commands.ADT | Commands.READ):
-                    byte[] sendADT = { OK, 0x03, 0x80 };
+                    byte[] sendADT = { OK, 0x03, 0x13 };
                     _dispatcher.SendData(sendADT);
                     break;
                     //Read ADW
                 case (Commands.ADW | Commands.READ):
-                    byte[] sendADW = { OK, 0xcb, 0x38, 0x14 };
+                    byte[] sendADW = { OK, 0xd5, 0x85, 0x51 };
                     _dispatcher.SendData(sendADW);
                     break;
                 //Set ADW Range 1
