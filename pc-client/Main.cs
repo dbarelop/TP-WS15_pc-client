@@ -192,7 +192,7 @@ namespace pc_client
 
         void Dispatcher_NewEpromDataReceivedEvent(object sender, byte[] value)
         {
-            if (_dispatcher.EepromIsReceivingEmptyData() || Array.Exists(value, element => element == Commands.EMPTY) || Array.Exists(value, element => element == 0x3f))
+            if (_dispatcher.EepromIsReceivingEmptyData() || Array.Exists(value, element => element == Commands.EMPTY))// || Array.Exists(value, element => element == 0x3f))
             {
                 _stopReceivingEepromData = true;
             }
@@ -575,7 +575,9 @@ namespace pc_client
                 _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.EEPROM | Commands.WRITE));
                 _dispatcher.SendData(Commands.ID_VOID, (char)firstB);
                 _dispatcher.SendData(Commands.ID_VOID, (char)secondB);
-                _dispatcher.SendData(Commands.ID_VOID, (char)0xff);
+                byte[] terminator = { 0xff };
+                _dispatcher.SendData(terminator);
+                WaitForEepromWritingData();
             }
             catch
             {

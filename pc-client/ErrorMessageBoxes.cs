@@ -29,7 +29,7 @@ namespace pc_client
 
         public void TimeOutError(char command)
         {
-            MessageBox.Show("Timeout occurred while sending " + command,
+            MessageBox.Show("Timeout occurred",
             "Timeout Error Occurred",
             MessageBoxButtons.OK,
             MessageBoxIcon.Error,

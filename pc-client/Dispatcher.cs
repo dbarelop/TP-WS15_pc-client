@@ -256,7 +256,7 @@ namespace pc_client
                     _requestPending = false;
                 }
 
-                if (Array.Exists(data, element => element == Commands.EMPTY) || Array.Exists(data, element => element == 0x3f))
+                if (Array.Exists(data, element => element == Commands.EMPTY)) //|| Array.Exists(data, element => element == 0x3f))
                 {
                     _eepromReceivingEmptyData = true;
                 }
@@ -295,14 +295,7 @@ namespace pc_client
                     case (Commands.ID_EEPROM):
                         if (NewEpromDataReceivedEvent != null)
                         {
-                            //if (_eepromReceivingEmptyData == true)
-                            //{
-                            //    return;
-                            //}
-                            //else
-                            //{
-                                NewEpromDataReceivedEvent(this, _helper.RemoveOK(data));
-                            //}
+                            NewEpromDataReceivedEvent(this, _helper.RemoveOK(data));
                         }
                         break;
                     case (Commands.ID_TERMINAL):
