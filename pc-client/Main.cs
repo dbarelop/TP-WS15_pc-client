@@ -136,11 +136,18 @@ namespace pc_client
         {
              if (value != null && value.Length <= 2)
             {
-                _data.ADT_Raw += _helper.HexArrayToString(value);
-                int temp = _helper.HexStringToDecimal(_data.ADT_Raw);
-                _data.Temperature = Commands.calculateTemperature(temp);
-                tbTemperatur.Text = _data.Temperature.ToString();
-                StopBGWTimer();
+                try
+                {
+                    _data.ADT_Raw += _helper.HexArrayToString(value);
+                    int temp = _helper.HexStringToDecimal(_data.ADT_Raw);
+                    _data.Temperature = Commands.calculateTemperature(temp);
+                    tbTemperatur.Text = _data.Temperature.ToString();
+                    StopBGWTimer();
+                }
+                catch (Exception)
+                {
+                    StopBGWTimer();
+                }
             }
         }
 
@@ -149,10 +156,17 @@ namespace pc_client
         {
             if (value != null && !(value.Length == 0))
             {
-                _data.ADW1_Raw += _helper.HexArrayToString(value);
-                _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
-                tbADChannel1.Text = _data.ADW1.ToString();
-                StopBGWTimer();
+                try
+                {
+                    _data.ADW1_Raw += _helper.HexArrayToString(value);
+                    _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
+                    tbADChannel1.Text = _data.ADW1.ToString();
+                    StopBGWTimer();
+                }
+                catch (Exception)
+                {
+                    StopBGWTimer();
+                }
             }
         }
 
@@ -161,10 +175,17 @@ namespace pc_client
         {
             if (value != null && !(value.Length == 0))
             {
-                _data.ADW2_Raw += _helper.HexArrayToString(value);
-                _data.ADW2 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW2_Raw));
-                tbADChannel2.Text = _data.ADW2.ToString();
-                StopBGWTimer();
+                try
+                {
+                    _data.ADW2_Raw += _helper.HexArrayToString(value);
+                    _data.ADW2 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW2_Raw));
+                    tbADChannel2.Text = _data.ADW2.ToString();
+                    StopBGWTimer();
+                }
+                catch (Exception)
+                {
+                    StopBGWTimer();
+                }
             }
         }
 
@@ -470,6 +491,30 @@ namespace pc_client
         private void _backgroundWorkerADW_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             DisableSettingsControls();
+        }
+
+
+        private void _backgroundWorkerADW2_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            DisableSettingsControls();
+        }
+
+
+        private void _backgroundWorkerADW2_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                List<object> genericlist = e.Argument as List<object>;
+
+                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[0]);
+                WaitForPendingRequest();
+                _dispatcher.SendData((String)genericlist[1], (char)genericlist[2]);
+                WaitForPendingRequest();
+            }
+            catch
+            {
+                _error.FatalError();
+            }
         }
 
 
@@ -876,8 +921,12 @@ namespace pc_client
 
                     _data.Temperature = 0;
                     _data.ADT_Raw = "";
-                    EnableSettingsControls();
+                    if(!chkPollTemp.Checked == true)
+                    {
+                        EnableSettingsControls();
+                    }
                     _lastSendCommand = (char)command;
+                    InitializeBGWTimer();
                     _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
                 }
             }
@@ -905,7 +954,11 @@ namespace pc_client
 
                     _lastSendCommand = (char)command;
                     _data.ADW1_Raw = "";
-                    EnableSettingsControls();
+                    if(!chkAD1.Checked == true)
+                    {
+                        EnableSettingsControls();
+                    }
+                    InitializeBGWTimer();
                     _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
                 }
             }
@@ -925,7 +978,7 @@ namespace pc_client
         {
             try
             {
-                if (!_backgroundWorkerADW.IsBusy)
+                if (!_backgroundWorkerADW2.IsBusy)
                 {
                     object identifier = Commands.ID_ADCHANNEL2;
                     object channel = (char)(Commands.ADW | Commands.CH2);
@@ -933,8 +986,12 @@ namespace pc_client
 
                     _data.ADW2_Raw = "";
                     _lastSendCommand = (char)command;
-                    EnableSettingsControls();
-                    _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
+                    if(!chkAD2.Checked == true)
+                    {
+                        EnableSettingsControls();
+                    }
+                    InitializeBGWTimer();
+                    _backgroundWorkerADW2.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
                 }
             }
             catch (Exception)
@@ -954,6 +1011,7 @@ namespace pc_client
 
                     _range = _data.getRNG1();
                     EnableSettingsControls();
+                    InitializeBGWTimer();
                     _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
                 }
             }
@@ -974,6 +1032,7 @@ namespace pc_client
 
                     _range = _data.getRNG2();
                     EnableSettingsControls();
+                    InitializeBGWTimer();
                     _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
                 }
             }
@@ -993,6 +1052,7 @@ namespace pc_client
                     _data.Eprom = "";
                     _stopReceivingEepromData = false;
                     EnableSettingsControls();
+                    InitializeBGWTimer();
                     _dispatcher.SetReceivingEmptyData(false);
 
                     _backgroundWorkerEepromRead.RunWorkerAsync();
@@ -1012,7 +1072,7 @@ namespace pc_client
                 {
                     _data.Eprom = rtfEprom.Text;
                     EnableSettingsControls();
-
+                    InitializeBGWTimer();
                     _backgroundWorkerEepromWrite.RunWorkerAsync();
                 }
             }
@@ -1231,7 +1291,7 @@ namespace pc_client
         {
             if (chkPollTemp.Checked == true)
             {
-                tempTimer.Interval = 500;
+                tempTimer.Interval = 1000;
                 tempTimer.Enabled = true;
                 this.tempTimer.Tick += new System.EventHandler(this.tempTimer_Tick);
             }
@@ -1254,7 +1314,7 @@ namespace pc_client
         {
             if (chkAD1.Checked == true)
             {
-                ad1Timer.Interval = 500;
+                ad1Timer.Interval = 1000;
                 ad1Timer.Enabled = true;
                 this.ad1Timer.Tick += new System.EventHandler(this.ad1Timer_Tick);
             }
@@ -1277,7 +1337,7 @@ namespace pc_client
         {
             if (chkAD2.Checked == true)
             {
-                ad2Timer.Interval = 500;
+                ad2Timer.Interval = 1000;
                 ad2Timer.Enabled = true;
                 this.ad2Timer.Tick += new System.EventHandler(this.ad2Timer_Tick);
             }
@@ -1314,6 +1374,7 @@ namespace pc_client
         }
 
         #endregion
+
 
     }
 }

@@ -106,6 +106,7 @@
             this.ad2Timer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerEepromRead = new System.ComponentModel.BackgroundWorker();
             this._backgroundWorkerEepromWrite = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerADW2 = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -883,6 +884,12 @@
             this._backgroundWorkerEepromWrite.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerEepromWrite_DoWork);
             this._backgroundWorkerEepromWrite.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerEepromWrite_RunWorkerCompleted);
             // 
+            // _backgroundWorkerADW2
+            // 
+            this._backgroundWorkerADW2.WorkerSupportsCancellation = true;
+            this._backgroundWorkerADW2.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerADW2_DoWork);
+            this._backgroundWorkerADW2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerADW2_RunWorkerCompleted);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -993,6 +1000,7 @@
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerADW2;
     }
 }
 
