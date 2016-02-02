@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO.Ports;
 using System.IO;
+using System.Globalization;
 
 namespace pc_client
 {
@@ -160,7 +161,7 @@ namespace pc_client
                 {
                     _data.ADW1_Raw += _helper.HexArrayToString(value);
                     _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
-                    tbADChannel1.Text = _data.ADW1.ToString();
+                    tbADChannel1.Text = _data.ADW1.ToString("G6");
                     StopBGWTimer();
                 }
                 catch (Exception)
@@ -179,7 +180,7 @@ namespace pc_client
                 {
                     _data.ADW2_Raw += _helper.HexArrayToString(value);
                     _data.ADW2 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW2_Raw));
-                    tbADChannel2.Text = _data.ADW2.ToString();
+                    tbADChannel2.Text = _data.ADW2.ToString("G6");
                     StopBGWTimer();
                 }
                 catch (Exception)

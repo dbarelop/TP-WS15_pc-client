@@ -254,7 +254,6 @@ namespace pc_client
                 if (Array.Exists(data, element => element == Commands.OK))
                 {
                     _requestPending = false;
-                    return;
                 }
 
                 if (Array.Exists(data, element => element == Commands.EMPTY)) //|| Array.Exists(data, element => element == 0x3f))
