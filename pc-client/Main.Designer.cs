@@ -129,6 +129,7 @@
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(496, 469);
             this.tabControl1.TabIndex = 3;
+            this.tabControl1.SelectedIndexChanged += new System.EventHandler(this.log_Enter);
             this.tabControl1.Enter += new System.EventHandler(this.mainTabControl_Enter);
             this.tabControl1.MouseEnter += new System.EventHandler(this.OnMouseEntering);
             // 
@@ -731,6 +732,7 @@
             // 
             // log
             // 
+            this.log.AutoScroll = true;
             this.log.BackColor = System.Drawing.Color.Gainsboro;
             this.log.Controls.Add(this.btnExport);
             this.log.Controls.Add(this.btnLogClear);
@@ -742,6 +744,7 @@
             this.log.TabIndex = 3;
             this.log.Text = "Log";
             this.log.Click += new System.EventHandler(this.logExport_Click);
+            this.log.Enter += new System.EventHandler(this.log_Enter);
             // 
             // btnExport
             // 

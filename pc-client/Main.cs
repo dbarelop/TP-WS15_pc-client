@@ -534,6 +534,7 @@ namespace pc_client
                     _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
                     _dispatcher.SendData(Commands.ID_EEPROM, (char)firstByte);
                     _dispatcher.SendData(Commands.ID_EEPROM, (char)secondByte);
+                    WaitForPendingRequest();
                 }
             }
             catch
@@ -567,6 +568,7 @@ namespace pc_client
                     _dispatcher.SendData(Commands.ID_VOID, (char)secondByte);
                     _dispatcher.SendData(Commands.ID_VOID, sendChar);
                     lastAdress = i+1;
+                    WaitForPendingRequest();
                     WaitForEepromWritingData();
                 }
                 _dispatcher.SetEepromWritingData(true);
@@ -577,6 +579,7 @@ namespace pc_client
                 _dispatcher.SendData(Commands.ID_VOID, (char)secondB);
                 byte[] terminator = { 0xff };
                 _dispatcher.SendData(terminator);
+                WaitForPendingRequest();
                 WaitForEepromWritingData();
             }
             catch
@@ -599,17 +602,17 @@ namespace pc_client
 
         private void InitializeBGWTimer()
         {
-            portTimer.Interval = 5000;
-            portTimer.Enabled = true;
-            this.portTimer.Tick += new System.EventHandler(this.bgwTimer_Tick);
+            bgwTimer.Interval = 5000;
+            bgwTimer.Enabled = true;
+            this.bgwTimer.Tick += new System.EventHandler(this.bgwTimer_Tick);
         }
 
 
         private void StopBGWTimer()
         {
             bgwTimer.Stop();
-            portTimer.Enabled = false;
-            this.portTimer.Tick -= new System.EventHandler(this.bgwTimer_Tick);
+            bgwTimer.Enabled = false;
+            this.bgwTimer.Tick -= new System.EventHandler(this.bgwTimer_Tick);
         }
 
 
@@ -851,6 +854,9 @@ namespace pc_client
 
         private void rtfLog_TextChanged(object sender, EventArgs e)
         {
+            rtfLog.SelectionStart = rtfLog.Text.Length;
+            rtfLog.Focus();
+
             if (rtfLog.Text.Length > 0)
             {
                 btnLogClear.Enabled = true;
@@ -862,6 +868,14 @@ namespace pc_client
                 btnExport.Enabled = false;
             }
         }
+
+
+        private void log_Enter(object sender, EventArgs e)
+        {
+            rtfLog.SelectionStart = rtfLog.Text.Length;
+            rtfLog.Focus();
+        }
+
 
         private void logExport_Click(object sender, EventArgs e)
         {
@@ -1375,8 +1389,8 @@ namespace pc_client
             }
         }
 
-        #endregion
 
+        #endregion
 
     }
 }
