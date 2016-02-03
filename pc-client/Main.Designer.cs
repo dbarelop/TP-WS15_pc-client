@@ -897,11 +897,13 @@
             // 
             // _backgroundWorkerTemperature
             // 
+            this._backgroundWorkerTemperature.WorkerSupportsCancellation = true;
             this._backgroundWorkerTemperature.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerTemperature_DoWork);
             this._backgroundWorkerTemperature.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerTemperature_RunWorkerCompleted);
             // 
             // _backgroundWorkerRange
             // 
+            this._backgroundWorkerRange.WorkerSupportsCancellation = true;
             this._backgroundWorkerRange.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerRange_DoWork);
             this._backgroundWorkerRange.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerRange_RunWorkerCompleted);
             // 

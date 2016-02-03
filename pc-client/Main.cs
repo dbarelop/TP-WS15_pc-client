@@ -311,9 +311,27 @@ namespace pc_client
 
         public void close_port()
         {
+            KillAllBackGroundActions();
             _comWrapper.ComportDispose();
+        }
+
+        private void KillAllBackGroundActions()
+        {
             _backgroundWorkerHardware.CancelAsync();
             _backgroundWorkerHardware.Dispose();
+            _backgroundWorkerTemperature.CancelAsync();
+            _backgroundWorkerTemperature.Dispose();
+            _backgroundWorkerADW.CancelAsync();
+            _backgroundWorkerADW.Dispose();
+            _backgroundWorkerADW2.CancelAsync();
+            _backgroundWorkerADW2.Dispose();
+            _backgroundWorkerEepromRead.CancelAsync();
+            _backgroundWorkerEepromRead.Dispose();
+            _backgroundWorkerEepromWrite.CancelAsync();
+            _backgroundWorkerEepromWrite.Dispose();
+            _backgroundWorkerRange.CancelAsync();
+            _backgroundWorkerRange.Dispose();
+
             StopBGWTimer();
             tempTimer.Stop();
             tempTimer.Enabled = false;
@@ -697,6 +715,7 @@ namespace pc_client
         private void bgwTimer_Tick(object sender, System.EventArgs e)
         {
             StopBGWTimer();
+            KillAllBackGroundActions();
             _error.TimeOutError('X');
             _backgroundWorkerHardware.CancelAsync();
             DisableSettingsControls();
