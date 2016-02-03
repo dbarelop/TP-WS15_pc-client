@@ -98,7 +98,7 @@
             this.label18 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.portTimer = new System.Windows.Forms.Timer(this.components);
-            this._backgroundWorker = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerHardware = new System.ComponentModel.BackgroundWorker();
             this.bgwTimer = new System.Windows.Forms.Timer(this.components);
             this._backgroundWorkerADW = new System.ComponentModel.BackgroundWorker();
             this.tempTimer = new System.Windows.Forms.Timer(this.components);
@@ -107,6 +107,8 @@
             this._backgroundWorkerEepromRead = new System.ComponentModel.BackgroundWorker();
             this._backgroundWorkerEepromWrite = new System.ComponentModel.BackgroundWorker();
             this._backgroundWorkerADW2 = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerTemperature = new System.ComponentModel.BackgroundWorker();
+            this._backgroundWorkerRange = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.main.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -847,11 +849,11 @@
             // 
             this.portTimer.Tick += new System.EventHandler(this.portTimer_Tick);
             // 
-            // _backgroundWorker
+            // _backgroundWorkerHardware
             // 
-            this._backgroundWorker.WorkerSupportsCancellation = true;
-            this._backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
-            this._backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorker_RunWorkerCompleted);
+            this._backgroundWorkerHardware.WorkerSupportsCancellation = true;
+            this._backgroundWorkerHardware.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerHardware_DoWork);
+            this._backgroundWorkerHardware.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerHardware_RunWorkerCompleted);
             // 
             // bgwTimer
             // 
@@ -892,6 +894,16 @@
             this._backgroundWorkerADW2.WorkerSupportsCancellation = true;
             this._backgroundWorkerADW2.DoWork += new System.ComponentModel.DoWorkEventHandler(this._backgroundWorkerADW2_DoWork);
             this._backgroundWorkerADW2.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerADW2_RunWorkerCompleted);
+            // 
+            // _backgroundWorkerTemperature
+            // 
+            this._backgroundWorkerTemperature.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerTemperature_DoWork);
+            this._backgroundWorkerTemperature.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerTemperature_RunWorkerCompleted);
+            // 
+            // _backgroundWorkerRange
+            // 
+            this._backgroundWorkerRange.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorkerRange_DoWork);
+            this._backgroundWorkerRange.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this._backgroundWorkerRange_RunWorkerCompleted);
             // 
             // MainForm
             // 
@@ -981,7 +993,7 @@
         private System.Windows.Forms.Button btnClearOut;
         private System.Windows.Forms.Timer portTimer;
         private System.Windows.Forms.Button btnConnect;
-        private System.ComponentModel.BackgroundWorker _backgroundWorker;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerHardware;
         private System.Windows.Forms.TabPage about;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TabPage log;
@@ -1004,6 +1016,8 @@
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Label label19;
         private System.ComponentModel.BackgroundWorker _backgroundWorkerADW2;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerTemperature;
+        private System.ComponentModel.BackgroundWorker _backgroundWorkerRange;
     }
 }
 

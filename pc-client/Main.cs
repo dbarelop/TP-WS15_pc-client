@@ -22,7 +22,7 @@ namespace pc_client
         Settings _settings = null;
         Data _data = null;
         int _waitCounter = 1;
-        volatile char _lastSendCommand;
+        Object _lockObject = new Object();
         volatile bool _simulateResponses = false;
         volatile bool _stopReceivingEepromData = false;
         double _range = 0;
@@ -135,14 +135,18 @@ namespace pc_client
 
         void Dispatcher_NewTemperatureDataReceivedEvent(object sender, byte[] value)
         {
-             if (value != null && value.Length <= 2)
+            if(value != null)
             {
+                _data.ADT_Raw += _helper.HexArrayToString(value);
+            }
+
+            if(_data.ADT_Raw.Length == 4)
+            { 
                 try
                 {
-                    _data.ADT_Raw += _helper.HexArrayToString(value);
                     int temp = _helper.HexStringToDecimal(_data.ADT_Raw);
                     _data.Temperature = Commands.calculateTemperature(temp);
-                    tbTemperatur.Text = _data.Temperature.ToString();
+                    tbTemperatur.Text = _data.Temperature.ToString("F3", CultureInfo.InvariantCulture);
                     StopBGWTimer();
                 }
                 catch (Exception)
@@ -155,13 +159,17 @@ namespace pc_client
 
         void Dispatcher_NewADChannel1DataReceivedEvent(object sender, byte[] value)
         {
-            if (value != null && !(value.Length == 0))
+            if(value != null)
             {
+                _data.ADW1_Raw += _helper.HexArrayToString(value);
+            }
+
+            if(_data.ADW1_Raw.Length == 6)
+            { 
                 try
                 {
-                    _data.ADW1_Raw += _helper.HexArrayToString(value);
                     _data.ADW1 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW1_Raw));
-                    tbADChannel1.Text = _data.ADW1.ToString("G6");
+                    tbADChannel1.Text = _data.ADW1.ToString("F5", CultureInfo.InvariantCulture);
                     StopBGWTimer();
                 }
                 catch (Exception)
@@ -174,13 +182,17 @@ namespace pc_client
 
         void Dispatcher_NewADChannel2DataReceivedEvent(object sender, byte[] value)
         {
-            if (value != null && !(value.Length == 0))
+            if(value != null)
             {
+                _data.ADW2_Raw += _helper.HexArrayToString(value);
+            }
+
+            if(_data.ADW2_Raw.Length == 6)
+            { 
                 try
                 {
-                    _data.ADW2_Raw += _helper.HexArrayToString(value);
                     _data.ADW2 = Commands.calculateVoltage(_range, _helper.HexStringToDecimal(_data.ADW2_Raw));
-                    tbADChannel2.Text = _data.ADW2.ToString("G6");
+                    tbADChannel2.Text = _data.ADW2.ToString("F5", CultureInfo.InvariantCulture);
                     StopBGWTimer();
                 }
                 catch (Exception)
@@ -300,8 +312,8 @@ namespace pc_client
         public void close_port()
         {
             _comWrapper.ComportDispose();
-            _backgroundWorker.CancelAsync();
-            _backgroundWorker.Dispose();
+            _backgroundWorkerHardware.CancelAsync();
+            _backgroundWorkerHardware.Dispose();
             StopBGWTimer();
             tempTimer.Stop();
             tempTimer.Enabled = false;
@@ -450,13 +462,16 @@ namespace pc_client
         ///////////////////////////////////////////////////////////////////////
         #region BackgroundWorkers
 
-        void BackgroundWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        void BackgroundWorkerHardware_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             try
             {
-                List<object> genericlist = e.Argument as List<object>;
-                _dispatcher.SendData((String)genericlist[0], (char)genericlist[1]);
-                WaitForPendingRequest();
+                WaitForPendingBytes();
+                lock (_lockObject)
+                {
+                    _dispatcher.SetPendingBytes(2);
+                    _dispatcher.SendData(Commands.ID_HARDWARE, (char)(Commands.MASTER | Commands.READ));
+                }
             }
             catch
             {
@@ -465,7 +480,56 @@ namespace pc_client
         }
 
 
-        private void _backgroundWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void _backgroundWorkerHardware_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            DisableSettingsControls();
+        }
+
+
+        void BackgroundWorkerRange_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                char command = (char)e.Argument;
+                WaitForPendingBytes();
+                lock (_lockObject)
+                {
+                    _dispatcher.SetPendingBytes(1);
+                    _dispatcher.SendData(Commands.ID_VOID, command);
+                }
+            }
+            catch
+            {
+                _error.FatalError();
+            }
+        }
+
+
+        private void _backgroundWorkerRange_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            DisableSettingsControls();
+        }
+
+
+        void BackgroundWorkerTemperature_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            try
+            {
+                WaitForPendingBytes();
+                lock (_lockObject)
+                {
+                    _dispatcher.SetPendingBytes(3);
+                    _dispatcher.SendData(Commands.ID_TEMPERATURE, (char)(Commands.ADT | Commands.READ));
+                }
+            }
+            catch
+            {
+                _error.FatalError();
+            }
+        }
+
+
+        private void _backgroundWorkerTemperature_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             DisableSettingsControls();
         }
@@ -475,12 +539,18 @@ namespace pc_client
         {
             try
             {
-                List<object> genericlist = e.Argument as List<object>;
-
-                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[0]);
-                WaitForPendingRequest();
-                _dispatcher.SendData((String)genericlist[1], (char)genericlist[2]);
-                WaitForPendingRequest();
+                WaitForPendingBytes();
+                lock (_lockObject)
+                {
+                    _dispatcher.SetPendingBytes(1);
+                    _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADW | Commands.CH1));
+                }
+                WaitForPendingBytes();
+                lock (_lockObject)
+                {
+                    _dispatcher.SetPendingBytes(4);
+                    _dispatcher.SendData(Commands.ID_ADCHANNEL1, (char)(Commands.ADW | Commands.READ));
+                }
             }
             catch
             {
@@ -505,12 +575,18 @@ namespace pc_client
         {
             try
             {
-                List<object> genericlist = e.Argument as List<object>;
-
-                _dispatcher.SendData(Commands.ID_VOID, (char)genericlist[0]);
-                WaitForPendingRequest();
-                _dispatcher.SendData((String)genericlist[1], (char)genericlist[2]);
-                WaitForPendingRequest();
+                WaitForPendingBytes();
+                lock (_lockObject)
+                {
+                    _dispatcher.SetPendingBytes(1);
+                    _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADW | Commands.CH2));
+                }
+                WaitForPendingBytes();
+                lock (_lockObject)
+                {
+                    _dispatcher.SetPendingBytes(4);
+                    _dispatcher.SendData(Commands.ID_ADCHANNEL2, (char)(Commands.ADW | Commands.READ));
+                }
             }
             catch
             {
@@ -532,10 +608,10 @@ namespace pc_client
                     }
                     byte firstByte = unchecked((byte)(i >> 8));
                     byte secondByte = unchecked((byte)(i << 256));
+                    WaitForPendingBytes();
                     _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
                     _dispatcher.SendData(Commands.ID_EEPROM, (char)firstByte);
                     _dispatcher.SendData(Commands.ID_EEPROM, (char)secondByte);
-                    WaitForPendingRequest();
                 }
             }
             catch
@@ -564,23 +640,23 @@ namespace pc_client
                     byte firstByte = unchecked((byte)(i >> 8));
                     byte secondByte = unchecked((byte)(i << 256));
                     char sendChar = sendString[i];
-                    _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.EEPROM | Commands.WRITE));
-                    _dispatcher.SendData(Commands.ID_VOID, (char)firstByte);
-                    _dispatcher.SendData(Commands.ID_VOID, (char)secondByte);
-                    _dispatcher.SendData(Commands.ID_VOID, sendChar);
+                    WaitForPendingBytes();
+                    _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.WRITE));
+                    _dispatcher.SendData(Commands.ID_EEPROM, (char)firstByte);
+                    _dispatcher.SendData(Commands.ID_EEPROM, (char)secondByte);
+                    _dispatcher.SendData(Commands.ID_EEPROM, sendChar);
                     lastAdress = i+1;
-                    WaitForPendingRequest();
                     WaitForEepromWritingData();
                 }
                 _dispatcher.SetEepromWritingData(true);
                 byte firstB = unchecked((byte)(lastAdress >> 8));
                 byte secondB = unchecked((byte)(lastAdress << 256));
-                _dispatcher.SendData(Commands.ID_VOID, (char)(Commands.EEPROM | Commands.WRITE));
-                _dispatcher.SendData(Commands.ID_VOID, (char)firstB);
-                _dispatcher.SendData(Commands.ID_VOID, (char)secondB);
+                WaitForPendingBytes();
+                _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.WRITE));
+                _dispatcher.SendData(Commands.ID_EEPROM, (char)firstB);
+                _dispatcher.SendData(Commands.ID_EEPROM, (char)secondB);
                 byte[] terminator = { 0xff };
                 _dispatcher.SendData(terminator);
-                WaitForPendingRequest();
                 WaitForEepromWritingData();
             }
             catch
@@ -620,10 +696,10 @@ namespace pc_client
         private void bgwTimer_Tick(object sender, System.EventArgs e)
         {
             StopBGWTimer();
-            _error.TimeOutError(_lastSendCommand);
-            _backgroundWorker.CancelAsync();
+            _error.TimeOutError('X');
+            _backgroundWorkerHardware.CancelAsync();
             DisableSettingsControls();
-            _dispatcher.SetRequestPendig(false);
+            _dispatcher.SetPendingBytes(0);
         }
 
         #endregion
@@ -904,15 +980,11 @@ namespace pc_client
         {
             try
             {
-                if (!_backgroundWorker.IsBusy)
+                if (!_backgroundWorkerHardware.IsBusy)
                 {
-                    object identifier = Commands.ID_HARDWARE;
-                    object command = (char)(Commands.MASTER | Commands.READ);
-
                     EnableSettingsControls();
-                    _lastSendCommand = (char)command;
                     InitializeBGWTimer();
-                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    _backgroundWorkerHardware.RunWorkerAsync();
                 }
             }
             catch (Exception)
@@ -931,20 +1003,16 @@ namespace pc_client
         {
             try
             {
-                if (!_backgroundWorker.IsBusy)
+                if (!_backgroundWorkerTemperature.IsBusy)
                 {
-                    object identifier = Commands.ID_TEMPERATURE;
-                    object command = (char)(Commands.ADT | Commands.READ);
-
                     _data.Temperature = 0;
                     _data.ADT_Raw = "";
                     if(!chkPollTemp.Checked == true)
                     {
                         EnableSettingsControls();
                     }
-                    _lastSendCommand = (char)command;
                     InitializeBGWTimer();
-                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    _backgroundWorkerTemperature.RunWorkerAsync();
                 }
             }
             catch (Exception)
@@ -965,18 +1033,13 @@ namespace pc_client
             {
                 if (!_backgroundWorkerADW.IsBusy)
                 {
-                    object identifier = Commands.ID_ADCHANNEL1;
-                    object channel = (char)(Commands.ADW | Commands.CH1);
-                    object command = (char)(Commands.ADW | Commands.READ);
-
-                    _lastSendCommand = (char)command;
                     _data.ADW1_Raw = "";
                     if(!chkAD1.Checked == true)
                     {
                         EnableSettingsControls();
                     }
                     InitializeBGWTimer();
-                    _backgroundWorkerADW.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
+                    _backgroundWorkerADW.RunWorkerAsync();
                 }
             }
             catch (Exception)
@@ -997,18 +1060,13 @@ namespace pc_client
             {
                 if (!_backgroundWorkerADW2.IsBusy)
                 {
-                    object identifier = Commands.ID_ADCHANNEL2;
-                    object channel = (char)(Commands.ADW | Commands.CH2);
-                    object command = (char)(Commands.ADW | Commands.READ);
-
                     _data.ADW2_Raw = "";
-                    _lastSendCommand = (char)command;
                     if(!chkAD2.Checked == true)
                     {
                         EnableSettingsControls();
                     }
                     InitializeBGWTimer();
-                    _backgroundWorkerADW2.RunWorkerAsync(_helper.CreateObjectList(channel, identifier, command));
+                    _backgroundWorkerADW2.RunWorkerAsync();
                 }
             }
             catch (Exception)
@@ -1021,15 +1079,13 @@ namespace pc_client
         {
             try
             {
-                if (!_backgroundWorker.IsBusy)
+                if (!_backgroundWorkerRange.IsBusy)
                 {
-                    object identifier = Commands.ID_VOID;
                     object command = (char)(Commands.ADW | Commands.RNG1);
-
                     _range = _data.getRNG1();
                     EnableSettingsControls();
                     InitializeBGWTimer();
-                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    _backgroundWorkerRange.RunWorkerAsync(command);
                 }
             }
             catch (Exception)
@@ -1042,15 +1098,14 @@ namespace pc_client
         {
             try
             {
-                if (!_backgroundWorker.IsBusy)
+                if (!_backgroundWorkerRange.IsBusy)
                 {
-                    object identifier = Commands.ID_VOID;
-                    object command = (char)(Commands.ADW | Commands.RNG2);
+                     object command = (char)(Commands.ADW | Commands.RNG2);
 
                     _range = _data.getRNG2();
                     EnableSettingsControls();
                     InitializeBGWTimer();
-                    _backgroundWorker.RunWorkerAsync(_helper.CreateObjectList(identifier, command));
+                    _backgroundWorkerRange.RunWorkerAsync(command);
                 }
             }
             catch (Exception)
@@ -1104,9 +1159,9 @@ namespace pc_client
         ///////////////////////////////////////////////////////////////////////
         #region Synchronisation
 
-        private bool WaitForPendingRequest()
+        private bool WaitForPendingBytes()
         {
-            while (_dispatcher.IsRequestPendig())
+            while (_dispatcher.GetPendingBytes() < 0)
             {
                 System.Threading.Thread.Sleep(10);
             }

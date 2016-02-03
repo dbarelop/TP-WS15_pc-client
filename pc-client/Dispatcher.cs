@@ -1,5 +1,7 @@
 ﻿using System.Windows.Forms;
 using System;
+using System.Linq;
+
 namespace pc_client
 {
     public class Dispatcher
@@ -52,7 +54,7 @@ namespace pc_client
         string _sendCmd = null;
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
-        volatile bool _requestPending = false;
+        volatile int _pendingBytes = 0;
         volatile bool _eepromReceivingEmptyData = false;
         volatile bool _eepromWritingData = false;
         Object _lockObject = new Object();
@@ -119,7 +121,6 @@ namespace pc_client
             }
             else
             {
-                _requestPending = true;
                 _lastSendCommand = data;
                 if (NewLogOutputDataReceivedEvent != null)
                 {
@@ -165,7 +166,6 @@ namespace pc_client
             }
             else
             {
-                _requestPending = true;
                 Helper helper = new Helper();
                 _lastSendCommand = helper.HexToString((byte)data);
                 if (NewLogOutputDataReceivedEvent != null)
@@ -195,15 +195,15 @@ namespace pc_client
         }
 
 
-        public bool IsRequestPendig()
+        public int GetPendingBytes()
         {
-            return _requestPending;
+            return _pendingBytes;
         }
 
 
-        public void SetRequestPendig(bool isPending)
+        public void SetPendingBytes(int count)
         {
-            _requestPending = isPending;
+            System.Threading.Interlocked.Exchange(ref _pendingBytes, -count);
         }
 
 
@@ -235,33 +235,27 @@ namespace pc_client
         {
             lock (_lockObject)
             {
+                byte[] receivedData = data;
+
                 if (_receiverForm.InvokeRequired)
                 {
                     _windowDispatcher.BeginInvoke(new NewDataReceivedDelegate(ComWrapper_NewDataReceivedEvent), new object[] { sender, data });
                     return;
                 }
 
-                if (NewDataReceivedEvent != null)
-                {
-                    NewDataReceivedEvent(this, data);
-                }
+                _pendingBytes = System.Threading.Interlocked.Add(ref _pendingBytes, data.Length);
 
                 if (NewLogInputDataReceivedEvent != null)
                 {
-                    NewLogInputDataReceivedEvent(this, data);
+                    NewLogInputDataReceivedEvent(this, receivedData);
                 }
 
-                if (Array.Exists(data, element => element == Commands.OK))
-                {
-                    _requestPending = false;
-                }
-
-                if (Array.Exists(data, element => element == Commands.EMPTY)) //|| Array.Exists(data, element => element == 0x3f))
+                if (Array.Exists(receivedData, element => element == Commands.EMPTY)) 
                 {
                     _eepromReceivingEmptyData = true;
                 }
 
-                if (Array.Exists(data, element => element == Commands.DONE))
+                if (Array.Exists(receivedData, element => element == Commands.DONE))
                 {
                     _eepromWritingData = false;
                 }
@@ -271,49 +265,49 @@ namespace pc_client
                     case (Commands.ID_HARDWARE):
                         if (NewHardwareDataReceivedEvent != null)
                         {
-                            NewHardwareDataReceivedEvent(this, _helper.RemoveOK(data));
+                            NewHardwareDataReceivedEvent(this, _helper.RemoveOK(receivedData));
                         }
                         break;
                     case (Commands.ID_TEMPERATURE):
                         if (NewTemperatureDataReceivedEvent != null)
                         {
-                            NewTemperatureDataReceivedEvent(this, _helper.RemoveOK(data));
+                            NewTemperatureDataReceivedEvent(this, _helper.RemoveOK(receivedData));
                         }
                         break;
                     case (Commands.ID_ADCHANNEL1):
                         if (NewADChannel1DataReceivedEvent != null)
                         {
-                            NewADChannel1DataReceivedEvent(this, _helper.RemoveOK(data));
+                            NewADChannel1DataReceivedEvent(this, _helper.RemoveOK(receivedData));
                         }
                         break;
                     case (Commands.ID_ADCHANNEL2):
                         if (NewADChannel2DataReceivedEvent != null)
                         {
-                            NewADChannel2DataReceivedEvent(this, _helper.RemoveOK(data));
+                            NewADChannel2DataReceivedEvent(this, _helper.RemoveOK(receivedData));
                         }
                         break;
                     case (Commands.ID_EEPROM):
                         if (NewEpromDataReceivedEvent != null)
                         {
-                            NewEpromDataReceivedEvent(this, _helper.RemoveOK(data));
+                            NewEpromDataReceivedEvent(this, _helper.RemoveOK(receivedData));
                         }
                         break;
                     case (Commands.ID_TERMINAL):
                         if (NewTerminalDataReceivedEvent != null)
                         {
-                            NewTerminalDataReceivedEvent(this, data);
+                            NewTerminalDataReceivedEvent(this, receivedData);
                         }
                         break;
                     case (Commands.ID_VOID):
                         if (NewVoidDataReceivedEvent != null)
                         {
-                            NewVoidDataReceivedEvent(this, data);
+                            NewVoidDataReceivedEvent(this, receivedData);
                         }
                         break;
                     default:
                         if (NewTerminalDataReceivedEvent != null)
                         {
-                            NewTerminalDataReceivedEvent(this, data);
+                            NewTerminalDataReceivedEvent(this, receivedData);
                         }
                         break;
                 }
