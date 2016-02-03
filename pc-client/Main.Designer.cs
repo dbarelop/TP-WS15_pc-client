@@ -355,7 +355,7 @@
             // rtfEprom
             // 
             this.rtfEprom.Location = new System.Drawing.Point(85, 241);
-            this.rtfEprom.MaxLength = 512;
+            this.rtfEprom.MaxLength = 511;
             this.rtfEprom.Name = "rtfEprom";
             this.rtfEprom.Size = new System.Drawing.Size(378, 155);
             this.rtfEprom.TabIndex = 13;

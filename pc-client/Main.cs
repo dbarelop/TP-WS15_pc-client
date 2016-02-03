@@ -205,7 +205,7 @@ namespace pc_client
 
         void Dispatcher_NewEpromDataReceivedEvent(object sender, byte[] value)
         {
-            if (_dispatcher.EepromIsReceivingEmptyData() || Array.Exists(value, element => element == Commands.EMPTY))// || Array.Exists(value, element => element == 0x3f))
+            if (_dispatcher.EepromIsReceivingEmptyData() || Array.Exists(value, element => element == Commands.EMPTY))
             {
                 _stopReceivingEepromData = true;
             }
@@ -606,12 +606,14 @@ namespace pc_client
                         _dispatcher.SetReceivingEmptyData(false);
                         return;
                     }
-                    byte firstByte = unchecked((byte)(i >> 8));
-                    byte secondByte = unchecked((byte)(i << 256));
+
                     WaitForPendingBytes();
-                    _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.READ));
-                    _dispatcher.SendData(Commands.ID_EEPROM, (char)firstByte);
-                    _dispatcher.SendData(Commands.ID_EEPROM, (char)secondByte);
+                    lock (_lockObject)
+                    {
+                        byte[] sendBytes = { (Commands.EEPROM | Commands.READ), unchecked((byte)(i >> 8)), unchecked((byte)(i << 256))};
+                        _dispatcher.SetPendingBytes(2);
+                        _dispatcher.SendData(Commands.ID_EEPROM_READ, sendBytes);
+                    }
                 }
             }
             catch
@@ -636,28 +638,27 @@ namespace pc_client
                 int lastAdress = 0;
                 for (int i = 0x0; i < Math.Min(0x200, sendString.Length); i++)
                 {
-                    _dispatcher.SetEepromWritingData(true);
-                    byte firstByte = unchecked((byte)(i >> 8));
-                    byte secondByte = unchecked((byte)(i << 256));
-                    char sendChar = sendString[i];
                     WaitForPendingBytes();
-                    _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.WRITE));
-                    _dispatcher.SendData(Commands.ID_EEPROM, (char)firstByte);
-                    _dispatcher.SendData(Commands.ID_EEPROM, (char)secondByte);
-                    _dispatcher.SendData(Commands.ID_EEPROM, sendChar);
-                    lastAdress = i+1;
-                    WaitForEepromWritingData();
+                    lock (_lockObject)
+                    {
+                        byte[] sendingBytes = { (Commands.EEPROM | Commands.WRITE), unchecked((byte)(i >> 8)), unchecked((byte)(i << 256)), (byte)sendString[i] };
+                        _dispatcher.SetPendingBytes(2);
+                        _dispatcher.SendData(Commands.ID_EEPROM_WRITE, sendingBytes);
+                        lastAdress = i + 1;
+                    }
                 }
-                _dispatcher.SetEepromWritingData(true);
-                byte firstB = unchecked((byte)(lastAdress >> 8));
-                byte secondB = unchecked((byte)(lastAdress << 256));
+
                 WaitForPendingBytes();
-                _dispatcher.SendData(Commands.ID_EEPROM, (char)(Commands.EEPROM | Commands.WRITE));
-                _dispatcher.SendData(Commands.ID_EEPROM, (char)firstB);
-                _dispatcher.SendData(Commands.ID_EEPROM, (char)secondB);
-                byte[] terminator = { 0xff };
-                _dispatcher.SendData(terminator);
-                WaitForEepromWritingData();
+                lock (_lockObject)
+                {
+                    if(lastAdress == 512)
+                    {
+                        lastAdress = 511;
+                    }
+                    byte[] sendBytes = { (Commands.EEPROM | Commands.WRITE), unchecked((byte)(lastAdress >> 8)), unchecked((byte)(lastAdress << 256)), 0xff };
+                    _dispatcher.SetPendingBytes(2);
+                    _dispatcher.SendData(Commands.ID_EEPROM_WRITE, sendBytes);
+                }
             }
             catch
             {
@@ -1162,16 +1163,6 @@ namespace pc_client
         private bool WaitForPendingBytes()
         {
             while (_dispatcher.GetPendingBytes() < 0)
-            {
-                System.Threading.Thread.Sleep(10);
-            }
-            return true;
-        }
-
-
-        private bool WaitForEepromWritingData()
-        {
-            while (_dispatcher.EepromIsWritingData())
             {
                 System.Threading.Thread.Sleep(10);
             }

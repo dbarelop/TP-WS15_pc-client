@@ -49,7 +49,8 @@ namespace pc_client
         public const string ID_TEMPERATURE = "Temperature";
         public const string ID_ADCHANNEL1 = "ADChannel1";
         public const string ID_ADCHANNEL2 = "ADChannel2";
-        public const string ID_EEPROM = "Eeprom";
+        public const string ID_EEPROM_READ = "EepromRead";
+        public const string ID_EEPROM_WRITE = "EepromWrite";
         public const string ID_TERMINAL = "Terminal";
         public const string ID_VOID = "Void";
 

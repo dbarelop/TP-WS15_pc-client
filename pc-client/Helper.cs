@@ -77,6 +77,17 @@ namespace pc_client
         }
 
 
+        public byte[] RemoveDONE(byte[] rawData)
+        {
+            byte[] withoutDONE = new byte[rawData.Length];
+            Array.Copy(rawData, withoutDONE, rawData.Length);
+            byte toRemove = Commands.DONE;
+            withoutDONE = rawData.Where(val => val != toRemove).ToArray();
+
+            return withoutDONE;
+        }
+
+
         public byte[] RemoveEMPTY(byte[] rawData)
         {
             byte[] withoutEMPTY = new byte[rawData.Length];

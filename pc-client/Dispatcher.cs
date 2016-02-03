@@ -56,9 +56,7 @@ namespace pc_client
         Form _receiverForm = null;
         volatile int _pendingBytes = 0;
         volatile bool _eepromReceivingEmptyData = false;
-        volatile bool _eepromWritingData = false;
         Object _lockObject = new Object();
-
         String _lastSendCommand;
 
         ErrorMessageBoxes _error = new ErrorMessageBoxes();
@@ -99,6 +97,14 @@ namespace pc_client
 
 
         public void SendData(string cmd, char data)
+        {
+            _sendCmd = cmd;
+
+            SendData(data);
+        }
+
+
+        public void SendData(string cmd, byte[] data)
         {
             _sendCmd = cmd;
 
@@ -207,18 +213,6 @@ namespace pc_client
         }
 
 
-        public bool EepromIsWritingData()
-        {
-            return _eepromWritingData;
-        }
-
-
-        public void SetEepromWritingData(bool isWriting)
-        {
-            _eepromWritingData = isWriting;
-        }
-
-
         public bool EepromIsReceivingEmptyData()
         {
             return _eepromReceivingEmptyData;
@@ -235,8 +229,6 @@ namespace pc_client
         {
             lock (_lockObject)
             {
-                byte[] receivedData = data;
-
                 if (_receiverForm.InvokeRequired)
                 {
                     _windowDispatcher.BeginInvoke(new NewDataReceivedDelegate(ComWrapper_NewDataReceivedEvent), new object[] { sender, data });
@@ -247,17 +239,12 @@ namespace pc_client
 
                 if (NewLogInputDataReceivedEvent != null)
                 {
-                    NewLogInputDataReceivedEvent(this, receivedData);
+                    NewLogInputDataReceivedEvent(this, data);
                 }
 
-                if (Array.Exists(receivedData, element => element == Commands.EMPTY)) 
+                if (Array.Exists(data, element => element == Commands.EMPTY)) 
                 {
                     _eepromReceivingEmptyData = true;
-                }
-
-                if (Array.Exists(receivedData, element => element == Commands.DONE))
-                {
-                    _eepromWritingData = false;
                 }
 
                 switch (_sendCmd)
@@ -265,49 +252,51 @@ namespace pc_client
                     case (Commands.ID_HARDWARE):
                         if (NewHardwareDataReceivedEvent != null)
                         {
-                            NewHardwareDataReceivedEvent(this, _helper.RemoveOK(receivedData));
+                            NewHardwareDataReceivedEvent(this, _helper.RemoveOK(data));
                         }
                         break;
                     case (Commands.ID_TEMPERATURE):
                         if (NewTemperatureDataReceivedEvent != null)
                         {
-                            NewTemperatureDataReceivedEvent(this, _helper.RemoveOK(receivedData));
+                            NewTemperatureDataReceivedEvent(this, _helper.RemoveOK(data));
                         }
                         break;
                     case (Commands.ID_ADCHANNEL1):
                         if (NewADChannel1DataReceivedEvent != null)
                         {
-                            NewADChannel1DataReceivedEvent(this, _helper.RemoveOK(receivedData));
+                            NewADChannel1DataReceivedEvent(this, _helper.RemoveOK(data));
                         }
                         break;
                     case (Commands.ID_ADCHANNEL2):
                         if (NewADChannel2DataReceivedEvent != null)
                         {
-                            NewADChannel2DataReceivedEvent(this, _helper.RemoveOK(receivedData));
+                            NewADChannel2DataReceivedEvent(this, _helper.RemoveOK(data));
                         }
                         break;
-                    case (Commands.ID_EEPROM):
+                    case (Commands.ID_EEPROM_READ):
                         if (NewEpromDataReceivedEvent != null)
                         {
-                            NewEpromDataReceivedEvent(this, _helper.RemoveOK(receivedData));
+                            byte[] receivedData = _helper.RemoveOK(data);
+                            receivedData = _helper.RemoveDONE(receivedData);
+                            NewEpromDataReceivedEvent(this, receivedData);
                         }
                         break;
                     case (Commands.ID_TERMINAL):
                         if (NewTerminalDataReceivedEvent != null)
                         {
-                            NewTerminalDataReceivedEvent(this, receivedData);
+                            NewTerminalDataReceivedEvent(this, data);
                         }
                         break;
                     case (Commands.ID_VOID):
                         if (NewVoidDataReceivedEvent != null)
                         {
-                            NewVoidDataReceivedEvent(this, receivedData);
+                            NewVoidDataReceivedEvent(this, data);
                         }
                         break;
                     default:
                         if (NewTerminalDataReceivedEvent != null)
                         {
-                            NewTerminalDataReceivedEvent(this, receivedData);
+                            NewTerminalDataReceivedEvent(this, data);
                         }
                         break;
                 }
