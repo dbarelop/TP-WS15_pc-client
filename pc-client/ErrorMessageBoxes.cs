@@ -27,9 +27,9 @@ namespace pc_client
         }
 
 
-        public void TimeOutError(char command)
+        public void TimeOutError(string command)
         {
-            MessageBox.Show("Timeout occurred",
+            MessageBox.Show("Timeout occurred while requesting: " + command,
             "Timeout Error Occurred",
             MessageBoxButtons.OK,
             MessageBoxIcon.Error,

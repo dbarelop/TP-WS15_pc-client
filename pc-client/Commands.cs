@@ -53,6 +53,7 @@ namespace pc_client
         public const string ID_EEPROM_WRITE = "EepromWrite";
         public const string ID_TERMINAL = "Terminal";
         public const string ID_VOID = "Void";
+        public const string ID_RANGE = "Range";
 
         #endregion
 

@@ -513,7 +513,7 @@ namespace pc_client
                 lock (_lockObject)
                 {
                     _dispatcher.SetPendingBytes(1);
-                    _dispatcher.SendData(Commands.ID_VOID, command);
+                    _dispatcher.SendData(Commands.ID_RANGE, command);
                 }
             }
             catch
@@ -716,8 +716,7 @@ namespace pc_client
         {
             StopBGWTimer();
             KillAllBackGroundActions();
-            _error.TimeOutError('X');
-            _backgroundWorkerHardware.CancelAsync();
+            _error.TimeOutError(_dispatcher.GetSendCommand());
             DisableSettingsControls();
             _dispatcher.SetPendingBytes(0);
         }

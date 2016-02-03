@@ -51,13 +51,13 @@ namespace pc_client
         #region member variables
         ComWrapper _comWrapper = null;
         Helper _helper = null;
-        string _sendCmd = null;
+        volatile string _sendCmd = null;
         System.Windows.Threading.Dispatcher _windowDispatcher;
         Form _receiverForm = null;
         volatile int _pendingBytes = 0;
         volatile bool _eepromReceivingEmptyData = false;
         Object _lockObject = new Object();
-        String _lastSendCommand;
+     //   volatile String _lastSendCommand;
 
         ErrorMessageBoxes _error = new ErrorMessageBoxes();
         #endregion
@@ -111,6 +111,11 @@ namespace pc_client
             SendData(data);
         }
 
+        public String GetSendCommand()
+        {
+            return _sendCmd;
+        }
+
 
 
         public void SendData(string data)
@@ -127,7 +132,6 @@ namespace pc_client
             }
             else
             {
-                _lastSendCommand = data;
                 if (NewLogOutputDataReceivedEvent != null)
                 {
                     NewLogOutputDataReceivedEvent(this, _helper.StringToHex(data));
@@ -173,7 +177,6 @@ namespace pc_client
             else
             {
                 Helper helper = new Helper();
-                _lastSendCommand = helper.HexToString((byte)data);
                 if (NewLogOutputDataReceivedEvent != null)
                 {
                     NewLogOutputDataReceivedEvent(this, helper.HexToString((byte)data));
@@ -288,6 +291,12 @@ namespace pc_client
                         }
                         break;
                     case (Commands.ID_VOID):
+                        if (NewVoidDataReceivedEvent != null)
+                        {
+                            NewVoidDataReceivedEvent(this, data);
+                        }
+                        break;
+                    case (Commands.ID_RANGE):
                         if (NewVoidDataReceivedEvent != null)
                         {
                             NewVoidDataReceivedEvent(this, data);
